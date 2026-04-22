@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pepe Seed - Token Detail</title>
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-hover: #059669;
+            --card: #1a1a2e;
+            --card2: #16213e;
+            --card-hover: #0f1729;
+            --card-boarder: #2d3748;
+            --bg: #0a0e1a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: white;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 24px;
+        }
+        
+        .card {
+            background: var(--card2);
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            padding: 20px;
+        }
+        
+        /* Header */
+        .token-header {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .token-avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+        
+        .token-info {
+            flex: 1;
+        }
+        
+        .token-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .token-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .token-symbol {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        
+        .favorite-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        
+        .favorite-btn.active {
+            color: #ef4444;
+        }
+        
+        .token-description {
+            color: #9ca3af;
+            margin-bottom: 12px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .social-link {
+            color: #9ca3af;
+            transition: color 0.2s;
+        }
+        
+        .social-link:hover {
+            color: var(--primary);
+        }
+        
+        /* Progress Bar */
+        .progress-card {
+            margin-bottom: 24px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .progress-bar-bg {
+            width: 100%;
+            height: 10px;
+            background: var(--card-boarder);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .info-item {
+            background: var(--card2);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+        
+        .info-value {
+            font-size: 14px;
+            color: white;
+        }
+        
+        /* Market Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .metric-card {
+            background: var(--card2);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+        
+        .metric-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .metric-change {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        
+        .metric-change.positive {
+            color: #10b981;
+        }
+        
+        .metric-change.negative {
+            color: #ef4444;
+        }
+        
+        /* Trust Level */
+        .trust-section {
+            margin-bottom: 24px;
+        }
+        
+        .trust-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .trust-score {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .trust-score-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #10b981;
+        }
+        
+        .trust-score-label {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+        
+        .trust-badges {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .trust-badge {
+            background: var(--card);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--card-boarder);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+        
+        .trust-badge.active {
+            border-color: var(--primary);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        /* Chart */
+        .chart-container {
+            background: var(--card2);
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .chart-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #9ca3af;
+        }
+        
+        .chart-controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .chart-btn {
+            padding: 6px 12px;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 6px;
+            color: #9ca3af;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .chart-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .chart-placeholder {
+            width: 100%;
+            height: 400px;
+            background: var(--card);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+        }
+        
+        /* Tabs */
+        .tabs-container {
+            background: var(--card2);
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            padding: 20px;
+        }
+        
+        .tabs-nav {
+            display: flex;
+            gap: 4px;
+            background: var(--card);
+            padding: 4px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .tab-btn.active {
+            background: var(--card-boarder);
+            color: white;
+        }
+        
+        /* Transactions Table */
+        .transactions-table {
+            width: 100%;
+            font-size: 14px;
+        }
+        
+        .transactions-table th {
+            text-align: left;
+            padding: 12px;
+            color: #9ca3af;
+            font-weight: 500;
+            border-bottom: 1px solid var(--card-boarder);
+        }
+        
+        .transactions-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(45, 55, 72, 0.3);
+        }
+        
+        .transactions-table tr:hover {
+            background: var(--card-hover);
+        }
+        
+        .tx-type-buy {
+            color: #10b981;
+        }
+        
+        .tx-type-sell {
+            color: #ef4444;
+        }
+        
+        .tx-link {
+            color: #9ca3af;
+            text-decoration: none;
+        }
+        
+        .tx-link:hover {
+            color: var(--primary);
+        }
+        
+        /* Chat */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            padding-right: 8px;
+        }
+        
+        .chat-message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .chat-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .chat-content {
+            flex: 1;
+        }
+        
+        .chat-username {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .chat-text {
+            font-size: 14px;
+            color: #e5e7eb;
+        }
+        
+        .chat-time {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 8px;
+            padding: 10px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .chat-send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        /* Holders */
+        .holders-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .holders-table {
+            width: 100%;
+            font-size: 14px;
+        }
+        
+        .holders-table th {
+            text-align: left;
+            padding: 12px;
+            color: #9ca3af;
+            font-weight: 500;
+            border-bottom: 1px solid var(--card-boarder);
+        }
+        
+        .holders-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(45, 55, 72, 0.3);
+        }
+        
+        .holder-badge {
+            display: inline-block;
+            margin-left: 6px;
+        }
+        
+        /* Trading Panel */
+        .trading-panel {
+            position: sticky;
+            top: 20px;
+        }
+        
+        .trade-mode-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .trade-mode-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-boarder);
+            background: var(--card);
+            color: #9ca3af;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .trade-mode-btn.buy.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .trade-mode-btn.sell.active {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+        
+        .trade-type-toggle {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        
+        .trade-type-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        
+        .trade-type-option input {
+            cursor: pointer;
+        }
+        
+        .trade-input-group {
+            margin-bottom: 16px;
+        }
+        
+        .trade-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+        
+        .trade-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .trade-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .max-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .trade-swap-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            color: #9ca3af;
+            padding: 8px;
+            cursor: pointer;
+        }
+        
+        .trade-execute-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .trade-execute-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .settings-btn {
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            color: #9ca3af;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="token-header">
+            <img src="https://assets.coingecko.com/coins/images/29850/thumb/pepe.png" alt="Pepe Seed" class="token-avatar">
+            <div class="token-info">
+                <div class="token-title">
+                    <div>
+                        <h1 class="token-name">Pepe Seed</h1>
+                        <p class="token-symbol">PSEED</p>
+                    </div>
+                    <button class="favorite-btn" title="Add to favorites">♡</button>
+                </div>
+                <p class="token-description">Pepe Seed is a fair-launch meme token on Solana</p>
+                <div class="social-links">
+                    <a href="#" class="social-link" title="Website">🌐</a>
+                    <a href="#" class="social-link" title="Twitter">🐦</a>
+                    <a href="#" class="social-link" title="Telegram">✈️</a>
+                    <a href="#" class="social-link" title="Discord">💬</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="card progress-card">
+            <div class="progress-header">
+                <span style="color: #e5e7eb; font-weight: 500;">Progress to DEX (Market Cap)</span>
+                <span style="color: white;">$45.2K <span style="color: #9ca3af;">/ $69K</span></span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 65.5%;"></div>
+            </div>
+            <div style="text-align: right; font-size: 12px; color: #9ca3af; margin-top: 4px;">65.5%</div>
+        </div>
+        
+        <!-- Info Grid -->
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Contract</div>
+                <div class="info-value">
+                    <a href="#" class="tx-link">Abc1...xyz9 ↗</a>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Deployer</div>
+                <div class="info-value">
+                    <a href="#" class="tx-link">creator.sol</a>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Created</div>
+                <div class="info-value">2h 15m ago</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Current Price</div>
+                <div class="info-value">$0.00123</div>
+            </div>
+        </div>
+        
+        <div class="grid-layout">
+            <!-- Left Column -->
+            <div>
+                <!-- Market Metrics -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <h2 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #e5e7eb;">Market Metrics</h2>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">Price</div>
+                            <div class="metric-value">$0.00123</div>
+                            <div class="metric-change positive">↑ 24.5%</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Market Cap</div>
+                            <div class="metric-value">$45.2K</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">24h Volume</div>
+                            <div class="metric-value">$12.8K</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Holders</div>
+                            <div class="metric-value">234 <span style="color: #10b981; font-size: 14px;">↑</span></div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Liquidity</div>
+                            <div class="metric-value">125.4 SOL</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Total Supply</div>
+                            <div class="metric-value">1B</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Trust Level -->
+                <div class="card trust-section">
+                    <div class="trust-header">
+                        <h2 style="font-size: 16px; font-weight: 600; color: #e5e7eb;">Trust Level</h2>
+                        <div class="trust-score">
+                            <div class="trust-score-value">78</div>
+                            <div class="trust-score-label">Medium</div>
+                        </div>
+                    </div>
+                    <div class="trust-badges">
+                        <div class="trust-badge active">
+                            <span>🔒</span>
+                            <span>LP Locked (100%)</span>
+                        </div>
+                        <div class="trust-badge">
+                            <span>✓</span>
+                            <span>Not Audited</span>
+                        </div>
+                        <div class="trust-badge active">
+                            <span>🛡️</span>
+                            <span>Freeze Disabled</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h2 class="chart-title">Price Chart</h2>
+                        <div class="chart-controls">
+                            <button class="chart-btn">5m</button>
+                            <button class="chart-btn">15m</button>
+                            <button class="chart-btn">1h</button>
+                            <button class="chart-btn active">1d</button>
+                            <button class="chart-btn">1w</button>
+                        </div>
+                    </div>
+                    <div class="chart-placeholder">
+                        📊 TradingView Chart
+                    </div>
+                </div>
+                
+                <!-- Tabs -->
+                <div class="tabs-container">
+                    <div class="tabs-nav">
+                        <button class="tab-btn active" onclick="switchTab('trades')">Trades</button>
+                        <button class="tab-btn" onclick="switchTab('chat')">Chat</button>
+                        <button class="tab-btn" onclick="switchTab('holders')">Holders</button>
+                    </div>
+                    
+                    <!-- Trades Tab -->
+                    <div id="trades-tab" class="tab-content">
+                        <table class="transactions-table">
+                            <thead>
+                                <tr>
+                                    <th>Maker</th>
+                                    <th>Type</th>
+                                    <th>SOL</th>
+                                    <th>PSEED</th>
+                                    <th>Date</th>
+                                    <th>Tx</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="#" class="tx-link">whale.sol</a></td>
+                                    <td class="tx-type-buy">BUY 🐋</td>
+                                    <td>5.0</td>
+                                    <td>4,065,041</td>
+                                    <td>2m ago</td>
+                                    <td><a href="#" class="tx-link">abc...xyz</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#" class="tx-link">trader1.sol</a></td>
+                                    <td class="tx-type-sell">SELL</td>
+                                    <td>0.5</td>
+                                    <td>406,504</td>
+                                    <td>5m ago</td>
+                                    <td><a href="#" class="tx-link">def...uvw</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#" class="tx-link">user2.sol</a></td>
+                                    <td class="tx-type-buy">BUY ⭐</td>
+                                    <td>0.1</td>
+                                    <td>81,300</td>
+                                    <td>8m ago</td>
+                                    <td><a href="#" class="tx-link">ghi...rst</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#" class="tx-link">alice.sol</a></td>
+                                    <td class="tx-type-buy">BUY</td>
+                                    <td>1.2</td>
+                                    <td>975,610</td>
+                                    <td>12m ago</td>
+                                    <td><a href="#" class="tx-link">jkl...opq</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#" class="tx-link">bob.sol</a></td>
+                                    <td class="tx-type-sell">SELL</td>
+                                    <td>0.3</td>
+                                    <td>243,902</td>
+                                    <td>15m ago</td>
+                                    <td><a href="#" class="tx-link">mno...pqr</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Chat Tab -->
+                    <div id="chat-tab" class="tab-content" style="display: none;">
+                        <div class="chat-container">
+                            <div class="chat-messages">
+                                <div class="chat-message">
+                                    <div class="chat-avatar">A</div>
+                                    <div class="chat-content">
+                                        <div class="chat-username">alice.sol</div>
+                                        <div class="chat-text">This token is going to moon! 🚀</div>
+                                        <div class="chat-time">2m ago</div>
+                                    </div>
+                                </div>
+                                <div class="chat-message">
+                                    <div class="chat-avatar">B</div>
+                                    <div class="chat-content">
+                                        <div class="chat-username">bob_trader</div>
+                                        <div class="chat-text">Just bought 1 SOL worth. LFG!</div>
+                                        <div class="chat-time">5m ago</div>
+                                    </div>
+                                </div>
+                                <div class="chat-message">
+                                    <div class="chat-avatar">C</div>
+                                    <div class="chat-content">
+                                        <div class="chat-username">crypto_whale</div>
+                                        <div class="chat-text">Solid fundamentals, great community</div>
+                                        <div class="chat-time">8m ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input-container">
+                                <input type="text" class="chat-input" placeholder="Type a message... (200 chars max)">
+                                <button class="chat-send-btn">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Holders Tab -->
+                    <div id="holders-tab" class="tab-content" style="display: none;">
+                        <div class="holders-stats">
+                            <div class="info-item">
+                                <div class="info-label">Total Holders</div>
+                                <div class="info-value">234</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Top 10 Conc.</div>
+                                <div class="info-value" style="color: #f59e0b;">42.3%</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Avg Holding</div>
+                                <div class="info-value">4.27M</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">New (24h)</div>
+                                <div class="info-value" style="color: #10b981;">+18</div>
+                            </div>
+                        </div>
+                        <table class="holders-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Holder</th>
+                                    <th>Balance</th>
+                                    <th>% Supply</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>
+                                        <a href="#" class="tx-link">creator.sol</a>
+                                        <span class="holder-badge">👑</span>
+                                    </td>
+                                    <td>150,000,000</td>
+                                    <td>15.0%</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>
+                                        <a href="#" class="tx-link">whale_1.sol</a>
+                                        <span class="holder-badge">🐋</span>
+                                        <span class="holder-badge">💎</span>
+                                    </td>
+                                    <td>80,000,000</td>
+                                    <td>8.0%</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td><a href="#" class="tx-link">investor.sol</a></td>
+                                    <td>50,000,000</td>
+                                    <td>5.0%</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>
+                                        <a href="#" class="tx-link">diamond.sol</a>
+                                        <span class="holder-badge">💎</span>
+                                    </td>
+                                    <td>45,000,000</td>
+                                    <td>4.5%</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td><a href="#" class="tx-link">trader_x.sol</a></td>
+                                    <td>30,000,000</td>
+                                    <td>3.0%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column - Trading Panel -->
+            <div>
+                <div class="card trading-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="font-size: 14px; font-weight: 600; color: #9ca3af;">Trade</h3>
+                        <button class="settings-btn">⚙️</button>
+                    </div>
+                    
+                    <div class="trade-mode-toggle">
+                        <button class="trade-mode-btn buy active">BUY</button>
+                        <button class="trade-mode-btn sell">SELL</button>
+                    </div>
+                    
+                    <div class="trade-type-toggle">
+                        <label class="trade-type-option">
+                            <input type="radio" name="trade-type" checked>
+                            <span>⚡ Market</span>
+                        </label>
+                        <label class="trade-type-option">
+                            <input type="radio" name="trade-type">
+                            <span>🎯 Limit</span>
+                        </label>
+                    </div>
+                    
+                    <div class="trade-input-group">
+                        <div class="trade-label">
+                            <span>From</span>
+                            <span>Balance: 10.5 SOL</span>
+                        </div>
+                        <div class="trade-input-wrapper">
+                            <input type="number" class="trade-input" placeholder="0.00">
+                            <button class="max-btn">MAX</button>
+                        </div>
+                    </div>
+                    
+                    <button class="trade-swap-btn">⇅</button>
+                    
+                    <div class="trade-input-group">
+                        <div class="trade-label">
+                            <span>To (Estimated)</span>
+                            <span>Balance: 0 PSEED</span>
+                        </div>
+                        <div class="trade-input-wrapper">
+                            <input type="text" class="trade-input" placeholder="0.00" readonly>
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--card); padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 12px; color: #9ca3af;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>Slippage:</span>
+                            <span>2%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Min Received:</span>
+                            <span>~401,800 PSEED</span>
+                        </div>
+                    </div>
+                    
+                    <button class="trade-execute-btn">
+                        Buy PSEED
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+        
+        // Favorite button toggle
+        document.querySelector('.favorite-btn').addEventListener('click', function() {
+            this.classList.toggle('active');
+            this.textContent = this.classList.contains('active') ? '♥' : '♡';
+        });
+        
+        // Trade mode toggle
+        document.querySelectorAll('.trade-mode-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.trade-mode-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

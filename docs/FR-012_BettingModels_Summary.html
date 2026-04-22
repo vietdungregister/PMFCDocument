@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FR-012_BettingModels_Summary.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h2 id="t%E1%BB%95ng-quan-4-m%C3%B4-h%C3%ACnh">Tổng quan 4 mô hình</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Tên mô hình</th>
+<th>User đấu với ai</th>
+<th>Độ phức tạp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Parimutuel Pool</td>
+<td>Users vs Users</td>
+<td>Thấp</td>
+</tr>
+<tr>
+<td>2</td>
+<td>AMM / LMSR</td>
+<td>Users vs Pool toán học</td>
+<td>Trung bình</td>
+</tr>
+<tr>
+<td>3</td>
+<td>CLOB Orderbook</td>
+<td>Users vs Users (khớp lệnh)</td>
+<td>Rất cao</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Platform làm nhà cái (House Bet)</td>
+<td>Users vs Protocol Pool</td>
+<td>Trung bình</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="ch%E1%BA%A5m-%C4%91i%E1%BB%83m">Chấm điểm</h2>
+<table>
+<thead>
+<tr>
+<th>Mô hình</th>
+<th style="text-align:center">Dễ build</th>
+<th style="text-align:center">UX người dùng</th>
+<th style="text-align:center">An toàn cho platform</th>
+<th style="text-align:center">Bảo mật</th>
+<th style="text-align:center"><strong>Tổng</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Parimutuel</td>
+<td style="text-align:center">★★★★★</td>
+<td style="text-align:center">★★☆☆☆</td>
+<td style="text-align:center">★★★★★</td>
+<td style="text-align:center">★★★★★</td>
+<td style="text-align:center"><strong>4.3 / 5</strong></td>
+</tr>
+<tr>
+<td>2. AMM/LMSR</td>
+<td style="text-align:center">★★★☆☆</td>
+<td style="text-align:center">★★★★☆</td>
+<td style="text-align:center">★★★☆☆</td>
+<td style="text-align:center">★★★★☆</td>
+<td style="text-align:center"><strong>3.5 / 5</strong></td>
+</tr>
+<tr>
+<td>3. CLOB Orderbook</td>
+<td style="text-align:center">★☆☆☆☆</td>
+<td style="text-align:center">★★★★☆</td>
+<td style="text-align:center">★★★★★</td>
+<td style="text-align:center">★★★☆☆</td>
+<td style="text-align:center"><strong>3.3 / 5</strong></td>
+</tr>
+<tr>
+<td>4. House betting</td>
+<td style="text-align:center">★★★★☆</td>
+<td style="text-align:center">★★★★★</td>
+<td style="text-align:center">★☆☆☆☆</td>
+<td style="text-align:center">★★☆☆☆</td>
+<td style="text-align:center"><strong>3.0 / 5</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="m%C3%B4-h%C3%ACnh-1-parimutuel-pool">Mô hình 1: Parimutuel Pool</h2>
+<h3 id="t%E1%BB%95ng-quan">Tổng quan</h3>
+<blockquote>
+<p>Tất cả tiền cược gom vào 1 cái pool chung. Bên thắng chia đều tiền của bên thua.</p>
+</blockquote>
+<h3 id="c%C3%A1ch-ho%E1%BA%A1t-%C4%91%E1%BB%99ng">Cách hoạt động</h3>
+<pre class="hljs"><code><div>Bước 1: War mở cửa
+        Token A (PEPE) ←→ Token B (WOJAK)
+        Thời gian: 24 giờ
+
+Bước 2: Người dùng đặt cược
+        └─ Phe PEPE: 600 SOL (từ 200 người)
+        └─ Phe WOJAK: 400 SOL (từ 150 người)
+        └─ Tổng nồi: 1,000 SOL
+
+Bước 3: War kết thúc, tính kết quả
+        Sau 24h: PEPE tăng 45%, WOJAK tăng 22%
+        → PEPE THẮNG
+
+Bước 4: Phân chia tiền thưởng
+        Phí platform 3% = 30 SOL
+        Nồi còn lại = 970 SOL
+        → Chia hết cho phe PEPE theo tỷ lệ đóng góp
+</div></code></pre>
+<h3 id="v%C3%AD-d%E1%BB%A5-s%E1%BB%91-c%E1%BB%A5-th%E1%BB%83">Ví dụ số cụ thể</h3>
+<p>User cược <strong>100 SOL</strong> vào PEPE (bên thắng):</p>
+<pre class="hljs"><code><div>Tỷ lệ thắng = 970 SOL / 600 SOL = 1.617x
+User nhận   = 100 × 1.617 = 161.7 SOL
+Lợi nhuận  = +61.7 SOL (+61.7%)
+</div></code></pre>
+<p>User cược <strong>100 SOL</strong> vào WOJAK (bên thua):</p>
+<pre class="hljs"><code><div>User nhận = 0 SOL
+Thua = -100 SOL
+</div></code></pre>
+<blockquote>
+<p>Điểm yếu <strong>:</strong> User không biết cụ thể odd của mình. Số tiền ăn được thay đổi theo thời gian. Ít có incentive vào sớm.</p>
+</blockquote>
+<h3 id="%C6%B0u-%C4%91i%E1%BB%83m">Ưu điểm</h3>
+<ul>
+<li>✅ Platform không mất tiền</li>
+<li>✅ Dễ triển khai</li>
+</ul>
+<h3 id="nh%C6%B0%E1%BB%A3c-%C4%91i%E1%BB%83m">Nhược điểm</h3>
+<ul>
+<li>❌ Không biết tỷ lệ thắng trước (người dùng pro sẽ ko thích mô hình này)</li>
+</ul>
+<hr>
+<h2 id="m%C3%B4-h%C3%ACnh-2-amm">Mô hình 2: AMM</h2>
+<h3 id="t%E1%BB%95ng-quan">Tổng quan</h3>
+<blockquote>
+<p>Người dùng cược với một công thức toán tự động (AMM).</p>
+</blockquote>
+<hr>
+<h3 id="th%C3%B4ng-s%E1%BB%91-kh%E1%BB%9Fi-t%E1%BA%A1o-seed">Thông số khởi tạo (Seed)</h3>
+<table>
+<thead>
+<tr>
+<th>Tham số</th>
+<th>Giá trị</th>
+<th>Ý nghĩa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Seed liquidity (b)</strong></td>
+<td>1 SOL</td>
+<td>Số SOL platform bơm vào pool để &quot;mồi&quot; thị trường</td>
+</tr>
+<tr>
+<td><strong>Mệnh giá vé</strong></td>
+<td>1 vé = 0.1 SOL</td>
+<td>Mua 1 vé để nhận 0.11 SOL nếu thắng, hoặc 0 nếu thua</td>
+</tr>
+<tr>
+<td><strong>Giá khởi điểm</strong></td>
+<td>PEPE_YES = <strong>0.05 SOL/vé</strong> | WOJAK_YES = <strong>0.05 SOL/vé</strong></td>
+<td>Hai phe cân bằng 50/50 ban đầu</td>
+</tr>
+<tr>
+<td><strong>Rule</strong></td>
+<td>Giá PEPE_YES + Giá WOJAK_YES = <strong>0.1 SOL</strong> luôn luôn</td>
+<td>Tổng xác suất = 100%</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Về Seed</strong>
+Seed quyết định độ ổn định của giá. Seed càng lớn → giá càng ít trượt khi có người mua.</p>
+</blockquote>
+<hr>
+<h3 id="lu%E1%BB%93ng-ho%E1%BA%A1t-%C4%91%E1%BB%99ng">Luồng hoạt động:</h3>
+<pre class="hljs"><code><div>Bước 1: Platform tạo 2 loại vé cược
+        └─ PEPE_YES  (mua nếu tin PEPE thắng)
+        └─ WOJAK_YES (mua nếu tin WOJAK thắng)
+
+        Giá mỗi vé khởi điểm: PEPE_YES = 0.05 SOL | WOJAK_YES = 0.05 SOL
+        (Tổng 2 loại luôn = 0.1 SOL - mệnh giá)
+
+─────────────────────────────────────────────────────
+Bước 2: Platform bơm seed
+        Seed: 1 SOL
+
+─────────────────────────────────────────────────────
+Bước 3: Alice mua 5 vé PEPE_YES
+        Trả: ~0.28 SOL
+        → Giá PEPE_YES tăng lên ~0.062 SOL/vé  (+24%)
+        → Giá WOJAK_YES giảm xuống ~0.038 SOL/vé
+
+─────────────────────────────────────────────────────
+Bước 4: Bob mua 5 vé WOJAK_YES
+        Trả: ~0.22 SOL  (rẻ hơn Alice vì WOJAK đang bị undervalue)
+        → Giá cân bằng lại dần về 50/50
+
+        → mua WOJAK_YES lúc này được lợi giá
+
+─────────────────────────────────────────────────────
+Bước 5: War kết thúc — PEPE thắng
+        Mỗi vé PEPE_YES → đổi được 0.1 SOL
+        Mỗi vé WOJAK_YES → = 0 SOL (vô giá trị)
+
+        Alice: mua 5 vé PEPE_YES với 0.28 SOL → nhận 0.5 SOL → lời 0.22 SOL
+        Bob:   mua 5 vé WOJAK_YES với 0.22 SOL → nhận 0 SOL → lỗ 0.22 SOL
+</div></code></pre>
+<hr>
+<h3 id="%C4%91i%E1%BB%83m-y%E1%BA%BFu">Điểm yếu:</h3>
+<ul>
+<li><strong>LP (platform)</strong> chịu rủi ro nếu người dùng mua nhiều vé của bên phía thắng hơn. q. Rủi ro tối đa ≈ 69% seed nếu tất cả mọi người đặt đúng 1 phía duy nhất.</li>
+</ul>
+<h3 id="%C4%91i%E1%BB%83m-y%E1%BA%BFu-v%E1%BB%9Bi-meme-coin">Điểm yếu với meme coin</h3>
+<p>Creator của token có thể thao túng được thị trường để ăn tiền bet.</p>
+<h3 id="%C6%B0u-%C4%91i%E1%BB%83m">Ưu điểm</h3>
+<ul>
+<li>✅ User biết odd</li>
+<li>✅ Hoạt động ngay cả khi ít người chơi (không cần bot)</li>
+</ul>
+<h3 id="nh%C6%B0%E1%BB%A3c-%C4%91i%E1%BB%83m">Nhược điểm</h3>
+<ul>
+<li>❌ Platform phải bơm seed mỗi war</li>
+<li>❌ LP có nguy cơ mất tiền khi bị insider exploit</li>
+<li>❌ Phức tạp hơn để code (Có công thức, cần test kỹ xem có kẽ hở gì trong công thức không)</li>
+</ul>
+<hr>
+<h2 id="m%C3%B4-h%C3%ACnh-3-clob-orderbook">Mô hình 3: CLOB Orderbook</h2>
+<h3 id="%C3%BD-t%C6%B0%E1%BB%9Fng">Ý tưởng</h3>
+<blockquote>
+<p>Như sàn chứng khoán, giao dịch xảy ra khi 2 người khớp giá với nhau.</p>
+</blockquote>
+<hr>
+<h3 id="m%E1%BB%99t-v%C3%A0i-kh%C3%A1i-ni%E1%BB%87m-l%C3%B5i">Một vài khái niệm lõi:</h3>
+<pre class="hljs"><code><div>Mỗi war tạo ra 2 loại share:
+  PEPE_WIN share  = &quot;tôi tin PEPE thắng&quot;
+  WOJAK_WIN share = &quot;tôi tin WOJAK thắng&quot;
+
+Quy tắc:
+  Giá PEPE_WIN + Giá WOJAK_WIN = 1 SOL (luôn luôn)
+
+Ý nghĩa giá:
+  PEPE_WIN giá 0.65 SOL  →  thị trường đang tin PEPE thắng 65%
+  WOJAK_WIN giá 0.35 SOL →  thị trường đang tin WOJAK thắng 35%
+
+Khi kết thúc:
+  Bên thắng → mỗi share = 1 SOL
+  Bên thua  → mỗi share = 0 SOL
+</div></code></pre>
+<hr>
+<h3 id="lu%E1%BB%93ng-ho%E1%BA%A1t-%C4%91%E1%BB%99ng">Luồng hoạt động:</h3>
+<pre class="hljs"><code><div>Bước 1: 
+        User A: đặt mua với giá 0.65 SOL
+
+        User A đặt lệnh MUA:
+          2 PEPE_WIN shares @ 0.65 SOL/share
+          → User A lock: 2 × 0.65 = 1.3 SOL vào pool
+          → Lệnh nằm chờ trên orderbook
+
+        [Orderbook:]
+        BID: User A muốn mua 2 PEPE_WIN @ 0.65 SOL  ← chờ người bán
+        ASK: (trống)
+
+────────────────────────────────────────────────────
+Bước 2: User B vào xem orderbook, thấy lệnh của User A
+
+        [Orderbook lúc này]
+        BID: User A muốn mua 2 PEPE_WIN @ 0.65 SOL 
+
+        User B đọc: &quot;User A trả 0.65/share cho PEPE_WIN&quot;
+        → User B chấp nhận tỷ lệ này, muốn cược WOJAK
+
+        User B đặt lệnh MUA WOJAK_WIN:
+          2 WOJAK_WIN shares @ 0.35 SOL/share
+          → User B lock: 2 × 0.35 = 0.7 SOL vào pool
+          → 0.65 + 0.35 = 1.0 ✓ → MATCH!
+
+────────────────────────────────────────────────────
+Bước 3: Hệ thống tự động xử lý khi lệnh khớp
+
+        User A nạp: 1.3 SOL → nhận 2 PEPE_WIN shares
+        User B nạp:   0.7 SOL → nhận 2 WOJAK_WIN shares
+        Tổng pool: 2.0 SOL locked trong contract
+
+────────────────────────────────────────────────────
+Bước 4: War kết thúc — PEPE THẮNG
+
+        User A (giữ YES/PEPE_WIN):
+          2 YES × 1 SOL = 2 SOL nhận về
+          Bỏ vào: 1.3 SOL → Lợi: +0.7 SOL (+54%)
+
+        User B (giữ NO/WOJAK_WIN):
+          2 NO × 0 SOL = 0 SOL nhận về
+          Net chi phí: 0.7 SOL → Thua: -0.7 SOL
+</div></code></pre>
+<hr>
+<h3 id="b%E1%BA%A3ng-t%C3%B3m-t%E1%BA%AFt">Bảng tóm tắt</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Alice (tin PEPE)</th>
+<th>Bob (tin WOJAK)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bỏ vào</td>
+<td>1.3 SOL</td>
+<td>0.7 SOL</td>
+</tr>
+<tr>
+<td>Nếu PEPE thắng</td>
+<td>+0.7 SOL lời</td>
+<td>-0.7 SOL thua</td>
+</tr>
+<tr>
+<td>Nếu WOJAK thắng</td>
+<td>-1.3 SOL thua</td>
+<td>+1.3 SOL lời</td>
+</tr>
+<tr>
+<td>Odds (giá share)</td>
+<td>0.65 SOL</td>
+<td>0.35 SOL</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="m%C3%B4-ph%E1%BB%8Fng-tr%C6%B0%E1%BB%9Dng-h%E1%BB%A3p-kh%C3%A1c-c%C3%B3-nhi%E1%BB%81u-user-v%C3%A0-nhi%E1%BB%81u-m%E1%BB%A9c-gi%C3%A1-%C4%91%E1%BA%B7t-h%C6%A1n">Mô phỏng trường hợp khác, có nhiều user và nhiều mức giá đặt hơn:</h3>
+<blockquote>
+<p>Quy tắc khớp: PEPE_WIN bid + WOJAK_WIN bid = <strong>1.0</strong> thì MATCH</p>
+</blockquote>
+<pre class="hljs"><code><div>══════════════════════════════════════════════════════════════
+T=1: User A đặt lệnh MUA PEPE_WIN
+
+  A đặt: MUA 3 PEPE_WIN @ 0.60 SOL → lock 1.8 SOL
+
+  [Orderbook]
+  PEPE_WIN  BID: A @ 0.60 (3 shares)
+  WOJAK_WIN BID: (trống)
+  → Chưa ai đối ứng → chờ
+
+══════════════════════════════════════════════════════════════
+T=2: User B đặt lệnh MUA PEPE_WIN, giá cao hơn A
+
+  B đặt: MUA 2 PEPE_WIN @ 0.65 SOL → lock 1.3 SOL
+
+  [Orderbook — sắp theo giá cao → thấp]
+  PEPE_WIN  BID: B @ 0.65 (2 shares)  ← ưu tiên khớp trước
+                  A @ 0.60 (3 shares)
+  WOJAK_WIN BID: (trống)
+  → Vẫn chưa ai đặt WOJAK_WIN → chờ
+
+══════════════════════════════════════════════════════════════
+T=3: User C vào, muốn cược WOJAK
+
+  C thấy orderbook: lệnh cao nhất là B @ 0.65 cho PEPE_WIN
+  → Phía ngược lại: WOJAK_WIN = 1 - 0.65 = 0.35
+  → C chấp nhận, đặt: MUA 2 WOJAK_WIN @ 0.35 → lock 0.7 SOL
+
+  Kiểm tra: 0.65 (B) + 0.35 (C) = 1.0 ✓ → MATCH với B!
+
+  Kết quả:
+    B: bỏ 1.3 SOL → nhận 2 PEPE_WIN
+    C: bỏ 0.7 SOL → nhận 2 WOJAK_WIN
+
+  [Orderbook sau T=3]
+  PEPE_WIN  BID: A @ 0.60 (3 shares)  ← B đã khớp hết
+  WOJAK_WIN BID: (trống)
+
+══════════════════════════════════════════════════════════════
+T=4: User D vào, muốn cược WOJAK nhưng ra giá thấp hơn
+
+  D đặt: MUA 5 WOJAK_WIN @ 0.30 → lock 1.5 SOL
+
+  Kiểm tra với lệnh tốt nhất hiện tại:
+    A @ 0.60 + D @ 0.30 = 0.90 ≠ 1.0 ✗ → KHÔNG KHỚP
+    (Còn thiếu 0.10 SOL để chốt deal)
+
+  [Orderbook sau T=4]
+  PEPE_WIN  ASK: B @ 0.72 (2 shares)
+  PEPE_WIN  BID: A @ 0.60 (3 shares)
+  WOJAK_WIN ASK: C @ 0.45 (2 shares)
+  WOJAK_WIN BID: D @ 0.30 (5 shares)
+
+══════════════════════════════════════════════════════════════
+T=5: User E vào, muốn cược WOJAK, chấp nhận giá hợp lý hơn
+
+  E thấy A đang bid 0.60 cho PEPE_WIN
+  → E chấp nhận đối ứng: MUA 3 WOJAK_WIN @ 0.40 → lock 1.2 SOL
+
+  Kiểm tra: 0.60 (A) + 0.40 (E) = 1.0 ✓ → MATCH với A! (3 shares)
+
+  Kết quả:
+    A: bỏ 1.8 SOL → nhận 3 PEPE_WIN
+    E: bỏ 1.2 SOL → nhận 3 WOJAK_WIN
+
+  [Orderbook sau T=5]
+  PEPE_WIN  ASK: A @ 0.68 (1 share)
+              B @ 0.72 (2 shares)
+  PEPE_WIN  BID: (trống)
+  WOJAK_WIN ASK: E @ 0.42 (2 shares)
+              C @ 0.45 (2 shares)
+  WOJAK_WIN BID: D @ 0.30 (5 shares)
+
+══════════════════════════════════════════════════════════════
+T=6: User F vào — Partial Fill (F nhỏ hơn D)
+
+  F muốn cược PEPE mạnh, đặt: MUA 3 PEPE_WIN @ 0.70 → lock 2.1 SOL
+
+  Kiểm tra: 0.70 (F) + 0.30 (D) = 1.0 ✓ → có thể MATCH với D
+
+  Nhưng: F muốn 3 shares, D còn 5 shares
+  → Chỉ khớp được 3 shares (theo số nhỏ hơn) → PARTIAL FILL
+
+  Kết quả:
+    F: bỏ 2.1 SOL → nhận 3 PEPE_WIN  (lệnh khớp TOÀN BỘ)
+    D: bỏ 0.9 SOL → nhận 3 WOJAK_WIN (lệnh khớp 3/5, còn 2 shares chưa khớp)
+       D được hoàn lại: 1.5 - 0.9 = 0.6 SOL (phần chưa khớp vẫn lock chờ)
+
+  [Orderbook sau T=6]
+  PEPE_WIN  ASK: A @ 0.68 (1 share)
+              B @ 0.72 (2 shares)
+              F @ 0.78 (2 shares)
+  PEPE_WIN  BID: (trống)
+  WOJAK_WIN ASK: E @ 0.42 (2 shares)
+              C @ 0.45 (2 shares)
+  WOJAK_WIN BID: D @ 0.30 (2 shares còn lại)
+
+══════════════════════════════════════════════════════════════
+T=7: Một lệnh lớn khớp với nhiều counterparty liên tiếp
+
+  [Tiếp từ T=6 — orderbook: WOJAK_WIN BID: D @ 0.30 (2 shares)]
+
+  Y vào: MUA 2 WOJAK_WIN @ 0.40 → lock 0.8 SOL
+  Z vào: MUA 3 WOJAK_WIN @ 0.40 → lock 1.2 SOL
+
+  [Orderbook]
+  PEPE_WIN  ASK: A @ 0.68 (1 share)
+              B @ 0.72 (2 shares)
+              F @ 0.78 (2 shares)
+  PEPE_WIN  BID: (trống)
+  WOJAK_WIN ASK: E @ 0.42 (2 shares)
+              C @ 0.45 (2 shares)
+  WOJAK_WIN BID: Y @ 0.40 (2 shares)
+              Z @ 0.40 (3 shares)
+              D @ 0.30 (2 shares)
+
+  X vào: MUA 8 PEPE_WIN @ 0.60 → lock 4.8 SOL
+  → cần đối ứng WOJAK_WIN @ 0.40 → thấy Y(2) + Z(3) = 5 shares đủ điều kiện
+  → D @ 0.30 không thỏa (0.60 + 0.30 ≠ 1.0) → bỏ qua
+
+  Hệ thống khớp lần lượt: Y trước → hết → Z tiếp
+
+  Kết quả:
+    Y: nhận 2 WOJAK_WIN (fully filled)
+    Z: nhận 3 WOJAK_WIN (fully filled)
+    X: nhận 5 PEPE_WIN, còn 3 shares chờ (không còn ai @ 0.40)
+
+  [Orderbook sau T=7]
+  PEPE_WIN  ASK: A @ 0.68 (1 share)
+              B @ 0.72 (2 shares)
+              F @ 0.78 (2 shares)
+  PEPE_WIN  BID: X @ 0.60 (3 shares còn lại)
+  WOJAK_WIN ASK: E @ 0.42 (2 shares)
+              C @ 0.45 (2 shares)
+  WOJAK_WIN BID: D @ 0.30 (2 shares)
+  → X BID 0.60 &lt; ASK thấp nhất 0.68 → không khớp secondary; primary cũng kẹt (D @ 0.30)
+
+══════════════════════════════════════════════════════════════
+T=8: Khớp lệnh secondary market
+
+  G đặt: MUA 2 PEPE_WIN @ 0.72 → MATCH với ASK rẻ nhất (A @ 0.68? Không — A chỉ có 1, G cần 2)
+  → Khớp A @ 0.68 (1 share) trước, còn 1 share → tiếp tục lên B @ 0.72 (1 share)
+  → Tổng: G nhận 2 PEPE_WIN, trả 0.68 + 0.72 = 1.40 SOL
+
+  [Orderbook sau T=8]
+  PEPE_WIN  ASK: B @ 0.72 (1 share)
+              F @ 0.78 (2 shares)
+  PEPE_WIN  BID: X @ 0.60 (3 shares)
+  WOJAK_WIN ASK: E @ 0.42 (2 shares)
+              C @ 0.45 (2 shares)
+  WOJAK_WIN BID: D @ 0.30 (2 shares)
+
+══════════════════════════════════════════════════════════════
+TỔNG KẾT
+
+  Đã khớp:
+    B(0.65) + C(0.35) = 1.0 → 2 cặp  (T=3)
+    A(0.60) + E(0.40) = 1.0 → 3 cặp  (T=5)
+    F(0.70) + D(0.30) = 1.0 → 3 cặp  (T=6, partial — F xong, D còn 2)
+    X(0.60) + Y(0.40) = 1.0 → 2 cặp  (T=7, khớp Y trước)
+    X(0.60) + Z(0.40) = 1.0 → 3 cặp  (T=7, khớp tiếp Z — X còn 3 chưa xong)
+    A @ 0.68 + B @ 0.72  → G nhận 2 PEPE_WIN  (T=8)
+
+  Chưa khớp: X BID 0.60 &lt; ASK thấp nhất 0.72 → spread chưa chạm; D BID 0.30 kẹt
+
+  Giá giao dịch PEPE_WIN: 0.65 → 0.60 → 0.70 → 0.60 → 0.68 / 0.72
+
+══════════════════════════════════════════════════════════════
+SETTLEMENT — War kết thúc, PEPE thắng
+
+  Pool (contract) đứng giữa xử lý tất cả:
+
+  T=3→T=7 — tạo share:
+    13 cặp × 1.0 SOL = 13.0 SOL vào pool
+    Phí 5%: 0.65 SOL → platform
+    Prize pool còn: 12.35 SOL → 13 shares × 0.95 SOL/share
+
+  T=8 — chuyển nhượng share qua pool:
+    G nạp 1.40 SOL → pool nhận, trừ 5% fee (0.07 SOL)
+    → Pool trả A: 0.646 SOL | B: 0.684 SOL
+    (Prize pool 13.0 SOL không đổi — chỉ đổi chủ share A/B → G)
+
+  Trả thưởng PEPE_WIN khi war kết thúc:
+    B: 1 share → 0.95 SOL
+    A: 2 share → 1.90 SOL
+    F: 3 share → 2.85 SOL
+    X: 5 share → 4.75 SOL
+    G: 2 share → 1.90 SOL
+    ─────────────────────
+    12.35 SOL ✓
+
+  WOJAK_WIN (C, E, D, Y, Z) → 0 SOL
+  Hoàn unmatched: X: 1.80 SOL | D: 0.60 SOL
+  Tổng platform thu: 0.65 + 0.07 = 0.72 SOL
+</div></code></pre>
+<h2 id="alt-text"><img src="image.png" alt="alt text"></h2>
+<h3 id="v%E1%BA%A5n-%C4%91%E1%BB%81-%22cold-start%22">Vấn đề: &quot;Cold Start&quot;</h3>
+<pre class="hljs"><code><div>[Orderbook lúc war mới mở — chưa ai đặt]
+
+User X đặt: MUA PEPE_WIN  @ 0.60  → chờ ai mua WOJAK_WIN @ 0.40
+User Y đặt: MUA WOJAK_WIN @ 0.20  → chờ ai mua PEPE_WIN  @ 0.80
+
+Kiểm tra: 0.60 + 0.20 = 0.80 ≠ 1.0  ← gap 0.20, không khớp
+War kết thúc sau 24h mà không có lệnh nào khớp → X và Y được hoàn tiền
+</div></code></pre>
+<p>Cần <strong>bot hoặc người Market Maker</strong> liên tục đặt lệnh cả 2 phía (vừa mua PEPE_WIN vừa mua WOJAK_WIN) để lúc nào cũng có lệnh chờ sẵn trên orderbook — người dùng vào là khớp được ngay, không phải ngồi chờ.</p>
+<h3 id="%C6%B0u-%C4%91i%E1%BB%83m">Ưu điểm</h3>
+<ul>
+<li>✅ Thị trường tự chơi với nhau và Platform không chịu rủi ro</li>
+<li>✅ Style pro, chuyên nghiệp</li>
+</ul>
+<h3 id="nh%C6%B0%E1%BB%A3c-%C4%91i%E1%BB%83m">Nhược điểm</h3>
+<ul>
+<li>❌ Nặng và phức tạp để triển khai</li>
+<li>❌ Cần MM (bot) để có thanh khoản</li>
+<li>❌ Nhiều tính toán phức tạp, cần test kĩ để tránh lỗ hổng.</li>
+</ul>
+<hr>
+<h2 id="m%C3%B4-h%C3%ACnh-4-platform-l%C3%A0m-nh%C3%A0-c%C3%A1i-house-betting">Mô hình 4: Platform làm nhà cái (House Betting)</h2>
+<h3 id="c%C3%A1ch-ho%E1%BA%A1t-%C4%91%E1%BB%99ng--t%E1%BB%ABng-b%C6%B0%E1%BB%9Bc">Cách hoạt động — từng bước</h3>
+<pre class="hljs"><code><div>Bước 1: Platform tự đưa odd:
+        PEPE: 50% → odds 1.85x
+        WOJAK: 50% → odds 1.85x
+        (Odds thấp hơn xác suất thật để platform có margin)
+
+Bước 2: User A đặt cược
+        User A cược 100 SOL vào WOJAK @ odds 2.1x
+
+Bước 3: Odds tự điều chỉnh
+        WOJAK được nhiều người cược → odds giảm xuống 1.8x
+        (Nhà cái tự bảo vệ bằng cách giảm hấp dẫn của phía đang được cược nhiều)
+
+Bước 4: Kết quả
+        WOJAK thắng → Alice nhận 210 SOL từ pool
+        PEPE thắng → 100 SOL của Alice ở lại pool (LP được chia)
+</div></code></pre>
+<h3 id="ai-ch%E1%BB%8Bu-r%E1%BB%A7i-ro">Ai chịu rủi ro?</h3>
+<p><strong>Platform</strong></p>
+<h3 id="%C6%B0u-%C4%91i%E1%BB%83m">Ưu điểm</h3>
+<ul>
+<li>✅ UX tốt nhất: instant, biết odds trước, không cần đối ứng</li>
+<li>✅ Giống bet thể thao</li>
+</ul>
+<h3 id="nh%C6%B0%E1%BB%A3c-%C4%91i%E1%BB%83m">Nhược điểm</h3>
+<ul>
+<li>❌ <strong>Nguy hiểm với meme coin</strong></li>
+<li>❌ Cần vốn để trả user</li>
+<li>❌ Thuần bet</li>
+</ul>
+<hr>
+<h2 id="k%E1%BA%BFt-lu%E1%BA%ADn--%C4%91%E1%BB%81-xu%E1%BA%A5t">Kết luận &amp; Đề xuất</h2>
+<blockquote>
+<p>*House betting nếu áp dụng cho kèo ngoài platform thì sẽ an toàn hơn.
+AMM nếu để creator tạo seed thì cộng thêm 1★ An toàn.</p>
+</blockquote>
+<h3 id="%C4%91i%E1%BB%83m-y%E1%BA%BFu-t%E1%BB%ABng-ph%C6%B0%C6%A1ng-%C3%A1n">Điểm yếu từng phương án</h3>
+<table>
+<thead>
+<tr>
+<th>Mô hình</th>
+<th>Điểm yếu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CLOB Orderbook</td>
+<td>Quá phức tạp, không có MM cho meme coin → orderbook trống</td>
+</tr>
+<tr>
+<td>AMM/LMSR</td>
+<td>LP chịu rủi ro, bị exploit bởi insider meme coin</td>
+</tr>
+<tr>
+<td>House betting</td>
+<td>Rủi ro nhất</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ph%C6%B0%C6%A1ng-%C3%A1n-%C4%91%E1%BB%81-xu%E1%BA%A5t-parimutuel-pool-v%E1%BB%9Bi-m%E1%BB%A9c-ph%C3%AD-th%E1%BA%A5p-2-3">Phương án đề xuất: Parimutuel Pool với mức phí thấp (2-3%)</h3>
+<hr>
+<p><strong>Cải tiến thêm — Time-Tranche:</strong></p>
+<pre class="hljs"><code><div>Cược sớm (0-8h đầu)   → nhân hệ số 1.2x Pool Shares ← khuyến khích vào sớm
+Cược bình thường      → hệ số 1.0x
+Cược muộn (2h cuối)   → nhân hệ số 0.8x Pool Shares ← hạn chế whale last-minute
+</div></code></pre>
+<blockquote>
+<p><strong>Ghi chú:</strong> Có thể xem xét kết hợp AMM nếu để creator tạo seed — tặng thêm 1 điểm an toàn cho AMM/LMSR.</p>
+</blockquote>
+
+</body>
+</html>

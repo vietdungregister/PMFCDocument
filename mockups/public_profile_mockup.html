@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Profile - PumpFun</title>
+    <style>
+        :root {
+            --primary: #10b981;
+            --accent: #ffffff;
+            --card: #1a1a2e;
+            --card2: #16213e;
+            --card-hover: #0f1729;
+            --card-boarder: #2d3748;
+            --bg: #0a0e1a;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-tertiary: #6b7280;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        /* Header */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            padding: 24px;
+            background: var(--card2);
+            border-radius: 16px;
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        .profile-info {
+            flex: 1;
+        }
+        
+        .username {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge.creator {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+        
+        .badge.whale {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+        
+        .display-name {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .wallet-address {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-tertiary);
+            font-family: monospace;
+        }
+        
+        .copy-btn {
+            padding: 4px 8px;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .copy-btn:hover {
+            background: var(--card-hover);
+            color: var(--primary);
+        }
+        
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            background: var(--card2);
+            padding: 8px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        
+        .tab:hover {
+            background: var(--card-hover);
+            color: var(--accent);
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Profile Info */
+        .info-section {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            margin-bottom: 16px;
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        
+        .info-grid {
+            display: grid;
+            gap: 16px;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .info-value {
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        
+        .info-value a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .info-value a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Token List */
+        .token-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .token-item {
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            gap: 16px;
+            align-items: center;
+            padding: 16px;
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .token-item:hover {
+            background: var(--card-hover);
+            border-color: var(--primary);
+        }
+        
+        .token-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .token-info {
+            flex: 1;
+        }
+        
+        .token-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .token-symbol {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .token-stats {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        
+        .token-balance {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .token-value {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        /* Privacy Message */
+        .privacy-message {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .privacy-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .privacy-message h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .privacy-message p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .empty-state p {
+            font-size: 14px;
+        }
+        
+        /* Order Item */
+        .order-item {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            margin-bottom: 12px;
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .order-type {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .order-type.buy {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+        }
+        
+        .order-type.sell {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .order-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .order-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .order-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .green { color: #10b981; }
+        .red { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="avatar">A</div>
+            <div class="profile-info">
+                <div class="username">
+                    <span>alice_trader</span>
+                    <span class="badge creator">👑 Creator</span>
+                    <span class="badge whale">🐋 Whale</span>
+                </div>
+                <div class="display-name">Alice - Meme Token Expert</div>
+                <div class="wallet-address">
+                    <span>7xK9mP3qLs8Nw2Rb5Vc4Hd6Jf9Kg1Yt3Xz7Qm2Wp5Rs8Tn</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats Overview -->
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-label">Portfolio Value</div>
+                <div class="stat-value">$45,280</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Tokens Created</div>
+                <div class="stat-value">3</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Trades</div>
+                <div class="stat-value">127</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Member Since</div>
+                <div class="stat-value">Jan 2025</div>
+            </div>
+        </div>
+        
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab(0)">Profile Info</button>
+            <button class="tab" onclick="showTab(1)">Holding Tokens</button>
+            <button class="tab" onclick="showTab(2)">Created Tokens</button>
+            <button class="tab" onclick="showTab(3)">Transaction History</button>
+        </div>
+        
+        <!-- Tab 1: Profile Info -->
+        <div class="tab-content active" id="tab-0">
+            <!-- Basic Info -->
+            <div class="info-section">
+                <div class="info-title">Basic Information</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Username</div>
+                        <div class="info-value">alice_trader</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Display Name</div>
+                        <div class="info-value">Alice - Meme Token Expert</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Bio</div>
+                        <div class="info-value">Passionate about discovering the next 100x meme token 🚀 Early supporter of DOGE and SHIB.</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Member Since</div>
+                        <div class="info-value">January 15, 2025</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Social Links -->
+            <div class="info-section">
+                <div class="info-title">Social Links</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Twitter/X</div>
+                        <div class="info-value"><a href="#" target="_blank">@alice_crypto</a></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Telegram</div>
+                        <div class="info-value"><a href="#" target="_blank">@alicetrader</a></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value" style="color: var(--text-tertiary);">Hidden</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Wallet Info -->
+            <div class="info-section">
+                <div class="info-title">Wallet Information</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Wallet Address</div>
+                        <div class="info-value" style="font-family: monospace; font-size: 12px;">
+                            7xK9mP3qLs8Nw2Rb5Vc4Hd6Jf9Kg1Yt3Xz7Qm2Wp5Rs8Tn
+                            <button class="copy-btn" style="margin-left: 8px;">Copy</button>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Total Transactions</div>
+                        <div class="info-value">127</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Activity Stats -->
+            <div class="info-section">
+                <div class="info-title">Activity Stats</div>
+                <div class="info-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="info-item">
+                        <div class="info-label">Tokens Held</div>
+                        <div class="info-value">8</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Tokens Created</div>
+                        <div class="info-value">3</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab 2: Holding Tokens -->
+        <div class="tab-content" id="tab-1">
+            <div class="token-list">
+                <div class="token-item">
+                    <div class="token-avatar"></div>
+                    <div class="token-info">
+                        <div class="token-name">Pepe Seed</div>
+                        <div class="token-symbol">PSEED • 50,000 tokens</div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">50,000</div>
+                        <div class="token-value">@$0.00123</div>
+                    </div>
+                </div>
+                
+                <div class="token-item">
+                    <div class="token-avatar" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                    <div class="token-info">
+                        <div class="token-name">Doge Killer</div>
+                        <div class="token-symbol">DOGEK • 125,000 tokens</div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">125,000</div>
+                        <div class="token-value">@$0.00035</div>
+                    </div>
+                </div>
+                
+                <div class="token-item">
+                    <div class="token-avatar" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                    <div class="token-info">
+                        <div class="token-name">Moon Token</div>
+                        <div class="token-symbol">MOON • 10,000 tokens</div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">10,000</div>
+                        <div class="token-value">@$0.0289</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab 3: Created Tokens -->
+        <div class="tab-content" id="tab-2">
+            <div class="token-list">
+                <div class="token-item">
+                    <div class="token-avatar" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"></div>
+                    <div class="token-info">
+                        <div class="token-name">Alice Token</div>
+                        <div class="token-symbol">ALICE</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+                            Created: 1 week ago • <span style="color: #f59e0b;">Graduated</span>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">MC: $125.5K</div>
+                        <div class="token-value">845 holders</div>
+                    </div>
+                </div>
+                
+                <div class="token-item">
+                    <div class="token-avatar" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);"></div>
+                    <div class="token-info">
+                        <div class="token-name">Crypto Queen</div>
+                        <div class="token-symbol">CQUEEN</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+                            Created: 2 weeks ago • <span style="color: var(--primary);">Active</span>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">MC: $67.2K</div>
+                        <div class="token-value">512 holders</div>
+                    </div>
+                </div>
+                
+                <div class="token-item">
+                    <div class="token-avatar" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);"></div>
+                    <div class="token-info">
+                        <div class="token-name">Rocket Ship</div>
+                        <div class="token-symbol">ROCKET</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+                            Created: 1 month ago • <span style="color: var(--primary);">Active</span>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">MC: $28.9K</div>
+                        <div class="token-value">234 holders</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab 4: Transaction History -->
+        <div class="tab-content" id="tab-3">
+            <div class="token-list">
+                <div class="token-item">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div class="order-type buy" style="width: 60px; text-align: center;">BUY</div>
+                        <div class="token-avatar" style="width: 40px; height: 40px;"></div>
+                        <div class="token-info">
+                            <div class="token-name">Pepe Seed</div>
+                            <div class="token-symbol">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">+10,000 PSEED</div>
+                        <div class="token-value">0.5 SOL</div>
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">7xK9...mP3q</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="token-item">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div class="order-type sell" style="width: 60px; text-align: center;">SELL</div>
+                        <div class="token-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                        <div class="token-info">
+                            <div class="token-name">Doge Killer</div>
+                            <div class="token-symbol">5 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance red">-25,000 DOGEK</div>
+                        <div class="token-value">0.875 SOL</div>
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">3aP2...kL9x</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="token-item">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div class="order-type buy" style="width: 60px; text-align: center;">BUY</div>
+                        <div class="token-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                        <div class="token-info">
+                            <div class="token-name">Moon Token</div>
+                            <div class="token-symbol">1 day ago</div>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">+5,000 MOON</div>
+                        <div class="token-value">0.145 SOL</div>
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">9bN4...rT7m</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="token-item">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div class="order-type buy" style="width: 60px; text-align: center;">BUY</div>
+                        <div class="token-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"></div>
+                        <div class="token-info">
+                            <div class="token-name">Alice Token</div>
+                            <div class="token-symbol">2 days ago</div>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">+100,000 ALICE</div>
+                        <div class="token-value">2.0 SOL</div>
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">5mK3...wP8q</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="token-item">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div class="order-type sell" style="width: 60px; text-align: center;">SELL</div>
+                        <div class="token-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                        <div class="token-info">
+                            <div class="token-name">Moon Token</div>
+                            <div class="token-symbol">3 days ago</div>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance red">-5,000 MOON</div>
+                        <div class="token-value">0.175 SOL</div>
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">2cL7...hN5k</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(index) {
+            // Hide all tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Show selected tab
+            document.querySelectorAll('.tab')[index].classList.add('active');
+            document.getElementById('tab-' + index).classList.add('active');
+        }
+    </script>
+</body>
+</html>

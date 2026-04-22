@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - PumpFun</title>
+    <style>
+        :root {
+            --primary: #10b981;
+            --accent: #ffffff;
+            --card: #1a1a2e;
+            --card2: #16213e;
+            --card-hover: #0f1729;
+            --card-boarder: #2d3748;
+            --bg: #0a0e1a;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-tertiary: #6b7280;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 40px;
+            padding: 24px;
+            background: var(--card2);
+            border-radius: 16px;
+            border: 1px solid var(--card-boarder);
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .username {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .display-name {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .wallet-address {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-tertiary);
+            font-family: monospace;
+        }
+
+        .copy-btn {
+            padding: 4px 8px;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .copy-btn:hover {
+            background: var(--card-hover);
+            color: var(--primary);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            background: var(--card2);
+            padding: 8px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            background: var(--card-hover);
+            color: var(--accent);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-change {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .green {
+            color: #10b981;
+        }
+
+        .red {
+            color: #ef4444;
+        }
+
+        /* Token List */
+        .token-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .token-item {
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            gap: 16px;
+            align-items: center;
+            padding: 16px;
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .token-item:hover {
+            background: var(--card-hover);
+            border-color: var(--primary);
+        }
+
+        .token-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .token-info {
+            flex: 1;
+        }
+
+        .token-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .token-symbol {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .token-stats {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .token-balance {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .token-value {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .token-pnl {
+            font-size: 12px;
+        }
+
+        /* Order Item */
+        .order-item {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            margin-bottom: 12px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .order-type {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .order-type.buy {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+        }
+
+        .order-type.sell {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .order-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .order-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .order-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--card2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-danger {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .char-counter {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* Avatar Section */
+        .avatar-section {
+            margin-bottom: 32px;
+        }
+
+        .avatar-upload {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .file-hint {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: 6px;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .form-column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Toggle Section */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: var(--card2);
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        .toggle-info {
+            flex: 1;
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .toggle-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            flex-shrink: 0;
+            display: inline-block;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #4b5563;
+            border-radius: 13px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle-switch input:checked+.toggle-slider {
+            background: var(--primary);
+        }
+
+        .toggle-switch input:checked+.toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            padding: 14px 24px;
+            font-size: 15px;
+        }
+
+        .btn-secondary {
+            background: var(--card);
+            color: var(--text-secondary);
+            border: 1px solid var(--card-boarder);
+        }
+
+        .btn-secondary:hover {
+            background: var(--card-hover);
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .avatar-upload {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="avatar">D</div>
+            <div class="profile-info">
+                <div class="username">dungdev</div>
+                <div class="display-name">Dung - Crypto Trader</div>
+                <div class="wallet-address">
+                    <span>7xK9...mP3q</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab(0)">Holding Tokens</button>
+            <button class="tab" onclick="showTab(1)">Created Tokens</button>
+            <button class="tab" onclick="showTab(2)">Transaction History</button>
+            <button class="tab" onclick="showTab(3)">Edit Profile</button>
+            <button class="tab" onclick="showTab(4)">Limit Orders</button>
+        </div>
+
+        <!-- Tab 1: Holding Tokens -->
+        <div class="tab-content active" id="tab-0">
+            <!-- Portfolio Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Value</div>
+                    <div class="stat-value">$12,458</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">24h Change</div>
+                    <div class="stat-value green">+$342</div>
+                    <div class="stat-change green">+2.82%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total P&L</div>
+                    <div class="stat-value green">+$2,145</div>
+                    <div class="stat-change green">+20.8%</div>
+                </div>
+            </div>
+
+            <!-- Token List -->
+            <div class="token-list">
+                <div class="token-item">
+                    <div class="token-avatar"></div>
+                    <div class="token-info">
+                        <div class="token-name">Pepe Seed</div>
+                        <div class="token-symbol">PSEED • 50,000 tokens</div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">$5,245</div>
+                        <div class="token-value">@$0.00123</div>
+                        <div class="token-pnl green">+$845 (+19.2%)</div>
+                    </div>
+                </div>
+
+                <div class="token-item">
+                    <div class="token-avatar" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    </div>
+                    <div class="token-info">
+                        <div class="token-name">Doge Killer</div>
+                        <div class="token-symbol">DOGEK • 125,000 tokens</div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">$4,320</div>
+                        <div class="token-value">@$0.00035</div>
+                        <div class="token-pnl green">+$520 (+13.7%)</div>
+                    </div>
+                </div>
+
+                <div class="token-item">
+                    <div class="token-avatar" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    </div>
+                    <div class="token-info">
+                        <div class="token-name">Moon Token</div>
+                        <div class="token-symbol">MOON • 10,000 tokens</div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">$2,893</div>
+                        <div class="token-value">@$0.0289</div>
+                        <div class="token-pnl red">-$107 (-3.6%)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Created Tokens -->
+        <div class="tab-content" id="tab-1">
+            <div class="token-list">
+                <div class="token-item">
+                    <div class="token-avatar" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                    </div>
+                    <div class="token-info">
+                        <div class="token-name">My First Token</div>
+                        <div class="token-symbol">MFT</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+                            Created: 3 days ago • <span style="color: var(--primary);">Active</span>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">MC: $45.2K</div>
+                        <div class="token-value">234 holders</div>
+                        <div class="token-pnl">Vol: $12.8K</div>
+                    </div>
+                </div>
+
+                <div class="token-item">
+                    <div class="token-avatar" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+                    </div>
+                    <div class="token-info">
+                        <div class="token-name">Dung Coin</div>
+                        <div class="token-symbol">DUNG</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+                            Created: 1 week ago • <span style="color: #f59e0b;">Graduated</span>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">MC: $72.5K</div>
+                        <div class="token-value">512 holders</div>
+                        <div class="token-pnl">Vol: $28.3K</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Transaction History -->
+        <div class="tab-content" id="tab-2">
+            <div class="token-list">
+                <div class="token-item">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div class="order-type buy" style="width: 60px; text-align: center;">BUY</div>
+                        <div class="token-avatar" style="width: 40px; height: 40px;"></div>
+                        <div class="token-info">
+                            <div class="token-name">Pepe Seed</div>
+                            <div class="token-symbol">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">+10,000 PSEED</div>
+                        <div class="token-value">0.5 SOL</div>
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">7xK9...mP3q</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="token-item">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div class="order-type sell" style="width: 60px; text-align: center;">SELL</div>
+                        <div class="token-avatar"
+                            style="width: 40px; height: 40px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        </div>
+                        <div class="token-info">
+                            <div class="token-name">Doge Killer</div>
+                            <div class="token-symbol">5 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance red">-25,000 DOGEK</div>
+                        <div class="token-value">0.875 SOL</div>
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">3aP2...kL9x</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="token-item">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div class="order-type buy" style="width: 60px; text-align: center;">BUY</div>
+                        <div class="token-avatar"
+                            style="width: 40px; height: 40px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        </div>
+                        <div class="token-info">
+                            <div class="token-name">Moon Token</div>
+                            <div class="token-symbol">1 day ago</div>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">+5,000 MOON</div>
+                        <div class="token-value">0.145 SOL</div>
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">9bN4...rT7m</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="token-item">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div class="order-type buy" style="width: 60px; text-align: center;">BUY</div>
+                        <div class="token-avatar"></div>
+                        <div class="token-info">
+                            <div class="token-name">Pepe Seed</div>
+                            <div class="token-symbol">2 days ago</div>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance">+40,000 PSEED</div>
+                        <div class="token-value">2.0 SOL</div>
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">5mK3...wP8q</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="token-item">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div class="order-type sell" style="width: 60px; text-align: center;">SELL</div>
+                        <div class="token-avatar"
+                            style="width: 40px; height: 40px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        </div>
+                        <div class="token-info">
+                            <div class="token-name">Moon Token</div>
+                            <div class="token-symbol">3 days ago</div>
+                        </div>
+                    </div>
+                    <div class="token-stats">
+                        <div class="token-balance red">-5,000 MOON</div>
+                        <div class="token-value">0.175 SOL</div>
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">2cL7...hN5k</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Edit Profile -->
+        <div class="tab-content" id="tab-3">
+            <!-- Avatar Section -->
+            <div class="avatar-section">
+                <label class="form-label">Avatar</label>
+                <div class="avatar-upload">
+                    <div class="avatar">D</div>
+                    <div class="avatar-info">
+                        <button class="btn btn-primary">Change Avatar</button>
+                        <div class="file-hint">Max 5MB, JPG/PNG/GIF</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Grid -->
+            <div class="form-grid">
+                <!-- Left Column -->
+                <div class="form-column">
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label class="form-label">Username * (One-time only)</label>
+                        <input type="text" class="form-input" value="dungdev" disabled>
+                        <div class="form-hint">🔒 Cannot be changed</div>
+                    </div>
+
+                    <!-- Display Name -->
+                    <div class="form-group">
+                        <label class="form-label">Display Name * (One-time only)</label>
+                        <input type="text" class="form-input" value="Dung - Crypto Trader">
+                        <div class="form-hint">🔒 Can only be set once</div>
+                    </div>
+
+                    <!-- Bio -->
+                    <div class="form-group">
+                        <label class="form-label">Bio</label>
+                        <textarea class="form-input" placeholder="Tell us about yourself" maxlength="200"></textarea>
+                        <div class="char-counter"><span id="charCount">0</span> / 200</div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="form-column">
+                    <!-- Twitter -->
+                    <div class="form-group">
+                        <label class="form-label">Twitter/X</label>
+                        <input type="text" class="form-input" placeholder="https://twitter.com/username">
+                    </div>
+
+                    <!-- Telegram -->
+                    <div class="form-group">
+                        <label class="form-label">Telegram</label>
+                        <input type="text" class="form-input" placeholder="@username or URL">
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="your@email.com">
+                    </div>
+
+                    <!-- Wallet -->
+                    <div class="form-group">
+                        <label class="form-label">Wallet Address</label>
+                        <input type="text" class="form-input" value="7xK9...mP3q" disabled>
+                        <div class="form-hint">Cannot be changed</div>
+                    </div>
+
+                    <!-- Privacy Toggle -->
+                    <div class="form-group">
+                        <label class="form-label">Privacy Settings</label>
+                        <div class="toggle-group">
+                            <div class="toggle-info">
+                                <div class="toggle-label" id="privacyLabel">Public</div>
+                                <div class="toggle-desc">Anyone can view your profile</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="privacyToggle" onchange="togglePrivacy()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary">Cancel</button>
+                <button class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+
+        <!-- Tab 5: Limit Orders -->
+        <div class="tab-content" id="tab-4">
+            <div class="order-item">
+                <div class="order-header">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 12px; cursor: pointer;"
+                            onclick="alert('Navigate to Token Detail')">
+                            <div class="token-avatar" style="width: 40px; height: 40px;"></div>
+                            <div>
+                                <div class="token-name">Pepe Seed (PSEED)</div>
+                                <div class="order-type buy">BUY ORDER</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 12px; color: var(--text-secondary);">Created 2h ago</div>
+                    </div>
+                </div>
+
+                <div class="order-details">
+                    <div class="order-detail">
+                        <div class="order-label">Amount</div>
+                        <div class="order-value">1.0 SOL</div>
+                    </div>
+                    <div class="order-detail">
+                        <div class="order-label">Target Price</div>
+                        <div class="order-value">$0.00150</div>
+                    </div>
+                    <div class="order-detail">
+                        <div class="order-label">Current Price</div>
+                        <div class="order-value">$0.00123</div>
+                    </div>
+                </div>
+
+                <div class="order-actions">
+                    <button class="btn btn-danger">Cancel Order</button>
+                </div>
+            </div>
+
+            <div class="order-item">
+                <div class="order-header">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 12px; cursor: pointer;"
+                            onclick="alert('Navigate to Token Detail')">
+                            <div class="token-avatar"
+                                style="width: 40px; height: 40px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                            </div>
+                            <div>
+                                <div class="token-name">Doge Killer (DOGEK)</div>
+                                <div class="order-type sell">SELL ORDER</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 12px; color: var(--text-secondary);">Created 5h ago</div>
+                    </div>
+                </div>
+
+                <div class="order-details">
+                    <div class="order-detail">
+                        <div class="order-label">Amount</div>
+                        <div class="order-value">50,000 DOGEK</div>
+                    </div>
+                    <div class="order-detail">
+                        <div class="order-label">Target Price</div>
+                        <div class="order-value">$0.00050</div>
+                    </div>
+                    <div class="order-detail">
+                        <div class="order-label">Current Price</div>
+                        <div class="order-value">$0.00035</div>
+                    </div>
+                </div>
+
+                <div class="order-actions">
+                    <button class="btn btn-danger">Cancel Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Character counter
+        const textarea = document.querySelector('textarea');
+        const charCount = document.getElementById('charCount');
+
+        if (textarea && charCount) {
+            textarea.addEventListener('input', function () {
+                charCount.textContent = this.value.length;
+            });
+        }
+
+        // Privacy toggle
+        function togglePrivacy() {
+            const toggle = document.getElementById('privacyToggle');
+            const label = document.getElementById('privacyLabel');
+            const desc = label.nextElementSibling;
+
+            if (toggle.checked) {
+                label.textContent = 'Private';
+                desc.textContent = 'Only you can view your profile';
+            } else {
+                label.textContent = 'Public';
+                desc.textContent = 'Anyone can view your profile';
+            }
+        }
+
+        function showTab(index) {
+            // Hide all tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Show selected tab
+            document.querySelectorAll('.tab')[index].classList.add('active');
+            document.getElementById('tab-' + index).classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

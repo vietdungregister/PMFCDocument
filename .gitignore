@@ -1,0 +1,17 @@
+# AI Agent internal files (không cần sync)
+.gemini/
+.claude/
+.agent/skills/
+
+# Temp/lock files của Office
+~$*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node (nếu sau này có code)
+node_modules/
+.env
+.env.local

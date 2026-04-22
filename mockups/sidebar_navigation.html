@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Navigation - PumpFun</title>
+    <style>
+        :root {
+            --primary: #10b981;
+            --accent: #ffffff;
+            --card: #1a1a2e;
+            --card2: #16213e;
+            --card-hover: #0f1729;
+            --card-boarder: #2d3748;
+            --bg: #0a0e1a;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-tertiary: #6b7280;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--card2);
+            border-right: 1px solid var(--card-boarder);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .logo {
+            padding: 0 20px 20px 20px;
+            border-bottom: 1px solid var(--card-boarder);
+            margin-bottom: 20px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .nav-section {
+            margin-bottom: 24px;
+        }
+        
+        .nav-section-title {
+            padding: 0 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .nav-item:hover {
+            background: var(--card-hover);
+            color: var(--accent);
+        }
+        
+        .nav-item.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .nav-icon {
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .user-section {
+            margin-top: auto;
+            padding: 20px;
+            border-top: 1px solid var(--card-boarder);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--card);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .user-profile:hover {
+            background: var(--card-hover);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .user-wallet {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            font-family: monospace;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 40px;
+        }
+        
+        .page-header {
+            margin-bottom: 32px;
+        }
+        
+        .page-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        
+        .content-placeholder {
+            background: var(--card);
+            padding: 60px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Logo -->
+        <div class="logo">
+            <div class="logo-text">🚀 PumpFun</div>
+        </div>
+        
+        <!-- Main Navigation -->
+        <div class="nav-section">
+            <div class="nav-section-title">Main</div>
+            <a href="#" class="nav-item active">
+                <span class="nav-icon">🏠</span>
+                <span>Token List</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🏆</span>
+                <span>Leaderboard</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">➕</span>
+                <span>Create Token</span>
+            </a>
+        </div>
+        
+        <!-- Personal -->
+        <div class="nav-section">
+            <div class="nav-section-title">Personal</div>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span>My Profile</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span>Creator Dashboard</span>
+            </a>
+        </div>
+        
+        <!-- Rewards -->
+        <div class="nav-section">
+            <div class="nav-section-title">Earn</div>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🎁</span>
+                <span>Rewards</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🤝</span>
+                <span>Referrals</span>
+            </a>
+        </div>
+        
+        <!-- User Profile Section -->
+        <div class="user-section">
+            <div class="user-profile">
+                <div class="user-avatar">D</div>
+                <div class="user-info">
+                    <div class="user-name">dungdev</div>
+                    <div class="user-wallet">7xK9...mP3q</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Welcome to PumpFun</h1>
+            <p class="page-subtitle">Discover and trade meme tokens on Solana</p>
+        </div>
+        
+        <div class="content-placeholder">
+            <h2>Main Content Area</h2>
+            <p>Your page content goes here</p>
+        </div>
+    </div>
+</body>
+</html>

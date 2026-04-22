@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FR-012: Meme Token War</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0d0d0d; color: #e0e0e0; }
+
+  /* ── TABS ── */
+  .top-tabs { display: flex; gap: 2px; background: #111; padding: 12px 20px 0; border-bottom: 1px solid #222; }
+  .top-tab { padding: 10px 22px; cursor: pointer; border-radius: 8px 8px 0 0; font-size: 13px; font-weight: 600; color: #888; background: #1a1a1a; border: 1px solid #222; border-bottom: none; transition: all .2s; }
+  .top-tab.active { background: #1e1e2e; color: #fff; border-color: #333; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── SPEC ── */
+  .spec { max-width: 860px; margin: 32px auto; padding: 0 24px 60px; }
+  .spec h1 { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .spec .subtitle { color: #666; font-size: 13px; margin-bottom: 32px; }
+  .spec h2 { font-size: 15px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: .8px; margin: 28px 0 12px; }
+  .spec h3 { font-size: 14px; font-weight: 600; color: #ccc; margin: 16px 0 8px; }
+  .spec p { font-size: 14px; color: #bbb; line-height: 1.7; margin-bottom: 10px; }
+  .spec ul { padding-left: 18px; }
+  .spec ul li { font-size: 14px; color: #bbb; line-height: 1.8; }
+  .spec pre { background: #161622; border: 1px solid #2a2a3a; border-radius: 8px; padding: 16px; font-size: 13px; color: #c9d1d9; line-height: 1.7; overflow-x: auto; margin: 10px 0 16px; font-family: 'Consolas', monospace; }
+  .spec table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  .spec th { background: #1a1a2e; color: #888; padding: 8px 12px; text-align: left; font-weight: 600; border-bottom: 1px solid #2a2a3a; }
+  .spec td { padding: 8px 12px; border-bottom: 1px solid #1e1e1e; color: #bbb; }
+  .spec td:first-child { color: #e0e0e0; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .badge.todo { background: #2a1a1a; color: #e05c5c; }
+  .badge.ok { background: #1a2a1a; color: #5ce05c; }
+  .divider { border: none; border-top: 1px solid #1e1e1e; margin: 24px 0; }
+
+  /* ── MOCK SHELL ── */
+  .mock-shell { display: flex; height: calc(100vh - 50px); }
+  .sidebar { width: 200px; background: #111; border-right: 1px solid #1e1e1e; padding: 16px 0; flex-shrink: 0; }
+  .sidebar-logo { padding: 0 16px 16px; font-size: 15px; font-weight: 800; color: #fff; border-bottom: 1px solid #1e1e1e; margin-bottom: 8px; }
+  .sidebar-logo span { color: #7c6af7; }
+  .nav-section { padding: 8px 16px 4px; font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 1px; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 16px; font-size: 13px; color: #888; cursor: pointer; transition: all .15s; }
+  .nav-item:hover { background: #1a1a1a; color: #ccc; }
+  .nav-item.active { background: #1e1e2e; color: #fff; border-right: 2px solid #7c6af7; }
+  .nav-badge { background: #ff4f4f; color: #fff; font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 10px; margin-left: auto; }
+  .mock-body { flex: 1; overflow-y: auto; background: #0d0d0d; }
+
+  /* ── WARS LIST ── */
+  .wars-header { padding: 24px 28px 0; display: flex; align-items: center; justify-content: space-between; }
+  .wars-header h2 { font-size: 20px; font-weight: 700; }
+  .wars-header h2 span { color: #ff4f4f; }
+  .wars-tabs { display: flex; gap: 4px; padding: 16px 28px; }
+  .wars-tab { padding: 7px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #222; color: #666; background: transparent; }
+  .wars-tab.active { background: #ff4f4f22; color: #ff4f4f; border-color: #ff4f4f44; }
+  .wars-grid { padding: 0 28px 40px; display: flex; flex-direction: column; gap: 12px; }
+
+  /* WAR CARD */
+  .war-card { background: #141420; border: 1px solid #2a2a3a; border-radius: 12px; padding: 20px; cursor: pointer; transition: border-color .2s; }
+  .war-card:hover { border-color: #444; }
+  .war-card.live { border-left: 3px solid #ff4f4f; }
+  .war-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .live-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #ff4f4f; }
+  .live-dot { width: 7px; height: 7px; background: #ff4f4f; border-radius: 50%; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .countdown { font-size: 13px; font-weight: 700; color: #888; font-family: monospace; }
+  .war-tokens { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .war-token { display: flex; align-items: center; gap: 8px; flex: 1; }
+  .war-token.right { flex-direction: row-reverse; }
+  .token-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .token-info { flex: 1; }
+  .token-name { font-size: 14px; font-weight: 700; color: #fff; }
+  .token-vol { font-size: 12px; color: #666; }
+  .war-token.right .token-info { text-align: right; }
+  .vs { font-size: 16px; font-weight: 900; color: #444; flex-shrink: 0; }
+  .battle-bar-wrap { margin-bottom: 12px; }
+  .battle-bar { height: 8px; background: #1e1e2e; border-radius: 4px; overflow: hidden; display: flex; }
+  .bar-a { background: linear-gradient(90deg, #4fc3f7, #0288d1); border-radius: 4px 0 0 4px; transition: width .5s ease; }
+  .bar-b { background: linear-gradient(90deg, #ef5350, #ff7043); border-radius: 0 4px 4px 0; transition: width .5s ease; }
+  .bar-labels { display: flex; justify-content: space-between; margin-top: 6px; font-size: 12px; font-weight: 700; }
+  .bar-labels .a { color: #4fc3f7; }
+  .bar-labels .b { color: #ef5350; }
+  .war-footer { display: flex; align-items: center; justify-content: space-between; }
+  .prize-pool { font-size: 13px; color: #f0c040; font-weight: 700; }
+  .prize-pool span { font-size: 11px; color: #888; font-weight: 400; }
+  .participants { font-size: 12px; color: #555; }
+  .join-btn { padding: 7px 18px; border-radius: 8px; background: #ff4f4f22; color: #ff4f4f; border: 1px solid #ff4f4f44; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .join-btn:hover { background: #ff4f4f33; }
+
+  /* ── WAR DETAIL ── */
+  .detail-back { padding: 20px 28px 0; font-size: 13px; color: #666; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .detail-back:hover { color: #aaa; }
+  .detail-header { padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; }
+  .detail-title { font-size: 18px; font-weight: 700; }
+  .detail-countdown { font-size: 22px; font-weight: 800; color: #ff4f4f; font-family: monospace; }
+  .detail-countdown small { font-size: 12px; color: #666; display: block; text-align: center; font-family: sans-serif; font-weight: 400; }
+
+  .arena { padding: 0 28px 20px; display: grid; grid-template-columns: 1fr 260px 1fr; gap: 16px; align-items: start; }
+
+  .team-card { background: #141420; border: 1px solid #2a2a3a; border-radius: 12px; padding: 20px; }
+  .team-card.team-a { border-top: 3px solid #4fc3f7; }
+  .team-card.team-b { border-top: 3px solid #ef5350; }
+  .team-avatar { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 10px; }
+  .team-name { font-size: 18px; font-weight: 800; margin-bottom: 2px; }
+  .team-symbol { font-size: 12px; color: #666; margin-bottom: 12px; }
+  .team-stat { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #1e1e1e; font-size: 13px; }
+  .team-stat:last-of-type { border: none; }
+  .stat-label { color: #666; }
+  .stat-val { font-weight: 700; color: #fff; }
+  .stat-val.up { color: #5ce05c; }
+
+  .center-panel { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .vs-big { font-size: 32px; font-weight: 900; color: #333; }
+  .big-bar-wrap { width: 100%; }
+  .big-bar { height: 20px; background: #1e1e2e; border-radius: 10px; overflow: hidden; display: flex; margin-bottom: 8px; }
+  .big-bar-a { background: linear-gradient(90deg, #4fc3f7, #0288d1); transition: width .5s; }
+  .big-bar-b { background: linear-gradient(90deg, #ef5350, #ff7043); transition: width .5s; }
+  .big-bar-labels { display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; }
+  .big-bar-labels .a { color: #4fc3f7; }
+  .big-bar-labels .b { color: #ef5350; }
+  .pool-info { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 10px; padding: 14px; width: 100%; text-align: center; }
+  .pool-sol { font-size: 22px; font-weight: 800; color: #f0c040; }
+  .pool-label { font-size: 11px; color: #666; margin-top: 2px; }
+  .pool-rake { font-size: 11px; color: #444; margin-top: 4px; }
+
+  /* BET PANEL */
+  .bet-panel { background: #141420; border: 1px solid #2a2a3a; border-radius: 12px; padding: 20px; margin: 0 28px 20px; }
+  .bet-panel h3 { font-size: 14px; font-weight: 700; margin-bottom: 16px; color: #aaa; }
+  .bet-sides { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .bet-side { border: 1px solid #2a2a3a; border-radius: 10px; padding: 16px; }
+  .bet-side.blue { border-color: #0288d155; }
+  .bet-side.red { border-color: #ef535055; }
+  .bet-side-label { font-size: 12px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .bet-side.blue .bet-side-label { color: #4fc3f7; }
+  .bet-side.red .bet-side-label { color: #ef5350; }
+  .bet-input-wrap { display: flex; align-items: center; background: #0d0d0d; border: 1px solid #2a2a3a; border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
+  .bet-input { flex: 1; background: transparent; border: none; padding: 10px 12px; font-size: 15px; font-weight: 700; color: #fff; outline: none; }
+  .bet-input-unit { padding: 0 12px; color: #666; font-size: 13px; }
+  .bet-presets { display: flex; gap: 6px; margin-bottom: 12px; }
+  .preset-btn { padding: 4px 10px; border-radius: 6px; border: 1px solid #2a2a3a; background: transparent; color: #666; font-size: 11px; cursor: pointer; }
+  .preset-btn:hover { border-color: #444; color: #aaa; }
+  .bet-est { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 14px; }
+  .bet-est-label { color: #666; }
+  .bet-est-val { font-weight: 700; }
+  .bet-side.blue .bet-est-val { color: #4fc3f7; }
+  .bet-side.red .bet-est-val { color: #ef5350; }
+  .bet-btn { width: 100%; padding: 11px; border-radius: 8px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; }
+  .bet-btn.blue { background: #4fc3f722; color: #4fc3f7; border: 1px solid #4fc3f744; }
+  .bet-btn.blue:hover { background: #4fc3f733; }
+  .bet-btn.red { background: #ef535022; color: #ef5350; border: 1px solid #ef535044; }
+  .bet-btn.red:hover { background: #ef535033; }
+
+  /* LIVE FEED */
+  .live-feed { margin: 0 28px 40px; }
+  .live-feed h3 { font-size: 13px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px; }
+  .feed-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #141414; font-size: 13px; }
+  .feed-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .feed-dot.a { background: #4fc3f7; }
+  .feed-dot.b { background: #ef5350; }
+  .feed-user { color: #888; }
+  .feed-user strong { color: #ccc; }
+  .feed-amount { margin-left: auto; font-weight: 700; }
+  .feed-amount.a { color: #4fc3f7; }
+  .feed-amount.b { color: #ef5350; }
+  .feed-time { color: #444; font-size: 11px; }
+
+  /* UPCOMING CARD */
+  .upcoming-card { background: #141420; border: 1px solid #2a2a3a; border-radius: 12px; padding: 20px; opacity: .7; }
+  .upcoming-badge { font-size: 11px; font-weight: 700; color: #f0c040; background: #f0c04022; padding: 3px 8px; border-radius: 4px; margin-bottom: 12px; display: inline-block; }
+  .upcoming-starts { font-size: 12px; color: #555; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #111; }
+  ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ TOP TABS -->
+<div class="top-tabs">
+  <div class="top-tab active" onclick="switchTab('spec')">📋 BA Spec</div>
+  <div class="top-tab" onclick="switchTab('list')">⚔️ Wars List</div>
+  <div class="top-tab" onclick="switchTab('detail')">🔥 War Detail</div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: SPEC -->
+<div id="tab-spec" class="tab-content active">
+<div class="spec">
+  <h1>FR-012: Meme Token War</h1>
+  <p class="subtitle">Informal BA — team internal read</p>
+
+  <hr class="divider">
+
+  <h2>Ý tưởng</h2>
+  <p>Platform chọn 2 token đấu nhau trong X tiếng. Đo xem token nào được <strong>mua nhiều SOL hơn</strong> (BUY volume) trong thời gian đó — token đó thắng.</p>
+  <p>User muốn tham gia thì đặt cược vào bên mình tin. Phe thua trả tiền cho phe thắng. Platform ăn rake <strong>5%</strong>.</p>
+
+  <hr class="divider">
+
+  <h2>Cơ chế pari-mutuel</h2>
+  <pre>War: DOGE vs PEPE — 6 tiếng
+
+User đặt cược vào bên mình chọn bất kỳ lúc nào trong war
+
+Kết thúc:
+  Team DOGE: 80 người đặt tổng 8 SOL
+  Team PEPE: 50 người đặt tổng 5 SOL
+  Total pool: 13 SOL
+
+  Platform rake 5% = 0.65 SOL
+  Remaining: 12.35 SOL
+
+  PEPE thắng (BUY volume nhiều hơn):
+    → 50 người PEPE chia 12.35 SOL theo tỷ lệ % tiền cược
+    → Người đặt 0.1 SOL → nhận 0.1/5 × 12.35 = 0.247 SOL (~2.47x)
+
+  DOGE thua → mất tiền cược</pre>
+
+  <p>Estimated payout hiển thị real-time, cập nhật liên tục khi có người vào. User thấy "nếu vào PEPE lúc này → est. ~2.47x" — không cố định nhưng có tham chiếu rõ ràng.</p>
+
+  <hr class="divider">
+
+  <h2>Thắng thua dựa vào gì</h2>
+  <p><strong>BUY volume</strong> — tổng SOL được dùng để MUA token trong thời gian war diễn ra. Không tính SELL.</p>
+  <ul>
+    <li>Đơn giản: "phe nào mua nhiều hơn thắng"</li>
+    <li>Tạo pressure mua thật — không phải chỉ vote</li>
+    <li>Kịch tính vì bar thay đổi theo từng giao dịch</li>
+    <li>Platform thu thêm trading fee từ volume này</li>
+  </ul>
+
+  <hr class="divider">
+
+  <h2>Revenue</h2>
+  <pre>Platform rake 5% trên tổng pool — bất kể ai thắng, không chịu rủi ro.
+
+War 13 SOL pool → rake = 0.65 SOL
+10 wars/ngày → ~6.5 SOL/ngày (~$975)
+
+Cộng thêm: trading fee tăng do war kích volume
+→ Con số thực cao hơn nhiều</pre>
+
+  <hr class="divider">
+
+  <h2>Flow</h2>
+  <pre>1. Platform tạo war: chọn 2 token, set duration
+2. War hiện trên trang Wars List — user thấy, vào đặt cược
+3. Hết giờ → system đo BUY volume 2 token trong war period
+4. Xác định token thắng → payout tự động chia cho bên thắng</pre>
+
+  <hr class="divider">
+
+  <h2>Edge cases</h2>
+  <table>
+    <tr><th>Tình huống</th><th>Xử lý</th></tr>
+    <tr><td>Một bên không có ai cược</td><td>Hủy war, hoàn toàn bộ tiền bên kia</td></tr>
+    <tr><td>2 bên BUY volume bằng nhau</td><td>Hoàn tiền tất cả, platform không ăn rake</td></tr>
+    <tr><td>Pool quá nhỏ (&lt; 0.5 SOL)</td><td>War vẫn chạy, rake nhỏ thì thôi</td></tr>
+    <tr><td>Wash trading để thắng</td><td><span class="badge todo">V2</span> chưa handle, note lại</td></tr>
+    <tr><td>Token bị rug trong lúc war</td><td><span class="badge todo">V2</span> cần rule hủy war</td></tr>
+  </table>
+
+  <hr class="divider">
+
+  <h2>Chưa quyết định</h2>
+  <ul>
+    <li>Duration options: 1h / 6h / 24h — test xem cái nào người ta thích nhất</li>
+    <li>Min cược: chưa set</li>
+    <li>Ai có quyền tạo war: chỉ platform? hay sau này mở cho creator?</li>
+    <li>Algorithm auto-chọn cặp token (theo market cap gần nhau, volume active)</li>
+    <li>Notification khi war mà user đang hold token bị kéo vào</li>
+  </ul>
+
+  <hr class="divider">
+
+  <h2>Vị trí trong product</h2>
+  <table>
+    <tr><th>Điểm tích hợp</th><th>Nội dung</th></tr>
+    <tr><td>Sidebar</td><td>⚔️ Wars — ngang hàng Leaderboard, badge số war đang LIVE</td></tr>
+    <tr><td>Token Detail page</td><td>Badge "⚔️ IN WAR" nếu token đang trong war, click → vào war detail</td></tr>
+    <tr><td>Token List</td><td>Token đang war hiện icon ⚔️ nhỏ bên cạnh tên</td></tr>
+    <tr><td>My Profile</td><td>Tab "My Bets" — xem cược đang active và lịch sử</td></tr>
+  </table>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: WARS LIST -->
+<div id="tab-list" class="tab-content">
+<div class="mock-shell">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">🌱 <span>PumpFun</span></div>
+    <div class="nav-section">Main</div>
+    <div class="nav-item">🏠 Token List</div>
+    <div class="nav-item">🏆 Leaderboard</div>
+    <div class="nav-item active">⚔️ Wars <span class="nav-badge">3</span></div>
+    <div class="nav-item">➕ Create Token</div>
+    <div class="nav-section">Personal</div>
+    <div class="nav-item">👤 My Profile</div>
+    <div class="nav-item">⚙️ Dashboard</div>
+    <div class="nav-section">Earn</div>
+    <div class="nav-item">🎁 Rewards</div>
+    <div class="nav-item">👥 Referrals</div>
+    <div class="nav-item">🌿 Points</div>
+  </div>
+
+  <!-- Body -->
+  <div class="mock-body">
+    <div class="wars-header">
+      <h2>⚔️ Token <span>Wars</span></h2>
+    </div>
+
+    <div class="wars-tabs">
+      <div class="wars-tab active">🔴 Live (3)</div>
+      <div class="wars-tab">🕐 Upcoming (5)</div>
+      <div class="wars-tab">✅ Ended</div>
+    </div>
+
+    <div class="wars-grid">
+
+      <!-- War Card 1 -->
+      <div class="war-card live" onclick="switchTab('detail')">
+        <div class="war-meta">
+          <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+          <div class="countdown">⏱ 03:24:17 left</div>
+        </div>
+        <div class="war-tokens">
+          <div class="war-token">
+            <div class="token-avatar" style="background:#1a2a3a">🐕</div>
+            <div class="token-info">
+              <div class="token-name">DOGE</div>
+              <div class="token-vol">8.4 SOL in bets</div>
+            </div>
+          </div>
+          <div class="vs">VS</div>
+          <div class="war-token right">
+            <div class="token-avatar" style="background:#2a1a1a">🐸</div>
+            <div class="token-info">
+              <div class="token-name">PEPE</div>
+              <div class="token-vol">5.1 SOL in bets</div>
+            </div>
+          </div>
+        </div>
+        <div class="battle-bar-wrap">
+          <div class="battle-bar">
+            <div class="bar-a" style="width:62%"></div>
+            <div class="bar-b" style="width:38%"></div>
+          </div>
+          <div class="bar-labels">
+            <span class="a">▲ 62% — 14.2 SOL vol</span>
+            <span class="b">9.8 SOL vol — 38% ▲</span>
+          </div>
+        </div>
+        <div class="war-footer">
+          <div>
+            <div class="prize-pool">🏆 Prize Pool: 13.5 SOL <span>(after 5% rake)</span></div>
+            <div class="participants">👥 130 participants</div>
+          </div>
+          <button class="join-btn">Join War →</button>
+        </div>
+      </div>
+
+      <!-- War Card 2 -->
+      <div class="war-card live">
+        <div class="war-meta">
+          <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+          <div class="countdown">⏱ 00:41:05 left</div>
+        </div>
+        <div class="war-tokens">
+          <div class="war-token">
+            <div class="token-avatar" style="background:#1a1a3a">🦊</div>
+            <div class="token-info">
+              <div class="token-name">FOXY</div>
+              <div class="token-vol">2.1 SOL in bets</div>
+            </div>
+          </div>
+          <div class="vs">VS</div>
+          <div class="war-token right">
+            <div class="token-avatar" style="background:#1a2a1a">🐻</div>
+            <div class="token-info">
+              <div class="token-name">BEAR</div>
+              <div class="token-vol">3.8 SOL in bets</div>
+            </div>
+          </div>
+        </div>
+        <div class="battle-bar-wrap">
+          <div class="battle-bar">
+            <div class="bar-a" style="width:36%"></div>
+            <div class="bar-b" style="width:64%"></div>
+          </div>
+          <div class="bar-labels">
+            <span class="a">▲ 36%</span>
+            <span class="b">64% ▲</span>
+          </div>
+        </div>
+        <div class="war-footer">
+          <div>
+            <div class="prize-pool">🏆 Prize Pool: 5.7 SOL <span>(after 5% rake)</span></div>
+            <div class="participants">👥 59 participants</div>
+          </div>
+          <button class="join-btn">Join War →</button>
+        </div>
+      </div>
+
+      <!-- War Card 3 -->
+      <div class="war-card live">
+        <div class="war-meta">
+          <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+          <div class="countdown">⏱ 05:58:30 left</div>
+        </div>
+        <div class="war-tokens">
+          <div class="war-token">
+            <div class="token-avatar" style="background:#2a2a1a">🌙</div>
+            <div class="token-info">
+              <div class="token-name">MOON</div>
+              <div class="token-vol">0.9 SOL in bets</div>
+            </div>
+          </div>
+          <div class="vs">VS</div>
+          <div class="war-token right">
+            <div class="token-avatar" style="background:#1a2a2a">🚀</div>
+            <div class="token-info">
+              <div class="token-name">RKTX</div>
+              <div class="token-vol">0.7 SOL in bets</div>
+            </div>
+          </div>
+        </div>
+        <div class="battle-bar-wrap">
+          <div class="battle-bar">
+            <div class="bar-a" style="width:56%"></div>
+            <div class="bar-b" style="width:44%"></div>
+          </div>
+          <div class="bar-labels">
+            <span class="a">▲ 56%</span>
+            <span class="b">44% ▲</span>
+          </div>
+        </div>
+        <div class="war-footer">
+          <div>
+            <div class="prize-pool">🏆 Prize Pool: 1.52 SOL <span>(after 5% rake)</span></div>
+            <div class="participants">👥 16 participants</div>
+          </div>
+          <button class="join-btn">Join War →</button>
+        </div>
+      </div>
+
+      <!-- Upcoming -->
+      <div class="upcoming-card">
+        <div class="upcoming-badge">🕐 UPCOMING</div>
+        <div class="war-tokens">
+          <div class="war-token">
+            <div class="token-avatar" style="background:#1a1a2a">🐋</div>
+            <div class="token-info">
+              <div class="token-name">WHALE</div>
+              <div class="upcoming-starts">Starts in 2h 15m</div>
+            </div>
+          </div>
+          <div class="vs">VS</div>
+          <div class="war-token right">
+            <div class="token-avatar" style="background:#2a1a2a">🦈</div>
+            <div class="token-info">
+              <div class="token-name">SHARK</div>
+              <div class="upcoming-starts" style="text-align:right">Duration: 6h</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: WAR DETAIL -->
+<div id="tab-detail" class="tab-content">
+<div class="mock-shell">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">🌱 <span>PumpFun</span></div>
+    <div class="nav-section">Main</div>
+    <div class="nav-item">🏠 Token List</div>
+    <div class="nav-item">🏆 Leaderboard</div>
+    <div class="nav-item active">⚔️ Wars <span class="nav-badge">3</span></div>
+    <div class="nav-item">➕ Create Token</div>
+    <div class="nav-section">Personal</div>
+    <div class="nav-item">👤 My Profile</div>
+    <div class="nav-item">⚙️ Dashboard</div>
+    <div class="nav-section">Earn</div>
+    <div class="nav-item">🎁 Rewards</div>
+    <div class="nav-item">👥 Referrals</div>
+    <div class="nav-item">🌿 Points</div>
+  </div>
+
+  <div class="mock-body">
+    <div class="detail-back" onclick="switchTab('list')">← Back to Wars</div>
+
+    <div class="detail-header">
+      <div class="detail-title">⚔️ DOGE vs PEPE</div>
+      <div class="detail-countdown">03:24:17 <small>remaining</small></div>
+    </div>
+
+    <!-- Arena -->
+    <div class="arena">
+
+      <!-- Team A -->
+      <div class="team-card team-a">
+        <div class="token-avatar" style="background:#1a2a3a;width:56px;height:56px;font-size:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:10px">🐕</div>
+        <div class="team-name" style="color:#4fc3f7">DOGE</div>
+        <div class="team-symbol">Doge Coin • $MC 48K</div>
+        <div style="margin-top:12px">
+          <div class="team-stat"><span class="stat-label">BUY Volume</span><span class="stat-val">14.2 SOL</span></div>
+          <div class="team-stat"><span class="stat-label">Transactions</span><span class="stat-val">87 buys</span></div>
+          <div class="team-stat"><span class="stat-label">Price change</span><span class="stat-val up">+12.4%</span></div>
+          <div class="team-stat"><span class="stat-label">Total bets</span><span class="stat-val" style="color:#4fc3f7">8.4 SOL</span></div>
+          <div class="team-stat"><span class="stat-label">Est. payout</span><span class="stat-val" style="color:#4fc3f7">~1.53x</span></div>
+        </div>
+      </div>
+
+      <!-- Center -->
+      <div class="center-panel">
+        <div class="vs-big">VS</div>
+        <div class="big-bar-wrap">
+          <div class="big-bar">
+            <div class="big-bar-a" style="width:59%"></div>
+            <div class="big-bar-b" style="width:41%"></div>
+          </div>
+          <div class="big-bar-labels">
+            <span class="a">59%</span>
+            <span class="b">41%</span>
+          </div>
+        </div>
+        <div class="pool-info">
+          <div class="pool-sol">12.825 SOL</div>
+          <div class="pool-label">Prize Pool (to winners)</div>
+          <div class="pool-rake">Total 13.5 SOL — 5% rake = 0.675 SOL to platform</div>
+        </div>
+        <div style="font-size:12px;color:#555;text-align:center">
+          👥 130 participants<br>
+          <span style="color:#444">BUY volume decides the winner</span>
+        </div>
+      </div>
+
+      <!-- Team B -->
+      <div class="team-card team-b">
+        <div class="token-avatar" style="background:#2a1a1a;width:56px;height:56px;font-size:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:10px">🐸</div>
+        <div class="team-name" style="color:#ef5350">PEPE</div>
+        <div class="team-symbol">Pepe Token • $MC 31K</div>
+        <div style="margin-top:12px">
+          <div class="team-stat"><span class="stat-label">BUY Volume</span><span class="stat-val">9.8 SOL</span></div>
+          <div class="team-stat"><span class="stat-label">Transactions</span><span class="stat-val">61 buys</span></div>
+          <div class="team-stat"><span class="stat-label">Price change</span><span class="stat-val up">+8.1%</span></div>
+          <div class="team-stat"><span class="stat-label">Total bets</span><span class="stat-val" style="color:#ef5350">5.1 SOL</span></div>
+          <div class="team-stat"><span class="stat-label">Est. payout</span><span class="stat-val" style="color:#ef5350">~2.51x</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bet Panel -->
+    <div class="bet-panel">
+      <h3>💰 Place Your Bet</h3>
+      <div class="bet-sides">
+
+        <!-- Bet on DOGE -->
+        <div class="bet-side blue">
+          <div class="bet-side-label">🐕 Bet on DOGE</div>
+          <div class="bet-input-wrap">
+            <input class="bet-input" type="number" placeholder="0.00" oninput="calcPayout(this,'blue')">
+            <div class="bet-input-unit">SOL</div>
+          </div>
+          <div class="bet-presets">
+            <button class="preset-btn" onclick="setAmt('blue',0.1)">0.1</button>
+            <button class="preset-btn" onclick="setAmt('blue',0.5)">0.5</button>
+            <button class="preset-btn" onclick="setAmt('blue',1)">1</button>
+          </div>
+          <div class="bet-est">
+            <span class="bet-est-label">Est. payout if DOGE wins:</span>
+            <span class="bet-est-val" id="payout-blue">—</span>
+          </div>
+          <button class="bet-btn blue">Bet on DOGE 🐕</button>
+        </div>
+
+        <!-- Bet on PEPE -->
+        <div class="bet-side red">
+          <div class="bet-side-label">🐸 Bet on PEPE</div>
+          <div class="bet-input-wrap">
+            <input class="bet-input" type="number" placeholder="0.00" oninput="calcPayout(this,'red')">
+            <div class="bet-input-unit">SOL</div>
+          </div>
+          <div class="bet-presets">
+            <button class="preset-btn" onclick="setAmt('red',0.1)">0.1</button>
+            <button class="preset-btn" onclick="setAmt('red',0.5)">0.5</button>
+            <button class="preset-btn" onclick="setAmt('red',1)">1</button>
+          </div>
+          <div class="bet-est">
+            <span class="bet-est-label">Est. payout if PEPE wins:</span>
+            <span class="bet-est-val" id="payout-red">—</span>
+          </div>
+          <button class="bet-btn red">Bet on PEPE 🐸</button>
+        </div>
+
+      </div>
+      <div style="font-size:11px;color:#444;text-align:center;margin-top:14px">
+        Payout is estimated and updates in real-time as more people join. Platform takes 5% rake.
+      </div>
+    </div>
+
+    <!-- Live Feed -->
+    <div class="live-feed">
+      <h3>Live Bets</h3>
+      <div class="feed-item">
+        <div class="feed-dot a"></div>
+        <div class="feed-user"><strong>@whale99</strong> bet on DOGE</div>
+        <div class="feed-amount a">+1.0 SOL</div>
+        <div class="feed-time">3s ago</div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot b"></div>
+        <div class="feed-user"><strong>@moon_bro</strong> bet on PEPE</div>
+        <div class="feed-amount b">+0.5 SOL</div>
+        <div class="feed-time">11s ago</div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot a"></div>
+        <div class="feed-user"><strong>@degen_ape</strong> bet on DOGE</div>
+        <div class="feed-amount a">+0.2 SOL</div>
+        <div class="feed-time">28s ago</div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot b"></div>
+        <div class="feed-user"><strong>@pepe_maxi</strong> bet on PEPE</div>
+        <div class="feed-amount b">+2.0 SOL</div>
+        <div class="feed-time">45s ago</div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot b"></div>
+        <div class="feed-user"><strong>@anon_777</strong> bet on PEPE</div>
+        <div class="feed-amount b">+0.1 SOL</div>
+        <div class="feed-time">1m ago</div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot a"></div>
+        <div class="feed-user"><strong>@sol_king</strong> bet on DOGE</div>
+        <div class="feed-amount a">+0.5 SOL</div>
+        <div class="feed-time">2m ago</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.top-tab').forEach((t,i) => {
+    t.classList.toggle('active', ['spec','list','detail'][i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach((c,i) => {
+    c.classList.toggle('active', ['tab-spec','tab-list','tab-detail'][i] === 'tab-'+name);
+  });
+}
+
+// Payout calculator (simplified simulation)
+const poolA = 8.4, poolB = 5.1, rake = 0.05;
+function calcPayout(input, side) {
+  const amt = parseFloat(input.value) || 0;
+  if (amt <= 0) { document.getElementById('payout-'+side).textContent = '—'; return; }
+  const total = (poolA + poolB + amt) * (1 - rake);
+  let payout;
+  if (side === 'blue') {
+    payout = (amt / (poolA + amt)) * total;
+  } else {
+    payout = (amt / (poolB + amt)) * total;
+  }
+  const mult = (payout / amt).toFixed(2);
+  document.getElementById('payout-'+side).textContent = `${payout.toFixed(3)} SOL (~${mult}x)`;
+}
+
+function setAmt(side, val) {
+  const inputs = document.querySelectorAll('.bet-input');
+  const idx = side === 'blue' ? 0 : 1;
+  inputs[idx].value = val;
+  calcPayout(inputs[idx], side);
+}
+</script>
+</body>
+</html>
