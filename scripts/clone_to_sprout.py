@@ -6,17 +6,19 @@ Bazaar → Sprout transforms:
   · Color palette: amber → peach, brown → forest green
   · Mascot SVG: cat hawker → sprout (cây con với 2 lá)
   · Brand identity: Stallspot → Sprout, "the meme bazaar" → "the meme garden"
-  · Tagline: "Open a stall. Trade memes." → "Plant your seed in the memeconomy."
+  · Tagline: surface-specific versions → Sprout equivalents
   · Marquee: bazaar phrases → garden phrases
   · Tier ladder: Newcomer/Regular/Local/Insider/Legend → Seed/Sprout/Sapling/Tree/Ancient Tree
-  · Microcopy: "stall by" → "by", "lucky vendor draw" → "daily harvest", etc.
+  · Microcopy: "stall by" → "by", "the lucky draw" → "the daily harvest", etc.
   · Connected wallet, sidebar structure, page architecture: UNCHANGED (3-layer principle compliant)
+  · Mood B signature glow: injected into every page after :root block (SPROUT_UI_SPEC.md §1.3a)
 
 Run:
   cd /path/to/PMFCDocument
   python3 scripts/clone_to_sprout.py
 
 Output: /mockups-sprout/ folder with 18 HTML files cloned + brand-swapped.
+Last updated: 2026-05-06 — Mood B glow + surface palette refinement (locked values)
 """
 import os, re, sys
 
@@ -95,18 +97,24 @@ CSS_RENAMES = [
     ('--bz-teal-400', '--sp-teal-400'),
     ('--bz-teal-500', '--sp-teal-500'),
     ('--bz-teal-soft', '--sp-teal-soft'),
+    ('--bz-teal-glow', '--sp-teal-glow'),
     ('--bz-crimson', '--sp-crimson'),
 ]
 
-# ===== Hex color swaps =====
+# ===== Hex color swaps (ORDER MATTERS — longer/specific first) =====
 HEX_SWAPS = [
-    # Surface palette: dark navy → green-tinted (matches MVP "garden under twilight")
+    # Surface palette: dark navy → green-tinted twilight (Mood B locked 2026-05-05)
     ('#0a0e1a', '#0a1610'),     # bg
-    ('#131826', '#13201a'),     # surface-1
-    ('#1a2138', '#1a2a22'),     # surface-2
-    ('#232b46', '#23332b'),     # surface-3
-    ('#1f2640', '#1f2a23'),     # border-1
-    ('#2a3456', '#2a3a30'),     # border-2
+    ('#131826', '#131f18'),     # surface-1  (refined from #13201a)
+    ('#1a2138', '#1a2a20'),     # surface-2  (refined from #1a2a22)
+    ('#232b46', '#243528'),     # surface-3  (refined from #23332b)
+    ('#1f2640', '#1f2d24'),     # border-1   (refined from #1f2a23)
+    ('#2a3456', '#2d4234'),     # border-2   (refined from #2a3a30)
+    # Text palette: slightly warmer for Sprout (greenish tint)
+    ('#f4f4f5', '#f5f7f4'),     # text-1
+    ('#a1a1aa', '#a3b0a7'),     # text-2
+    ('#71717a', '#6f7d74'),     # text-3
+    ('#52525b', '#4a5650'),     # text-mute
     # Brand: amber → peach
     ('#F5DBA8', '#f4cba0'),
     ('#FAC775', '#e8a87c'),
@@ -121,6 +129,9 @@ HEX_SWAPS = [
     ('rgba(234, 181, 82, 0.18)', 'rgba(232, 168, 124, 0.18)'),
     ('rgba(234,181,82,0.10)', 'rgba(232,168,124,0.10)'),
     ('rgba(234,181,82,0.18)', 'rgba(232,168,124,0.18)'),
+    # Teal soft (Bazaar rgba → Sprout rgba with 0.14 alpha per spec)
+    ('rgba(124, 196, 164, 0.10)', 'rgba(124, 196, 164, 0.14)'),
+    ('rgba(124,196,164,0.10)', 'rgba(124,196,164,0.14)'),
 ]
 
 # ===== CSS class renames (.amber → .peach for marquee) =====
@@ -134,8 +145,11 @@ TEXT_SWAPS = [
     # Brand FIRST (must run before "Regular" → "Sprout" tier swap)
     ('Stallspot', 'Sprout'),
     ('the meme bazaar', 'the meme garden'),
-    # Tagline & search
-    ('Open a stall. Trade memes.', 'Plant your seed in the memeconomy.'),
+    # Taglines — Group A introduced surface-specific taglines; map to Sprout equivalent
+    ('Open a stall. Pitch your meme.', 'Plant your seed in the memeconomy.'),  # creator funnel
+    ('Trade memes at the bazaar.', 'Plant your seed in the memeconomy.'),       # hero
+    ('Open a stall. Trade memes.', 'Plant your seed in the memeconomy.'),       # deprecated compound (safety)
+    # Search placeholder
     ('Search the bazaar — tokens, vendors, addresses…',
      'Search the garden — tokens, creators, addresses…'),
     # Marquee phrases
@@ -158,29 +172,38 @@ TEXT_SWAPS = [
     ('You belong here.', 'Growing strong in the garden.'),
     ('You know the deals.', 'A sturdy tree.'),
     ('Everyone knows your name.', 'An ancient tree of legend.'),
-    # Microcopy
-    ('stall by ', 'by '),
+    # Microcopy — precise replacements
+    ('stall by ', 'by '),           # trailing-space variant (token cards, etc.)
+    ('<span>stall by</span>', '<span>by</span>'),  # no-space variant (leaderboard spans)
     ('Stall story', 'Token story'),
+    # Rewards — Bazaar Group A changed subtitle to "The lucky draw." → Sprout uses "the daily harvest."
+    ('The lucky draw. Spend a ticket, spin five reels, win SOL.',
+     'The daily harvest. Spend a ticket, spin five reels, win SOL.'),
+    ('the lucky draw', 'the daily harvest'),
     ('the lucky vendor draw', 'the daily harvest'),
+    # Referrals
     ('Bring a friend to the bazaar.', 'Plant a friend in the garden.'),
     ('Bring a friend to the bazaar', 'Plant a friend in the garden'),
     ('Hand out your stall card.', 'Share your seed packet.'),
     ('Hand out your stall card', 'Share your seed packet'),
     ('5% commission when they trade at your stall',
      '5% commission when they trade in your garden'),
+    # Arena
     ('Showdown row', 'Garden arena'),
     ('back winners · the crowd predicts',
      'back winners · the garden predicts'),
+    # Points
     ('Earn points by trading, creating, and bringing the crowd. Climb the bazaar.',
      'Earn points by trading, creating, and bringing friends. Grow your garden.'),
-    ('The lucky vendor draw. Spend a ticket, spin five reels, win SOL.',
-     'The daily harvest. Spend a ticket, spin five reels, win SOL.'),
+    # Referrals longer forms
     ('Bring a friend to the bazaar. Earn when they trade.',
      'Plant a friend in the garden. Earn when they trade.'),
     ('No referrals yet', 'No seeds planted yet'),
     ('Share your link to start earning. The bazaar grows when you bring people in.',
      'Share your link to start earning. The garden grows when you bring people in.'),
     ('https://stallspot.app/join/@', 'https://sprout.app/join/@'),
+    # Graduation moment
+    ('has franchised across the bazaar', 'has bloomed in the garden'),
     # CSS comments (cosmetic)
     ('Bazaar primary — amber (warm bazaar lantern)',
      'Sprout primary — peach (sunset over garden)'),
@@ -190,6 +213,76 @@ TEXT_SWAPS = [
      'Teal — leaf/bloom accents'),
 ]
 
+# ===== Mood B Signature Glow CSS =====
+# Locked 2026-05-05 — SPROUT_UI_SPEC.md §1.3a. Do NOT modify without spec update.
+GLOW_CSS = """
+/* === Mood B signature glow (locked 2026-05-05 — SPROUT_UI_SPEC.md §1.3a) === */
+/* Do NOT modify without updating spec section 1.3a first. */
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.06), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 30%, rgba(124,196,164,0.05), transparent 60%);
+  background-attachment: fixed;
+}
+.logo-mascot {
+  box-shadow: 0 0 24px rgba(232,168,124,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-primary {
+  box-shadow: 0 0 20px rgba(232,168,124,0.30);
+}
+.marquee-track .peach { color: var(--sp-peach-200); text-shadow: 0 0 12px rgba(232,168,124,0.4); }
+.marquee-track .teal  { color: var(--sp-teal-300);  text-shadow: 0 0 12px rgba(124,196,164,0.4); }
+.token-card.featured, .tk-card.featured, .card.featured {
+  border-color: rgba(232,168,124,0.55);
+  background: radial-gradient(ellipse 300px 200px at 100% 0%, rgba(232,168,124,0.10), transparent 70%), var(--surface-1);
+  box-shadow: 0 0 32px rgba(232,168,124,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.token-card:hover, .tk-card:hover {
+  box-shadow: 0 0 24px rgba(124,196,164,0.08);
+}
+.token-av, .tk-av { box-shadow: 0 0 16px rgba(124,196,164,0.15); }
+.bar-fill { box-shadow: 0 0 10px rgba(232,168,124,0.5); }
+/* === end Mood B glow === */
+"""
+
+# ===== Sprout-specific palette additions (inject into :root if not already present) =====
+SPROUT_ROOT_ADDITIONS = """
+  /* Sprout Mood B additions */
+  --sp-teal-glow: rgba(124, 196, 164, 0.22);
+  --sp-peach-glow: rgba(232, 168, 124, 0.18);
+"""
+
+
+def find_root_end(content):
+    """Find the position just after the first :root { … } closing brace."""
+    root_start = content.find(':root')
+    if root_start == -1:
+        return -1
+    brace_start = content.find('{', root_start)
+    if brace_start == -1:
+        return -1
+    depth = 0
+    for i, c in enumerate(content[brace_start:], brace_start):
+        if c == '{':
+            depth += 1
+        elif c == '}':
+            depth -= 1
+            if depth == 0:
+                return i + 1
+    return -1
+
+
+def inject_glow(content):
+    """Inject Mood B glow CSS after the first :root {…} block."""
+    if 'Mood B signature glow' in content:
+        return content  # already injected — idempotent
+    pos = find_root_end(content)
+    if pos != -1:
+        return content[:pos] + '\n' + GLOW_CSS + content[pos:]
+    return content
+
+
 def transform(html):
     # SVGs first (before any text or color changes)
     html = CAT_32_RE.sub(SPROUT_32, html)
@@ -198,7 +291,7 @@ def transform(html):
     # CSS vars
     for old, new in CSS_RENAMES:
         html = html.replace(old, new)
-    # Hex
+    # Hex (and text palette)
     for old, new in HEX_SWAPS:
         html = html.replace(old, new)
     # CSS classes
@@ -207,27 +300,36 @@ def transform(html):
     # Text swaps
     for old, new in TEXT_SWAPS:
         html = html.replace(old, new)
+    # Inject Mood B glow
+    html = inject_glow(html)
     return html
 
 
 def main():
     count = 0
+    skipped = []
     for fname in sorted(os.listdir(SRC)):
         if not fname.endswith('.html'):
             continue
-        with open(os.path.join(SRC, fname), 'r', encoding='utf-8') as f:
+        src_path = os.path.join(SRC, fname)
+        dst_path = os.path.join(DST, fname)
+        with open(src_path, 'r', encoding='utf-8') as f:
             html = f.read()
         new_html = transform(html)
-        with open(os.path.join(DST, fname), 'w', encoding='utf-8') as f:
+        with open(dst_path, 'w', encoding='utf-8') as f:
             f.write(new_html)
         count += 1
-        print(f'  OK  {fname}')
+        has_glow = 'Mood B signature glow' in new_html
+        has_surface = '--surface-1: #131f18' in new_html
+        glow_mark = '✓ glow' if has_glow else '✗ NO GLOW'
+        surf_mark = '✓ surface' if has_surface else '✗ NO SURFACE'
+        print(f'  OK  {fname:<50} [{glow_mark}] [{surf_mark}]')
 
     print(f'\nCloned {count} file(s): mockups-bazaar/ → mockups-sprout/')
     print('\nNext steps:')
-    print('  1. Open mockups-sprout/token_list_v4.html in browser to visually verify')
-    print('  2. If brand swap looks correct, all 18 pages are ready')
-    print('  3. If issues found, report back to AI for refinement')
+    print('  1. Open mockups-sprout/token_list_v4.html in browser to visually verify Mood B glow')
+    print('  2. Run verification greps per SPROUT_MOOD_B_IMPLEMENTATION_PLAN.md §4a')
+    print('  3. Confirm _mood_demos/ files are unchanged (not touched by this script)')
 
 
 if __name__ == '__main__':

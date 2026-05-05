@@ -1,207 +1,830 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Sprout — Token List v4</title>
+<title>Sprout — Token List V4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  /* Sprout — green-tinted dark surface (matches MVP "garden under twilight") */
-  --bg:          #0a1610;
-  --surface-1:   #13201a;
-  --surface-2:   #1a2a22;
-  --surface-3:   #23332b;
-  --border-1:    #1f2a23;
-  --border-2:    #2a3a30;
+  /* ========================================================
+     STALLSPOT token list v4
+     - Structural backbone: home_full_layout.html (fixed header,
+       sidebar grouping, tab line indicator, card structure)
+     - MVP elements: marquee, featured chips
+     - Story Garden: peach/teal/amber palette, leaf trust,
+       mascot in sidebar, garden voice, signature moments
+     ======================================================== */
+  :root {
+    --bg:          #0a1610;
+    --surface-1:   #131f18;
+    --surface-2:   #1a2a20;
+    --surface-3:   #243528;
+    --border-1:    #1f2d24;
+    --border-2:    #2d4234;
+    --sp-peach-100: #f4cba0;
+    --sp-peach-200: #e8a87c;
+    --sp-peach-400: #e8a87c;
+    --sp-peach-500: #d68a5b;
+    --sp-peach-soft: rgba(232, 168, 124, 0.10);
+    --sp-forest-300: #5ba886;
+    --sp-forest-500: #3d7458;
+    --sp-forest-700: #3d7458;
+    --sp-cream:    #f4cba0;
+    --sp-teal-300: #9ED8B8;
+    --sp-teal-400: #7CC4A4;
+    --sp-teal-500: #5BA886;
+    --sp-crimson:  #D65A54;
+    --text-1: #f5f7f4;
+    --text-2: #a3b0a7;
+    --text-3: #6f7d74;
+    --text-mute: #4a5650;
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+    --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
+  --mascot-sm:   22px;
+  --mascot-md:   30px;
+  --mascot-lg:   40px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-  /* Sprout primary — peach */
-  --sp-peach-100: #f4cba0;
-  --sp-peach-200: #e8a87c;
-  --sp-peach-400: #e8a87c;
-  --sp-peach-500: #d68a5b;
-  --sp-peach-soft: rgba(232, 168, 124, 0.10);
-  --sp-peach-glow: rgba(232, 168, 124, 0.18);
-
-  /* Sprout secondary — forest */
-  --sp-forest-300: #5ba886;
-  --sp-forest-500: #3d7458;
-
-  /* Teal accents */
-  --sp-teal-300: #9ED8B8;
-  --sp-teal-400: #7CC4A4;
-  --sp-teal-500: #5BA886;
-  --sp-teal-soft: rgba(124, 196, 164, 0.10);
-
-  /* Amber for "almost there" graduating state */
-  --sp-amber-400: #d4a256;
-  --sp-amber-soft: rgba(212, 162, 86, 0.10);
-
-  --sp-crimson:  #D65A54;
-
-  --text-1: #f4f4f5;
-  --text-2: #a1a1aa;
-  --text-3: #71717a;
-  --text-mute: #52525b;
-  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-body:    'Inter', system-ui, sans-serif;
-  --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
-  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
-  --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+/* === Mood B signature glow (locked 2026-05-05 — SPROUT_UI_SPEC.md §1.3a) === */
+/* Do NOT modify without updating spec section 1.3a first. */
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.06), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 30%, rgba(124,196,164,0.05), transparent 60%);
+  background-attachment: fixed;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text-1); font-family: var(--font-body); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+.logo-mascot {
+  box-shadow: 0 0 24px rgba(232,168,124,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-primary {
+  box-shadow: 0 0 20px rgba(232,168,124,0.30);
+}
+.marquee-track .peach { color: var(--sp-peach-200); text-shadow: 0 0 12px rgba(232,168,124,0.4); }
+.marquee-track .teal  { color: var(--sp-teal-300);  text-shadow: 0 0 12px rgba(124,196,164,0.4); }
+.token-card.featured, .tk-card.featured, .card.featured {
+  border-color: rgba(232,168,124,0.55);
+  background: radial-gradient(ellipse 300px 200px at 100% 0%, rgba(232,168,124,0.10), transparent 70%), var(--surface-1);
+  box-shadow: 0 0 32px rgba(232,168,124,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.token-card:hover, .tk-card:hover {
+  box-shadow: 0 0 24px rgba(124,196,164,0.08);
+}
+.token-av, .tk-av { box-shadow: 0 0 16px rgba(124,196,164,0.15); }
+.bar-fill { box-shadow: 0 0 10px rgba(232,168,124,0.5); }
+/* === end Mood B glow === */
 
-/* HEADER */
-.header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--surface-1); border-bottom: 1px solid var(--border-1); z-index: 100; display: flex; align-items: center; padding: 0 24px; gap: 24px; }
-.logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; cursor: pointer; }
-.logo-mascot { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(180deg, #f4cba0, #e8a87c); display: grid; place-items: center; flex-shrink: 0; }
-.logo-mascot svg { width: 26px; height: 26px; }
-.logo-text-wrap { display: flex; flex-direction: column; line-height: 1.05; }
-.logo-text { font-family: var(--font-display); font-size: 17px; font-weight: 800; color: var(--sp-peach-400); letter-spacing: -0.01em; }
-.logo-sub { font-size: 9.5px; font-weight: 600; color: var(--text-3); letter-spacing: 0.06em; text-transform: lowercase; margin-top: 1px; }
-.header-search { position: relative; flex: 1; max-width: 480px; }
-.header-search input { width: 100%; height: 36px; padding: 0 14px 0 38px; background: var(--surface-2); border: 1px solid var(--border-1); border-radius: var(--r-md); color: var(--text-1); font-size: 13.5px; font-family: inherit; }
-.header-search input::placeholder { color: var(--text-3); }
-.header-search input:focus { outline: none; border-color: var(--sp-peach-400); }
-.header-search > svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-3); }
-.header-actions { display: flex; gap: 8px; margin-left: auto; align-items: center; }
-.btn-primary { height: 36px; padding: 0 16px; background: linear-gradient(180deg, #f4cba0, #e8a87c); border: none; border-radius: var(--r-md); color: #2a1505; font-family: var(--font-display); font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s var(--ease); }
-.btn-primary:hover { background: linear-gradient(180deg, #f8d8b3, #f0b58e); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* MARQUEE */
-.marquee { position: fixed; top: var(--header-h); left: 0; right: 0; height: var(--marquee-h); background: var(--bg); border-bottom: 1px solid var(--border-1); overflow: hidden; display: flex; align-items: center; z-index: 99; }
-.marquee-track { display: flex; gap: 36px; white-space: nowrap; animation: scroll 40s linear infinite; font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--text-3); }
-.marquee-track .peach { color: var(--sp-peach-400); }
-.marquee-track .teal { color: var(--sp-teal-400); }
-@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  body {
+    background: var(--bg);
+    color: var(--text-1);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
 
-/* SIDEBAR */
-.sidebar { position: fixed; left: 0; top: calc(var(--header-h) + var(--marquee-h)); bottom: 0; width: var(--sidebar-w); background: var(--surface-1); border-right: 1px solid var(--border-1); padding: 20px 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; }
-.nav-group { display: flex; flex-direction: column; gap: 1px; }
-.nav-label { font-family: var(--font-display); font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); padding: 0 12px 6px; }
-.nav-item { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: var(--r-md); color: var(--text-2); font-size: 13.5px; font-weight: 500; cursor: pointer; transition: all 0.12s var(--ease); text-decoration: none; }
-.nav-item svg { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.85; }
-.nav-item:hover { background: var(--surface-2); color: var(--text-1); }
-.nav-item.active { color: var(--sp-peach-400); background: var(--sp-peach-soft); font-weight: 600; }
-.nav-badge { margin-left: auto; background: var(--sp-crimson); color: white; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: var(--r-pill); }
-.user-card { margin-top: auto; background: var(--surface-2); border: 1px solid var(--border-1); border-radius: var(--r-md); padding: 10px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.user-mascot { width: 34px; height: 34px; border-radius: var(--r-pill); background: var(--surface-3); display: grid; place-items: center; border: 1.5px solid var(--sp-peach-400); flex-shrink: 0; }
-.user-mascot svg { width: 24px; height: 24px; }
-.user-info { flex: 1; min-width: 0; }
-.user-name { font-size: 12.5px; font-weight: 600; color: var(--text-1); }
-.user-tier { font-family: var(--font-display); font-size: 10.5px; color: var(--sp-peach-400); font-weight: 700; margin-top: 1px; }
+  /* ========================================================
+     HEADER (fixed top — pro structure)
+     ======================================================== */
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    background: var(--surface-1);
+    border-bottom: 1px solid var(--border-1);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+  }
 
-/* WALLET CONNECTED */
-.wallet-connected { position: relative; height: 36px; background: var(--surface-2); border: 1px solid var(--border-2); border-radius: var(--r-pill); padding: 3px 12px 3px 4px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.15s var(--ease); }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+  .logo-mascot {
+    width: var(--mascot-lg);
+    height: var(--mascot-lg);
+    border-radius: var(--r-md);
+    background: linear-gradient(180deg, var(--sp-peach-100), var(--sp-peach-400));
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .logo-mascot svg { width: 30px; height: 30px; }
+  .logo-text {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--sp-peach-400);
+    letter-spacing: -0.01em;
+  }
+
+  .header-search {
+    position: relative;
+    flex: 1;
+    max-width: 480px;
+  }
+  .header-search input {
+    width: 100%;
+    height: 36px;
+    padding: 0 14px 0 38px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    color: var(--text-1);
+    font-family: inherit;
+    font-size: 13.5px;
+    transition: border-color 0.15s var(--ease);
+  }
+  .header-search input::placeholder { color: var(--text-3); }
+  .header-search input:focus {
+    outline: none;
+    border-color: var(--sp-peach-400);
+  }
+  .header-search > svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--text-3);
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+    align-items: center;
+  }
+  .btn-ghost {
+    height: 36px;
+    padding: 0 14px;
+    background: transparent;
+    border: 1px solid var(--border-2);
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+  }
+  .btn-ghost:hover {
+    border-color: var(--sp-peach-400);
+    color: var(--sp-peach-400);
+  }
+  .btn-primary {
+    height: 36px;
+    padding: 0 16px;
+    background: linear-gradient(180deg, #e8a87c, #e8a87c);
+    border: none;
+    border-radius: var(--r-md);
+    color: #2a1505;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(180deg, #ffd08a, #f0bc62);
+  }
+
+  /* ========================================================
+     MARQUEE (below header — MVP feel kept)
+     ======================================================== */
+  .marquee {
+    position: fixed;
+    top: var(--header-h);
+    left: 0; right: 0;
+    height: var(--marquee-h);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border-1);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    z-index: 99;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 36px;
+    white-space: nowrap;
+    animation: scroll 40s linear infinite;
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+  }
+  .marquee-track .peach { color: var(--sp-peach-400); }
+  .marquee-track .teal { color: var(--sp-teal-400); }
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ========================================================
+     SIDEBAR (grouping — pro structure)
+     ======================================================== */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: calc(var(--header-h) + var(--marquee-h));
+    bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--surface-1);
+    border-right: 1px solid var(--border-1);
+    padding: 20px 14px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .nav-group { display: flex; flex-direction: column; gap: 1px; }
+  .nav-label {
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+    padding: 0 12px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 12px;
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s var(--ease);
+    text-decoration: none;
+    position: relative;
+  }
+  .nav-item svg { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.85; }
+  .nav-item:hover { background: var(--surface-2); color: var(--text-1); }
+  .nav-item.active {
+    color: var(--sp-peach-400);
+    background: var(--sp-peach-soft);
+    font-weight: 600;
+  }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--sp-crimson);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: var(--r-pill);
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* User card at bottom — logged-in with mascot */
+  .user-card {
+    margin-top: auto;
+    background: var(--surface-2);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .user-mascot {
+    width: var(--mascot-lg);
+    height: var(--mascot-lg);
+    border-radius: var(--r-pill);
+    background: var(--surface-3);
+    display: grid;
+    place-items: center;
+    border: 1.5px solid var(--sp-peach-400);
+    flex-shrink: 0;
+  }
+  .user-mascot svg { width: 30px; height: 30px; }
+  .user-info { flex: 1; min-width: 0; }
+  .user-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+  .user-tier {
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    color: var(--sp-peach-400);
+    font-weight: 700;
+    margin-top: 1px;
+  }
+
+  /* ========================================================
+     MAIN CONTENT
+     ======================================================== */
+  .main {
+    margin-left: var(--sidebar-w);
+    margin-top: calc(var(--header-h) + var(--marquee-h));
+    padding: 28px 32px 40px;
+    max-width: 1320px;
+  }
+
+  .notice {
+    background: var(--sp-peach-soft);
+    border: 1px solid rgba(232, 168, 124, 0.25);
+    border-radius: var(--r-md);
+    padding: 10px 14px;
+    margin-bottom: 24px;
+    font-size: 12.5px;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .notice strong { color: var(--sp-peach-400); font-family: var(--font-display); }
+
+  /* Featured chip row (kept from MVP) */
+  .featured-row {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    margin-bottom: 28px;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+  .featured-row::-webkit-scrollbar { height: 4px; }
+  .featured-row::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
+
+  .featured-chip {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    transition: border-color 0.15s var(--ease);
+    min-width: 200px;
+  }
+  .featured-chip:hover { border-color: var(--sp-peach-400); }
+  .featured-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--r-sm);
+    flex-shrink: 0;
+  }
+  .featured-name {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--sp-peach-400);
+  }
+
+  /* Page header */
+  .page-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 24px;
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+  .page-subtitle {
+    font-size: 13.5px;
+    color: var(--text-2);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .page-subtitle svg { width: 14px; height: 14px; color: var(--sp-teal-400); }
+
+  /* Tabs (line indicator — pro) */
+  .tabs-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border-1);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .tab {
+    padding: 11px 18px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-2);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+    margin-bottom: -1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tab:hover { color: var(--text-1); }
+  .tab.active {
+    color: var(--sp-peach-400);
+    border-bottom-color: var(--sp-peach-400);
+  }
+  .tab-leaf { width: 12px; height: 12px; color: var(--sp-teal-400); }
+  .tab.active .tab-leaf { color: var(--sp-peach-400); }
+
+  .tabs-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 9px;
+    color: var(--text-2);
+    font-size: 12.5px;
+  }
+  .tab-toggle { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .tt-toggle {
+    width: 28px;
+    height: 16px;
+    background: var(--sp-teal-500);
+    border-radius: var(--r-pill);
+    position: relative;
+  }
+  .tt-toggle::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    right: 2px;
+  }
+  .tt-toggle.off { background: var(--border-2); }
+  .tt-toggle.off::after { right: auto; left: 2px; }
+
+  .action-btn {
+    padding: 7px 14px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .action-btn:hover { border-color: var(--sp-peach-400); color: var(--text-1); }
+
+  /* ========================================================
+     TOKEN GRID (pro structure + Garden palette)
+     ======================================================== */
+  .token-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+  }
+
+  .token-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.18s var(--ease);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .token-card:hover {
+    border-color: var(--border-2);
+    transform: translateY(-2px);
+  }
+  .token-card.is-hovered {
+    border-color: var(--sp-peach-400);
+    transform: translateY(-2px);
+  }
+  .token-card.almost-there {
+    background: linear-gradient(180deg, var(--sp-peach-soft) 0%, var(--surface-1) 30%);
+  }
+
+  .card-head {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .token-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--r-md);
+    flex-shrink: 0;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .token-avatar svg { width: 100%; height: 100%; }
+  .token-meta { flex: 1; min-width: 0; padding-right: 26px; }
+
+  .token-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+  }
+  .token-name {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--sp-peach-400);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .trust-leaf {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    cursor: help;
+  }
+  .trust-leaf svg { width: 14px; height: 14px; }
+  /* shield hidden at name-row, moved to Market cap label */
+  .token-name-row .trust-leaf { display: none; }
+  /* Trust shield 3-tier per FR-013 */
+  .trust-gold   { color: var(--sp-peach-400); }   /* 60-100 — Đáng tin cậy */
+  .trust-silver { color: var(--sp-teal-400); }    /* 30-59 — Có tín hiệu tích cực */
+  .trust-bronze { color: var(--sp-peach-400); }   /* 0-29 — Token mới */
+  .token-symbol {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text-3);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+  .token-desc {
+    font-size: 12.5px;
+    color: var(--text-3);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .favorite {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: var(--text-mute);
+    transition: color 0.15s var(--ease);
+  }
+  .favorite:hover, .favorite.active { color: var(--sp-peach-400); }
+  .favorite svg { width: 16px; height: 16px; }
+
+  /* Price + change */
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .price-value {
+    font-family: var(--font-mono);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-1);
+    letter-spacing: -0.02em;
+  }
+  .price-change {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .price-up { color: var(--sp-teal-400); }
+  .price-down { color: var(--sp-crimson); }
+
+  /* Stats row (Volume + MC, slim 2 cols) */
+  .stats-row {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 14px;
+  }
+  .stat-cell { display: flex; flex-direction: column; gap: 2px; }
+  .stat-label-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-1);
+  }
+
+  /* Footer with border-top separator (pro structure) */
+  .card-footer {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .creator-info {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11.5px;
+    color: var(--text-3);
+    min-width: 0;
+  }
+  .creator-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: var(--r-pill);
+    background: linear-gradient(135deg, #e8a87c, #d68a5b);
+    flex-shrink: 0;
+    border: 1px solid var(--border-2);
+  }
+  .creator-name {
+    color: var(--text-2);
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .btn-buy {
+    height: 32px;
+    padding: 0 16px;
+    background: var(--sp-teal-500);
+    border: none;
+    border-radius: var(--r-md);
+    color: #ecfeff;
+    font-family: var(--font-display);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+    flex-shrink: 0;
+  }
+  .btn-buy:hover { background: var(--sp-teal-400); }
+
+  /* Slim graduation bar at very bottom */
+  .graduation {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .graduation-label {
+    font-size: 10.5px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+  .graduation-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--border-1);
+    border-radius: var(--r-pill);
+    overflow: hidden;
+  }
+  .graduation-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sp-peach-400), var(--sp-teal-400));
+    border-radius: var(--r-pill);
+  }
+  .graduation-fill.amber {
+    background: linear-gradient(90deg, var(--sp-peach-400), var(--sp-peach-400));
+  }
+  .graduation-percent {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--sp-peach-400);
+    font-weight: 600;
+    min-width: 32px;
+    text-align: right;
+  }
+  .graduation-percent.amber { color: var(--sp-peach-400); }
+
+  /* "New" badge */
+  .badge-new {
+    position: absolute;
+    top: -1px;
+    left: 16px;
+    background: var(--sp-teal-500);
+    color: #ecfeff;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 4px 10px 4px 8px;
+    border-radius: 0 0 var(--r-sm) var(--r-sm);
+    letter-spacing: 0.03em;
+    font-family: var(--font-display);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .badge-new svg { width: 10px; height: 10px; }
+
+/* ===== CONNECTED WALLET ===== */
+.wallet-connected { position: relative; height: 36px; background: var(--surface-2); border: 1px solid var(--border-2); border-radius: var(--r-pill); padding: 3px 12px 3px 4px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.15s var(--ease); font-family: var(--font-body); }
 .wallet-connected:hover { border-color: var(--sp-peach-400); background: var(--sp-peach-soft); }
 .wallet-connected.open { border-color: var(--sp-peach-400); }
-.wc-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(180deg,#f4cba0,#e8a87c); display: grid; place-items: center; flex-shrink: 0; }
-.wc-avatar svg { width: 20px; height: 20px; }
+.wc-avatar { width: var(--mascot-md); height: var(--mascot-md); border-radius: 50%; background: linear-gradient(180deg,#e8a87c,#e8a87c); display: grid; place-items: center; flex-shrink: 0; }
+.wc-avatar svg { width: 18px; height: 18px; }
 .wc-info { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
 .wc-balance { font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; color: var(--sp-peach-400); }
 .wc-addr { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-3); margin-top: 1px; }
 .wc-chevron { width: 12px; height: 12px; color: var(--text-3); flex-shrink: 0; transition: transform 0.15s var(--ease); }
 .wallet-connected.open .wc-chevron { transform: rotate(180deg); color: var(--sp-peach-400); }
 .wc-net-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sp-teal-400); flex-shrink: 0; box-shadow: 0 0 0 2px rgba(124,196,164,0.20); }
+.wc-net-dot.wrong { background: var(--sp-crimson); box-shadow: 0 0 0 2px rgba(214,90,84,0.20); }
 .wc-menu { position: absolute; top: calc(100% + 8px); right: 0; width: 220px; background: var(--surface-1); border: 1px solid var(--border-1); border-radius: var(--r-md); padding: 6px; display: none; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
 .wallet-connected.open .wc-menu { display: block; }
 .wc-menu-head { padding: 10px 10px 8px; border-bottom: 1px solid var(--border-1); margin-bottom: 4px; }
 .wc-menu-net { font-size: 10.5px; color: var(--text-3); font-family: var(--font-display); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
 .wc-menu-bal { font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--text-1); margin-top: 2px; }
-.wc-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r-sm); color: var(--text-1); font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none; width: 100%; background: transparent; border: none; font-family: inherit; text-align: left; }
+.wc-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r-sm); color: var(--text-1); font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none; width: 100%; background: transparent; border: none; font-family: inherit; text-align: left; transition: background 0.12s var(--ease); }
 .wc-item:hover { background: var(--surface-2); }
-.wc-item svg { width: 14px; height: 14px; opacity: 0.7; }
+.wc-item svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
 .wc-item.danger { color: var(--sp-crimson); }
+.wc-item.danger:hover { background: rgba(214,90,84,0.10); }
 .wc-divider { height: 1px; background: var(--border-1); margin: 4px 0; }
 
-/* MAIN */
-.main { margin-left: var(--sidebar-w); margin-top: calc(var(--header-h) + var(--marquee-h)); padding: 28px 32px 60px; max-width: 1500px; }
-
-.page-head { margin-bottom: 18px; }
-.page-title { font-family: var(--font-display); font-size: 32px; font-weight: 800; color: var(--text-1); letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 8px; }
-.page-sub { font-size: 14px; color: var(--text-2); }
-
-/* TABS */
-.tabs-wrap { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid var(--border-1); }
-.tabs { display: flex; gap: 0; }
-.tab { padding: 12px 18px; background: transparent; border: none; color: var(--text-2); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s var(--ease); border-bottom: 2px solid transparent; margin-bottom: -1px; display: inline-flex; align-items: center; gap: 6px; }
-.tab:hover { color: var(--text-1); }
-.tab.active { color: var(--sp-peach-400); border-bottom-color: var(--sp-peach-400); }
-.tabs-actions { display: flex; gap: 8px; padding-bottom: 6px; align-items: center; }
-.action-btn { height: 32px; padding: 0 12px; background: transparent; border: 1px solid var(--border-1); border-radius: var(--r-md); color: var(--text-2); font-size: 12.5px; font-weight: 600; cursor: pointer; }
-.action-btn:hover { border-color: var(--border-2); color: var(--text-1); }
-
-/* TOKEN GRID */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
-.tcard { background: var(--surface-1); border: 1px solid var(--border-1); border-radius: var(--r-lg); padding: 16px; cursor: pointer; transition: all 0.15s var(--ease); position: relative; overflow: hidden; }
-.tcard:hover { border-color: var(--border-2); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-.tcard.almost { background: linear-gradient(180deg, var(--sp-amber-soft), var(--surface-1) 35%); }
-
-.tc-row { display: flex; gap: 12px; margin-bottom: 12px; }
-.tc-avatar { width: 48px; height: 48px; border-radius: 10px; flex-shrink: 0; display: grid; place-items: center; overflow: hidden; }
-.tc-meta { flex: 1; min-width: 0; }
-.tc-name-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
-.tc-name { font-family: var(--font-display); font-size: 15px; font-weight: 800; color: var(--text-1); letter-spacing: -0.01em; line-height: 1.15; }
-.tc-leaf { width: 14px; height: 14px; flex-shrink: 0; }
-.tc-leaf.gold { color: var(--sp-peach-400); }
-.tc-leaf.silver { color: var(--sp-teal-400); }
-.tc-leaf.bronze { color: var(--sp-amber-400); }
-.tc-symbol { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); font-weight: 600; letter-spacing: 0.05em; }
-
-.tc-price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; font-family: var(--font-mono); }
-.tc-price { font-size: 16px; font-weight: 700; color: var(--text-1); }
-.tc-up { color: var(--sp-teal-400); font-size: 12px; font-weight: 600; }
-.tc-down { color: var(--sp-crimson); font-size: 12px; font-weight: 600; }
-
-.tc-stats { display: flex; gap: 16px; padding: 10px 0; border-top: 1px solid var(--border-1); border-bottom: 1px solid var(--border-1); margin-bottom: 12px; }
-.tc-stat { flex: 1; }
-.tc-stat-label { font-size: 10px; color: var(--text-3); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 2px; }
-.tc-stat-value { font-family: var(--font-mono); font-size: 13px; color: var(--text-1); font-weight: 600; }
-
-.tc-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-.tc-bar-label { font-size: 10px; color: var(--text-3); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
-.tc-bar-label.amber { color: var(--sp-amber-400); }
-.tc-bar { flex: 1; height: 4px; background: var(--surface-3); border-radius: 2px; overflow: hidden; }
-.tc-fill { height: 100%; background: linear-gradient(90deg, var(--sp-peach-400), var(--sp-teal-400)); border-radius: 2px; }
-.tc-fill.amber { background: linear-gradient(90deg, var(--sp-amber-400), var(--sp-peach-400)); }
-.tc-pct { font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--sp-peach-400); min-width: 32px; text-align: right; }
-
-.tc-creator { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-3); }
-.tc-creator-mas { width: 18px; height: 18px; border-radius: 50%; background: var(--surface-3); display: grid; place-items: center; border: 1px solid var(--sp-peach-400); flex-shrink: 0; }
-.tc-creator-mas svg { width: 13px; height: 13px; }
-.tc-creator-by { color: var(--text-3); }
-.tc-creator-name { color: var(--sp-peach-400); font-weight: 600; }
-.tc-creator-tier { color: var(--sp-teal-400); font-weight: 600; }
-
-.badge-new { position: absolute; top: -1px; left: 16px; background: var(--sp-teal-400); color: #0a3320; font-size: 9.5px; font-weight: 800; padding: 3px 10px 3px 8px; border-radius: 0 0 var(--r-sm) var(--r-sm); letter-spacing: 0.04em; font-family: var(--font-display); }
-
-/* notice */
-.notice { background: var(--sp-peach-soft); border: 1px solid rgba(232, 168, 124, 0.25); border-radius: var(--r-md); padding: 10px 14px; font-size: 12px; color: var(--text-2); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
-.notice strong { color: var(--sp-peach-400); font-family: var(--font-display); }
 </style>
 </head>
 <body>
 
+<!-- ============ HEADER (fixed top, pro structure) ============ -->
 <header class="header">
-  <a class="logo" href="token_list_v4.html">
-    <div class="logo-mascot">
-      <svg viewBox="0 0 32 32" fill="none">
-        <ellipse cx="16" cy="24" rx="9" ry="6" fill="#8B4513"/>
-        <ellipse cx="11" cy="14" rx="3" ry="6" transform="rotate(-25 11 14)" fill="#7cc4a4"/>
-        <ellipse cx="21" cy="14" rx="3" ry="6" transform="rotate(25 21 14)" fill="#5ba886"/>
-        <rect x="15" y="16" width="2" height="8" fill="#3d7458"/>
-        <circle cx="13" cy="25" r="0.8" fill="#1a1208"/>
-        <circle cx="19" cy="25" r="0.8" fill="#1a1208"/>
-        <path d="M 13 27 Q 16 28.5 19 27" stroke="#1a1208" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+  <div class="logo" onclick="location.href='token_list_v4.html'" style="cursor:pointer" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
+  <div class="logo-mascot" style="width:var(--mascot-lg);height:var(--mascot-lg);border-radius:10px;background:linear-gradient(180deg,#e8a87c,#e8a87c);display:grid;place-items:center;flex-shrink:0">
+    <svg viewBox="0 0 64 64" fill="none">
+        <ellipse cx="32" cy="46" rx="16" ry="11" fill="#8B4513"/>
+        <ellipse cx="24" cy="28" rx="6" ry="11" transform="rotate(-25 24 28)" fill="#7cc4a4"/>
+        <ellipse cx="40" cy="28" rx="6" ry="11" transform="rotate(25 40 28)" fill="#5ba886"/>
+        <rect x="30" y="30" width="4" height="14" fill="#3d7458"/>
+        <circle cx="27" cy="48" r="1.5" fill="#1a1208"/>
+        <circle cx="37" cy="48" r="1.5" fill="#1a1208"/>
+        <path d="M 27 51 Q 32 53.5 37 51" stroke="#1a1208" stroke-width="1.2" fill="none" stroke-linecap="round"/>
       </svg>
-    </div>
-    <div class="logo-text-wrap">
-      <span class="logo-text">Sprout</span>
-      <span class="logo-sub">the meme garden</span>
-    </div>
+  </div>
+  <div>
+    <span class="logo-text" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:17px;font-weight:800;color:#e8a87c;letter-spacing:-0.01em">Sprout</span>
+    <span style="display:block;font-size:9px;font-weight:600;color:#6f7d74;letter-spacing:0.06em;text-transform:lowercase">the meme garden</span>
+  </div>
+</div>
+    <span class="logo-text">Sprout</span><span class="logo-sub" style="display:block;font-size:9px;font-weight:600;color:var(--text-3);letter-spacing:0.06em;text-transform:lowercase;margin-top:-1px">the meme garden</span>
   </a>
 
   <div class="header-search">
@@ -211,52 +834,53 @@ body { background: var(--bg); color: var(--text-1); font-family: var(--font-body
 
   <div class="header-actions">
     <div class="wallet-connected" onclick="toggleWalletMenu(event)">
-      <div class="wc-avatar">
-        <svg viewBox="0 0 24 24" fill="none">
-          <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
-          <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
-          <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
-          <rect x="11" y="12" width="2" height="6" fill="#3d7458"/>
-          <circle cx="10" cy="19" r="0.6" fill="#1a1208"/>
-          <circle cx="14" cy="19" r="0.6" fill="#1a1208"/>
-          <path d="M 10 20.5 Q 12 21.5 14 20.5" stroke="#1a1208" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="wc-info">
-        <div class="wc-balance">12.45 SOL</div>
-        <div class="wc-addr">7xK9…mP3q</div>
-      </div>
-      <span class="wc-net-dot" title="Solana mainnet"></span>
-      <svg class="wc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  <div class="wc-avatar">
+    <svg viewBox="0 0 24 24" fill="none">
+        <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
+        <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
+        <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
+        <rect x="11" y="12" width="2" height="6" fill="#3d7458"/>
+        <circle cx="10" cy="19" r="0.6" fill="#1a1208"/>
+        <circle cx="14" cy="19" r="0.6" fill="#1a1208"/>
+        <path d="M 10 20.5 Q 12 21.5 14 20.5" stroke="#1a1208" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+      </svg>
+  </div>
+  <div class="wc-info">
+    <div class="wc-balance">12.45 SOL</div>
+    <div class="wc-addr">7xK9…mP3q</div>
+  </div>
+  <span class="wc-net-dot" title="Solana mainnet"></span>
+  <svg class="wc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
 
-      <div class="wc-menu">
-        <div class="wc-menu-head">
-          <div class="wc-menu-net"><span class="wc-net-dot"></span> Solana mainnet</div>
-          <div class="wc-menu-bal">12.45 SOL</div>
-        </div>
-        <a class="wc-item" href="my_profile.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          My profile
-        </a>
-        <button class="wc-item" onclick="event.stopPropagation()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copy address
-        </button>
-        <a class="wc-item" href="edit_profile_privacy.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4"/></svg>
-          Settings
-        </a>
-        <div class="wc-divider"></div>
-        <button class="wc-item danger">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Disconnect
-        </button>
-      </div>
+  <div class="wc-menu">
+    <div class="wc-menu-head">
+      <div class="wc-menu-net"><span class="wc-net-dot"></span> Solana mainnet</div>
+      <div class="wc-menu-bal">12.45 SOL</div>
     </div>
-    <button class="btn-primary" onclick="location.href='create_token.html'">Create token</button>
+    <a class="wc-item" href="my_profile.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My profile
+    </a>
+    <button class="wc-item" onclick="event.stopPropagation(); navigator.clipboard&&navigator.clipboard.writeText('7xK9...mP3q')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy address
+    </button>
+    <a class="wc-item" href="edit_profile_privacy.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+    <div class="wc-divider"></div>
+    <button class="wc-item danger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Disconnect
+    </button>
+  </div>
+</div>
+    <button onclick="location.href='create_token.html'" class="btn-primary">Create token</button>
   </div>
 </header>
 
+<!-- ============ MARQUEE (kept from MVP) ============ -->
 <div class="marquee">
   <div class="marquee-track">
     <span class="peach">PLANT YOUR SEED</span><span>·</span>
@@ -274,11 +898,13 @@ body { background: var(--bg); color: var(--text-1); font-family: var(--font-body
   </div>
 </div>
 
+<!-- ============ SIDEBAR (grouping, pro structure) ============ -->
 <aside class="sidebar">
+
   <div class="nav-group">
     <div class="nav-label">Discover</div>
     <a class="nav-item active" href="token_list_v4.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg>
       Discover
     </a>
     <a class="nav-item" href="FR-012_TokenWar.html">
@@ -286,7 +912,7 @@ body { background: var(--bg); color: var(--text-1); font-family: var(--font-body
       Arena
     </a>
     <a class="nav-item" href="clubs.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 17.5 4.5 15M17 9l-3 6M11 4 7 10M21 9c-2 4-3.5 6.5-7.5 8.5L8 16M14 4c2 4 3.5 6.5 7.5 8.5"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 17.5 4.5 15"/><path d="m17 9-3 6"/><path d="M11 4 7 10"/><path d="M21 9c-2 4-3.5 6.5-7.5 8.5L8 16"/><path d="M14 4c2 4 3.5 6.5 7.5 8.5"/></svg>
       Clubs
     </a>
     <a class="nav-item" href="events.html">
@@ -294,7 +920,7 @@ body { background: var(--bg); color: var(--text-1); font-family: var(--font-body
       Events
     </a>
     <a class="nav-item" href="leaderboard.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
       Leader Board
     </a>
   </div>
@@ -310,12 +936,12 @@ body { background: var(--bg); color: var(--text-1); font-family: var(--font-body
 
   <div class="nav-group">
     <div class="nav-label">Earn</div>
-    <a class="nav-item" href="points.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
-      Points
-    </a>
     <a class="nav-item" href="rewards.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+      Point System
+    </a>
+    <a class="nav-item" href="points.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
       Rewards
     </a>
     <a class="nav-item" href="referrals.html">
@@ -328,297 +954,420 @@ body { background: var(--bg); color: var(--text-1); font-family: var(--font-body
     </a>
   </div>
 
-  <div class="user-card" onclick="location.href='my_profile.html'">
+  <!-- User card (signature moment: mascot Tier) -->
+  <div class="user-card" onclick="location.href='my_profile.html'" style="cursor:pointer">
     <div class="user-mascot">
-      <svg viewBox="0 0 24 24" fill="none">
-        <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
-        <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
-        <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
-        <rect x="11" y="12" width="2" height="6" fill="#3d7458"/>
-        <circle cx="10" cy="19" r="0.6" fill="#1a1208"/>
-        <circle cx="14" cy="19" r="0.6" fill="#1a1208"/>
-        <path d="M 10 20.5 Q 12 21.5 14 20.5" stroke="#1a1208" stroke-width="0.5" fill="none" stroke-linecap="round"/>
-      </svg>
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+  <path d="M3 9L12 5L21 9" fill="#3d7458"/>
+  <rect x="5" y="9" width="14" height="11" rx="1" fill="#3d7458"/>
+  <path d="M9 9L10 7L11 9Z" fill="#e8a87c"/>
+  <path d="M13 9L14 7L15 9Z" fill="#e8a87c"/>
+  <circle cx="12" cy="14" r="4" fill="#e8a87c"/>
+  <ellipse cx="10.5" cy="13" rx="0.7" ry="0.9" fill="#3d7458"/>
+  <ellipse cx="13.5" cy="13" rx="0.7" ry="0.9" fill="#3d7458"/>
+  <path d="M10.5 15.5 Q12 16.5 13.5 15.5" stroke="#3d7458" stroke-width="0.6" fill="none" stroke-linecap="round"/>
+</svg>
     </div>
     <div class="user-info">
       <div class="user-name">NobleFlame</div>
-      <div class="user-tier">Sapling · 2,485 pts</div>
+      <div class="user-tier">Sprout · 642 pts</div>
     </div>
   </div>
 </aside>
 
+<!-- ============ MAIN CONTENT ============ -->
 <main class="main">
-  <div class="notice"><span>🌱</span><div><strong>Sprout v4</strong> · Green-tinted garden palette · Trust shields giữ Bronze/Silver/Gold standard · Token cards với sprout creator avatars</div></div>
 
-  <div class="page-head">
-    <h1 class="page-title">Discover tokens</h1>
-    <p class="page-sub">Plant your seed in the memeconomy. Watch what's blooming.</p>
+  <div class="notice">
+    <span style="font-size:14px">🌱</span>
+    <div><strong>Preview v4 (final)</strong> · Trust shield: chỉ icon màu (Bronze amber / Silver teal / Gold peach), hover thấy score chi tiết. Bỏ Buy button khỏi card. Bỏ featured row + subtitle.</div>
   </div>
 
+  <!-- Page header -->
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Discover tokens</h1>
+      <!-- Group A fix 2026-05-06: hero tagline -->
+      <p class="page-subtitle">Plant your seed in the memeconomy.</p>
+    </div>
+  </div>
+
+  <!-- Tabs (line indicator — pro) -->
   <div class="tabs-wrap">
-    <div class="tabs">
-      <button class="tab active">Trending</button>
-      <button class="tab">Trending Arena</button>
-      <button class="tab">Market Cap</button>
-      <button class="tab">New</button>
-      <button class="tab">Graduated</button>
+    <div class="tabs" id="main-tabs">
+      <button class="tab active" onclick="switchMainTab(this,'trending')">Trending</button>
+      <button class="tab" onclick="switchMainTab(this,'arena'); location.href='FR-012_TokenWar.html'">
+        <svg class="tab-leaf" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8 5 5 9 5 14c0 4 3 8 7 8s7-4 7-8c0-5-3-9-7-12z"/></svg>
+        Trending Arena
+      </button>
+      <button class="tab" onclick="switchMainTab(this,'marketcap')">Market Cap</button>
+      <button class="tab" onclick="switchMainTab(this,'new')">New</button>
+      <button class="tab" onclick="switchMainTab(this,'finalized')">Finalized</button>
     </div>
     <div class="tabs-actions">
-      <button class="action-btn">Sort ▼</button>
-      <button class="action-btn">Filter ▼</button>
+      <span class="tab-toggle" onclick="toggleSwitch(this)" id="nsfw-toggle">NSFW <div class="tt-toggle off"></div></span>
+      <span class="tab-toggle" onclick="toggleSwitch(this)" id="live-toggle">Live <div class="tt-toggle off"></div></span>
+      <button class="action-btn" id="sort-btn" onclick="toggleDropdown('sort-dropdown','filter-dropdown')">Sort ▼</button>
+      <button class="action-btn" id="filter-btn" onclick="toggleDropdown('filter-dropdown','sort-dropdown')">Filter ▼</button>
     </div>
   </div>
 
-  <div class="grid">
+  <!-- Sort dropdown -->
+  <div id="sort-dropdown" style="display:none;position:relative;margin-bottom:12px">
+    <div style="position:absolute;top:0;right:0;background:var(--surface-2);border:1px solid var(--border-2);border-radius:var(--r-md);padding:6px;min-width:180px;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,0.4)">
+      <div class="sort-option active" onclick="selectSort(this,'trending')">🔥 Trending</div>
+      <div class="sort-option" onclick="selectSort(this,'volume')">📊 Volume 24h</div>
+      <div class="sort-option" onclick="selectSort(this,'marketcap')">💰 Market Cap</div>
+      <div class="sort-option" onclick="selectSort(this,'new')">🆕 Newest first</div>
+    </div>
+  </div>
 
-    <!-- Card 1 -->
-    <div class="tcard" onclick="location.href='token_detail.html'">
-      <div class="tc-row">
-        <div class="tc-avatar" style="background: linear-gradient(135deg,#1a3a4a,#2a9d8f);">
-          <svg viewBox="0 0 32 32" width="32" height="32"><circle cx="16" cy="16" r="11" fill="#0d1f2d"/><path d="M11 11 A 7 7 0 0 0 11 21 A 5 5 0 0 1 11 11" fill="#7cc4a4"/></svg>
+  <!-- Filter dropdown -->
+  <div id="filter-dropdown" style="display:none;position:relative;margin-bottom:12px">
+    <div style="position:absolute;top:0;right:0;background:var(--surface-2);border:1px solid var(--border-2);border-radius:var(--r-md);padding:16px;min-width:260px;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,0.4)">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);margin-bottom:10px">Trust Level</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <label class="filter-chip active"><input type="checkbox" checked style="display:none"> 🥇 Gold</label>
+        <label class="filter-chip active"><input type="checkbox" checked style="display:none"> 🥈 Silver</label>
+        <label class="filter-chip active"><input type="checkbox" checked style="display:none"> 🥉 Bronze</label>
+      </div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);margin-bottom:10px">Progress to DEX</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <label class="filter-chip"><input type="checkbox" style="display:none"> Almost there</label>
+        <label class="filter-chip"><input type="checkbox" style="display:none"> &gt; 50%</label>
+        <label class="filter-chip"><input type="checkbox" style="display:none"> New</label>
+      </div>
+      <div style="display:flex;justify-content:space-between;gap:8px;margin-top:6px">
+        <button onclick="document.getElementById('filter-dropdown').style.display='none'" style="flex:1;padding:8px;background:var(--surface-3);border:1px solid var(--border-1);border-radius:var(--r-md);color:var(--text-2);font-family:inherit;font-size:12px;cursor:pointer">Reset</button>
+        <button onclick="document.getElementById('filter-dropdown').style.display='none'" style="flex:1;padding:8px;background:linear-gradient(180deg,#e8a87c,#e8a87c);border:none;border-radius:var(--r-md);color:#2a1505;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Token grid -->
+  <div class="token-grid">
+
+    <!-- Card 1: Moon Token -->
+    <div class="token-card" onclick="location.href='token_detail.html'">
+      <span class="favorite active"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+      <div class="card-head">
+        <div class="token-avatar" style="background:linear-gradient(135deg,#1a3a4a,#2a9d8f)">
+          <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="20" fill="#0d1f2d"/><path d="M22 22 A 12 12 0 0 0 22 38 A 8 8 0 0 1 22 22" fill="#7cc4a4"/></svg>
         </div>
-        <div class="tc-meta">
-          <div class="tc-name-row">
-            <span class="tc-name">Moon Token</span>
-            <svg class="tc-leaf gold" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+        <div class="token-meta">
+          <div class="token-name-row">
+            <span class="token-name">Moon Token</span>
+            <span class="trust-leaf trust-gold" title="Gold · 64/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span>
           </div>
-          <div class="tc-symbol">MOON</div>
+          <div class="token-symbol">MOON</div>
+          <div class="token-desc">A community-driven meme reaching escape velocity 🌙</div>
         </div>
       </div>
-      <div class="tc-price-row"><span class="tc-price">$0.0234</span><span class="tc-up">↑ 38.5%</span></div>
-      <div class="tc-stats">
-        <div class="tc-stat"><div class="tc-stat-label">Volume 24h</div><div class="tc-stat-value">$1.95M</div></div>
-        <div class="tc-stat"><div class="tc-stat-label">Market cap</div><div class="tc-stat-value">$242K</div></div>
+      <div class="price-row">
+        <span class="price-value">$0.0234</span>
+        <span class="price-change price-up">↑ 38.5%</span>
       </div>
-      <div class="tc-bar-row">
-        <span class="tc-bar-label">To DEX</span>
-        <div class="tc-bar"><div class="tc-fill" style="width:22%"></div></div>
-        <span class="tc-pct">22%</span>
+      <div class="stats-row">
+        <div class="stat-cell"><span class="stat-label">Volume 24h</span><span class="stat-value">$1.95M</span></div>
+        <div class="stat-cell"><span class="stat-label-row"><span class="stat-label">Market cap</span><span class="trust-leaf trust-gold" title="Gold · 64/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span></span><span class="stat-value">$242.2K</span></div>
       </div>
-      <div class="tc-creator">
-        <div class="tc-creator-mas">
-          <svg viewBox="0 0 24 24" fill="none">
-            <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
-            <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
-            <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
-          </svg>
+      <div class="card-footer">
+        <div class="creator-info">
+          <div class="creator-avatar" style="background:linear-gradient(135deg,#7cc4a4,#5ba886)"></div>
+          <span class="creator-name">by alice · Sapling tier · 12d ago</span>
         </div>
-        <span class="tc-creator-by">by</span>
-        <span class="tc-creator-name">alice</span>
-        <span>·</span>
-        <span class="tc-creator-tier">Sapling</span>
-        <span>· 12d ago</span>
+      </div>
+      <div class="graduation">
+        <span class="graduation-label">To DEX</span>
+        <div class="graduation-bar"><div class="graduation-fill" style="width:22%"></div></div>
+        <span class="graduation-percent">22%</span>
       </div>
     </div>
 
-    <!-- Card 2 - Almost graduated -->
-    <div class="tcard almost" onclick="location.href='token_detail.html'">
-      <div class="tc-row">
-        <div class="tc-avatar" style="background: linear-gradient(135deg,#7cc4a4,#1f7050);">
-          <svg viewBox="0 0 32 32" width="32" height="32"><ellipse cx="16" cy="16" rx="10" ry="7" fill="#5ba886"/><line x1="9" y1="16" x2="23" y2="16" stroke="#0d1f15" stroke-width="1.5"/></svg>
+    <!-- Card 2: Pump Token — ALMOST THERE -->
+    <div class="token-card almost-there" onclick="location.href='token_detail.html'">
+      <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+      <div class="card-head">
+        <div class="token-avatar" style="background:linear-gradient(135deg,#7cc4a4,#1f7050)">
+          <svg viewBox="0 0 60 60"><ellipse cx="30" cy="30" rx="18" ry="12" fill="#5ba886"/><ellipse cx="30" cy="30" rx="18" ry="12" stroke="#0d1f15" stroke-width="2" fill="none"/><line x1="20" y1="30" x2="40" y2="30" stroke="#0d1f15" stroke-width="2"/></svg>
         </div>
-        <div class="tc-meta">
-          <div class="tc-name-row">
-            <span class="tc-name">Pump Token</span>
-            <svg class="tc-leaf gold" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+        <div class="token-meta">
+          <div class="token-name-row">
+            <span class="token-name">Pump Token</span>
+            <span class="trust-leaf trust-gold" title="Gold · 92/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span>
           </div>
-          <div class="tc-symbol">PUMP</div>
+          <div class="token-symbol">PUMP</div>
+          <div class="token-desc">Almost graduated — seconds away from the DEX canopy.</div>
         </div>
       </div>
-      <div class="tc-price-row"><span class="tc-price">$0.6450</span><span class="tc-up">↑ 122.3%</span></div>
-      <div class="tc-stats">
-        <div class="tc-stat"><div class="tc-stat-label">Volume 24h</div><div class="tc-stat-value">$981K</div></div>
-        <div class="tc-stat"><div class="tc-stat-label">Market cap</div><div class="tc-stat-value">$677K</div></div>
+      <div class="price-row">
+        <span class="price-value">$0.6450</span>
+        <span class="price-change price-up">↑ 122.3%</span>
       </div>
-      <div class="tc-bar-row">
-        <span class="tc-bar-label amber">Almost graduated</span>
-        <div class="tc-bar"><div class="tc-fill amber" style="width:93%"></div></div>
-        <span class="tc-pct">93%</span>
+      <div class="stats-row">
+        <div class="stat-cell"><span class="stat-label">Volume 24h</span><span class="stat-value">$981.5K</span></div>
+        <div class="stat-cell"><span class="stat-label-row"><span class="stat-label">Market cap</span><span class="trust-leaf trust-gold" title="Gold · 92/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span></span><span class="stat-value">$677.9K</span></div>
       </div>
-      <div class="tc-creator">
-        <div class="tc-creator-mas">
-          <svg viewBox="0 0 24 24" fill="none">
-            <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
-            <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
-            <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
-          </svg>
+      <div class="card-footer">
+        <div class="creator-info">
+          <div class="creator-avatar" style="background:linear-gradient(135deg,#e8a87c,#d68a5b)"></div>
+          <span class="creator-name">by bob · Sprout tier · 3d ago</span>
         </div>
-        <span class="tc-creator-by">by</span>
-        <span class="tc-creator-name">bob</span>
-        <span>·</span>
-        <span class="tc-creator-tier">Tree</span>
-        <span>· 28d ago</span>
+      </div>
+      <div class="graduation">
+        <span class="graduation-label" style="color:var(--sp-peach-400)">Almost graduated</span>
+        <div class="graduation-bar"><div class="graduation-fill amber" style="width:93%"></div></div>
+        <span class="graduation-percent amber">93%</span>
       </div>
     </div>
 
-    <!-- Card 3 - Just sprouted -->
-    <div class="tcard" onclick="location.href='token_detail.html'">
-      <span class="badge-new">New</span>
-      <div class="tc-row" style="margin-top: 6px;">
-        <div class="tc-avatar" style="background: linear-gradient(135deg,#e8a87c,#a05030);">
-          <svg viewBox="0 0 32 32" width="32" height="32"><polygon points="16,5 20,14 16,22 12,14" fill="#f4cba0"/></svg>
+    <!-- Card 3: Rock Token — wilting -->
+    <div class="token-card" onclick="location.href='token_detail.html'">
+      <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+      <div class="card-head">
+        <div class="token-avatar" style="background:linear-gradient(135deg,#a89683,#5a4836)">
+          <svg viewBox="0 0 60 60"><ellipse cx="30" cy="38" rx="22" ry="14" fill="#7d6a48"/><ellipse cx="22" cy="34" rx="3" ry="4" fill="#fff"/><ellipse cx="38" cy="34" rx="3" ry="4" fill="#fff"/><circle cx="22" cy="34" r="1.5" fill="#000"/><circle cx="38" cy="34" r="1.5" fill="#000"/></svg>
         </div>
-        <div class="tc-meta">
-          <div class="tc-name-row">
-            <span class="tc-name">Crystal STAR023</span>
-            <svg class="tc-leaf bronze" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+        <div class="token-meta">
+          <div class="token-name-row">
+            <span class="token-name">Rock Token</span>
+            <span class="trust-leaf trust-silver" title="Silver · 38/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span>
           </div>
-          <div class="tc-symbol">STAR023 · 7 min ago</div>
+          <div class="token-symbol">ROCK</div>
+          <div class="token-desc">Solid as a rock. Currently in correction — patient gardeners welcome.</div>
         </div>
       </div>
-      <div class="tc-price-row"><span class="tc-price">$0.000087</span><span class="tc-up">↑ 0%</span></div>
-      <div class="tc-stats">
-        <div class="tc-stat"><div class="tc-stat-label">Volume 24h</div><div class="tc-stat-value">$0</div></div>
-        <div class="tc-stat"><div class="tc-stat-label">Market cap</div><div class="tc-stat-value">$87</div></div>
+      <div class="price-row">
+        <span class="price-value">$0.1245</span>
+        <span class="price-change price-down">↓ 12.8%</span>
       </div>
-      <div class="tc-bar-row">
-        <span class="tc-bar-label">To DEX</span>
-        <div class="tc-bar"><div class="tc-fill" style="width:1%"></div></div>
-        <span class="tc-pct">2%</span>
+      <div class="stats-row">
+        <div class="stat-cell"><span class="stat-label">Volume 24h</span><span class="stat-value">$67.0K</span></div>
+        <div class="stat-cell"><span class="stat-label-row"><span class="stat-label">Market cap</span><span class="trust-leaf trust-silver" title="Silver · 38/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span></span><span class="stat-value">$68.6K</span></div>
       </div>
-      <div class="tc-creator">
-        <div class="tc-creator-mas">
-          <svg viewBox="0 0 24 24" fill="none">
-            <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
-            <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
-            <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
-          </svg>
+      <div class="card-footer">
+        <div class="creator-info">
+          <div class="creator-avatar" style="background:linear-gradient(135deg,#d65a54,#b94842)"></div>
+          <span class="creator-name">by charlie · Seed tier · 1d ago</span>
         </div>
-        <span class="tc-creator-by">by</span>
-        <span class="tc-creator-name">charlie</span>
-        <span>·</span>
-        <span class="tc-creator-tier">Seed</span>
-        <span>· 7m ago</span>
+      </div>
+      <div class="graduation">
+        <span class="graduation-label">To DEX</span>
+        <div class="graduation-bar"><div class="graduation-fill" style="width:35%"></div></div>
+        <span class="graduation-percent">35%</span>
       </div>
     </div>
 
-    <!-- Card 4 -->
-    <div class="tcard" onclick="location.href='token_detail.html'">
-      <div class="tc-row">
-        <div class="tc-avatar" style="background: linear-gradient(135deg,#5ba886,#3d7458);">
-          <svg viewBox="0 0 32 32" width="32" height="32"><ellipse cx="16" cy="22" rx="9" ry="6" fill="#3d7458"/><path d="M11 14 Q 16 8 21 14" stroke="#7cc4a4" stroke-width="2" fill="none"/></svg>
+    <!-- Card 4: Crystal STAR023 — NEW -->
+    <div class="token-card" onclick="location.href='token_detail.html'">
+      <span class="badge-new">
+        <svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="8" cy="10" rx="3" ry="5" transform="rotate(-25 8 10)"/><ellipse cx="16" cy="10" rx="3" ry="5" transform="rotate(25 16 10)"/><rect x="11" y="9" width="2" height="11"/></svg>
+        New
+      </span>
+      <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+      <div class="card-head" style="margin-top:8px">
+        <div class="token-avatar" style="background:linear-gradient(135deg,#e8a87c,#a05030)">
+          <svg viewBox="0 0 60 60"><polygon points="30,10 38,26 30,42 22,26" fill="#e8a87c"/><polygon points="30,10 38,26 30,26" fill="#e8a87c"/></svg>
         </div>
-        <div class="tc-meta">
-          <div class="tc-name-row">
-            <span class="tc-name">Pepe Seed</span>
-            <svg class="tc-leaf silver" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+        <div class="token-meta">
+          <div class="token-name-row">
+            <span class="token-name">Crystal STAR023</span>
+            <span class="trust-leaf trust-bronze" title="Bronze · 12/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span>
           </div>
-          <div class="tc-symbol">PSEED</div>
+          <div class="token-symbol">STAR023</div>
+          <div class="token-desc">Fresh launch — seven minutes old. Be the first to tend it.</div>
         </div>
       </div>
-      <div class="tc-price-row"><span class="tc-price">$0.0089</span><span class="tc-up">↑ 14.2%</span></div>
-      <div class="tc-stats">
-        <div class="tc-stat"><div class="tc-stat-label">Volume 24h</div><div class="tc-stat-value">$45.2K</div></div>
-        <div class="tc-stat"><div class="tc-stat-label">Market cap</div><div class="tc-stat-value">$108K</div></div>
+      <div class="price-row">
+        <span class="price-value">$0.000087</span>
+        <span class="price-change price-up">↑ 0.0%</span>
       </div>
-      <div class="tc-bar-row">
-        <span class="tc-bar-label">To DEX</span>
-        <div class="tc-bar"><div class="tc-fill" style="width:54%"></div></div>
-        <span class="tc-pct">54%</span>
+      <div class="stats-row">
+        <div class="stat-cell"><span class="stat-label">Volume 24h</span><span class="stat-value">$0</span></div>
+        <div class="stat-cell"><span class="stat-label-row"><span class="stat-label">Market cap</span><span class="trust-leaf trust-bronze" title="Bronze · 12/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span></span><span class="stat-value">$87</span></div>
       </div>
-      <div class="tc-creator">
-        <div class="tc-creator-mas">
-          <svg viewBox="0 0 24 24" fill="none">
-            <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
-            <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
-            <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
-          </svg>
+      <div class="card-footer">
+        <div class="creator-info">
+          <div class="creator-avatar" style="background:linear-gradient(135deg,#9ed8b8,#5ba886)"></div>
+          <span class="creator-name">by diana · Seed tier · 7m ago</span>
         </div>
-        <span class="tc-creator-by">by</span>
-        <span class="tc-creator-name">dana</span>
-        <span>·</span>
-        <span class="tc-creator-tier">Sprout</span>
-        <span>· 4d ago</span>
+      </div>
+      <div class="graduation">
+        <span class="graduation-label">To DEX</span>
+        <div class="graduation-bar"><div class="graduation-fill" style="width:1%"></div></div>
+        <span class="graduation-percent">2%</span>
       </div>
     </div>
 
-    <!-- Card 5 -->
-    <div class="tcard" onclick="location.href='token_detail.html'">
-      <div class="tc-row">
-        <div class="tc-avatar" style="background: linear-gradient(135deg,#e8a87c,#d68a5b);">
-          <svg viewBox="0 0 32 32" width="32" height="32"><circle cx="16" cy="16" r="10" fill="#f4cba0"/><circle cx="16" cy="16" r="5" fill="#d68a5b"/></svg>
+    <!-- Card 5: Cosmos FIRE094 — HOVERED demo -->
+    <div class="token-card is-hovered" onclick="location.href='token_detail.html'">
+      <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+      <div class="card-head">
+        <div class="token-avatar" style="background:linear-gradient(135deg,#d4a256,#8a5e1e)">
+          <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="18" fill="none" stroke="#e8a87c" stroke-width="2"/><circle cx="30" cy="30" r="12" fill="none" stroke="#e8a87c" stroke-width="1.5"/><circle cx="30" cy="30" r="5" fill="#e8a87c"/></svg>
         </div>
-        <div class="tc-meta">
-          <div class="tc-name-row">
-            <span class="tc-name">Sun Token</span>
-            <svg class="tc-leaf gold" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+        <div class="token-meta">
+          <div class="token-name-row">
+            <span class="token-name">Cosmos FIRE094</span>
+            <span class="trust-leaf trust-silver" title="Silver · 45/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span>
           </div>
-          <div class="tc-symbol">SUN</div>
+          <div class="token-symbol">FIRE094</div>
+          <div class="token-desc">Cosmic energy meets meme culture. A seasoned grower just joined.</div>
         </div>
       </div>
-      <div class="tc-price-row"><span class="tc-price">$0.124</span><span class="tc-down">↓ 4.8%</span></div>
-      <div class="tc-stats">
-        <div class="tc-stat"><div class="tc-stat-label">Volume 24h</div><div class="tc-stat-value">$324K</div></div>
-        <div class="tc-stat"><div class="tc-stat-label">Market cap</div><div class="tc-stat-value">$489K</div></div>
+      <div class="price-row">
+        <span class="price-value">$0.0079</span>
+        <span class="price-change price-up">↑ 14.2%</span>
       </div>
-      <div class="tc-bar-row">
-        <span class="tc-bar-label">To DEX</span>
-        <div class="tc-bar"><div class="tc-fill" style="width:71%"></div></div>
-        <span class="tc-pct">71%</span>
+      <div class="stats-row">
+        <div class="stat-cell"><span class="stat-label">Volume 24h</span><span class="stat-value">$15.5K</span></div>
+        <div class="stat-cell"><span class="stat-label-row"><span class="stat-label">Market cap</span><span class="trust-leaf trust-silver" title="Silver · 45/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span></span><span class="stat-value">$3.16M</span></div>
       </div>
-      <div class="tc-creator">
-        <div class="tc-creator-mas">
-          <svg viewBox="0 0 24 24" fill="none">
-            <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
-            <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
-            <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
-          </svg>
+      <div class="card-footer">
+        <div class="creator-info">
+          <div class="creator-avatar" style="background:linear-gradient(135deg,#d4a256,#b88840)"></div>
+          <span class="creator-name">by eve · Sprout tier · 2d ago</span>
         </div>
-        <span class="tc-creator-by">by</span>
-        <span class="tc-creator-name">eve</span>
-        <span>·</span>
-        <span class="tc-creator-tier">Tree</span>
-        <span>· 18d ago</span>
+      </div>
+      <div class="graduation">
+        <span class="graduation-label">To DEX</span>
+        <div class="graduation-bar"><div class="graduation-fill" style="width:31%"></div></div>
+        <span class="graduation-percent">31%</span>
       </div>
     </div>
 
-    <!-- Card 6 -->
-    <div class="tcard" onclick="location.href='token_detail.html'">
-      <div class="tc-row">
-        <div class="tc-avatar" style="background: linear-gradient(135deg,#9ed8b8,#5ba886);">
-          <svg viewBox="0 0 32 32" width="32" height="32"><path d="M16 6 L 8 26 L 24 26 Z" fill="#5ba886"/></svg>
+    <!-- Card 6: Silver SILVER037 -->
+    <div class="token-card" onclick="location.href='token_detail.html'">
+      <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+      <div class="card-head">
+        <div class="token-avatar" style="background:linear-gradient(135deg,#9ed8b8,#5ba886)">
+          <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="20" fill="#9ed8b8"/><circle cx="35" cy="25" r="14" fill="#0a1610"/></svg>
         </div>
-        <div class="tc-meta">
-          <div class="tc-name-row">
-            <span class="tc-name">Forest Coin</span>
-            <svg class="tc-leaf silver" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+        <div class="token-meta">
+          <div class="token-name-row">
+            <span class="token-name">Silver SILVER037</span>
+            <span class="trust-leaf trust-bronze" title="Bronze · 22/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span>
           </div>
-          <div class="tc-symbol">FOREST</div>
+          <div class="token-symbol">SILVER037</div>
+          <div class="token-desc">A silver lining for the SOL ecosystem. Slow and steady.</div>
         </div>
       </div>
-      <div class="tc-price-row"><span class="tc-price">$0.0034</span><span class="tc-up">↑ 8.1%</span></div>
-      <div class="tc-stats">
-        <div class="tc-stat"><div class="tc-stat-label">Volume 24h</div><div class="tc-stat-value">$67.8K</div></div>
-        <div class="tc-stat"><div class="tc-stat-label">Market cap</div><div class="tc-stat-value">$145K</div></div>
+      <div class="price-row">
+        <span class="price-value">$0.0356</span>
+        <span class="price-change price-up">↑ 4.7%</span>
       </div>
-      <div class="tc-bar-row">
-        <span class="tc-bar-label">To DEX</span>
-        <div class="tc-bar"><div class="tc-fill" style="width:38%"></div></div>
-        <span class="tc-pct">38%</span>
+      <div class="stats-row">
+        <div class="stat-cell"><span class="stat-label">Volume 24h</span><span class="stat-value">$15.4K</span></div>
+        <div class="stat-cell"><span class="stat-label-row"><span class="stat-label">Market cap</span><span class="trust-leaf trust-bronze" title="Bronze · 22/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span></span><span class="stat-value">$3.0M</span></div>
       </div>
-      <div class="tc-creator">
-        <div class="tc-creator-mas">
-          <svg viewBox="0 0 24 24" fill="none">
-            <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
-            <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
-            <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
-          </svg>
+      <div class="card-footer">
+        <div class="creator-info">
+          <div class="creator-avatar" style="background:linear-gradient(135deg,#7cc4a4,#3d7458)"></div>
+          <span class="creator-name">by frank · Sapling tier · 5d ago</span>
         </div>
-        <span class="tc-creator-by">by</span>
-        <span class="tc-creator-name">frank</span>
-        <span>·</span>
-        <span class="tc-creator-tier">Sapling</span>
-        <span>· 9d ago</span>
+      </div>
+      <div class="graduation">
+        <span class="graduation-label">To DEX</span>
+        <div class="graduation-bar"><div class="graduation-fill" style="width:42%"></div></div>
+        <span class="graduation-percent">42%</span>
       </div>
     </div>
 
   </div>
+
 </main>
 
-<script>
-  function toggleWalletMenu(e) { e.stopPropagation(); document.querySelectorAll('.wallet-connected').forEach(w => w.classList.toggle('open')); }
-  document.addEventListener('click', e => { if (!e.target.closest('.wallet-connected')) document.querySelectorAll('.wallet-connected').forEach(w => w.classList.remove('open')); });
-</script>
 
+<style>
+.sort-option {
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--text-2);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.sort-option:hover { background: var(--surface-3); color: var(--text-1); }
+.sort-option.active { color: var(--sp-peach-400); font-weight: 600; }
+.filter-chip {
+  padding: 6px 12px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  color: var(--text-2);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.12s;
+}
+.filter-chip.active {
+  background: var(--sp-peach-soft);
+  border-color: var(--sp-peach-400);
+  color: var(--sp-peach-400);
+  font-weight: 600;
+}
+</style>
+
+<script>
+// Close dropdowns on outside click
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#sort-btn') && !e.target.closest('#sort-dropdown'))
+    document.getElementById('sort-dropdown').style.display = 'none';
+  if (!e.target.closest('#filter-btn') && !e.target.closest('#filter-dropdown'))
+    document.getElementById('filter-dropdown').style.display = 'none';
+});
+
+function switchMainTab(btn, name) {
+  document.querySelectorAll('#main-tabs .tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Update page title
+  const titles = { trending:'Discover tokens', marketcap:'Top Market Cap', new:'New Arrivals', finalized:'Finalized Stalls', arena:'Trending Arena' };
+  const h1 = document.querySelector('.page-title');
+  if (h1 && titles[name]) h1.textContent = titles[name];
+}
+
+function toggleSwitch(el) {
+  const tog = el.querySelector('.tt-toggle');
+  tog.classList.toggle('off');
+}
+
+function toggleDropdown(showId, hideId) {
+  const show = document.getElementById(showId);
+  const hide = document.getElementById(hideId);
+  if (hide) hide.style.display = 'none';
+  show.style.display = show.style.display === 'none' ? 'block' : 'none';
+}
+
+function selectSort(el, key) {
+  document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+  const labels = { trending:'Trending ▼', volume:'Volume ▼', marketcap:'Market Cap ▼', new:'Newest ▼' };
+  document.getElementById('sort-btn').textContent = labels[key] || 'Sort ▼';
+  document.getElementById('sort-dropdown').style.display = 'none';
+}
+
+// Filter chip toggle
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => chip.classList.toggle('active'));
+});
+
+// Favorite heart toggle
+document.querySelectorAll('.favorite').forEach(fav => {
+  fav.addEventListener('click', function(e) {
+    e.stopPropagation();
+    this.classList.toggle('active');
+    const path = this.querySelector('path');
+    if (this.classList.contains('active')) {
+      this.querySelector('svg').setAttribute('fill','currentColor');
+    } else {
+      this.querySelector('svg').setAttribute('fill','none');
+    }
+  });
+});
+</script>
+<script>
+function toggleWalletMenu(e) { e.stopPropagation(); document.querySelectorAll('.wallet-connected').forEach(w => w.classList.toggle('open')); }
+document.addEventListener('click', e => { if (!e.target.closest('.wallet-connected')) document.querySelectorAll('.wallet-connected').forEach(w => w.classList.remove('open')); });
+</script>
 </body>
 </html>

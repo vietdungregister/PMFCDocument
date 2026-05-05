@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stall Manager — Sprout</title>
+    <style>
+        :root {
+    --bg:          #0a1610;
+    --surface-1:   #131f18;
+    --surface-2:   #1a2a20;
+    --surface-3:   #243528;
+    --border-1:    #1f2d24;
+    --border-2:    #2d4234;
+    --sp-peach-100: #f4cba0;
+    --sp-peach-200: #e8a87c;
+    --sp-peach-400: #e8a87c;
+    --sp-peach-500: #d68a5b;
+    --sp-peach-soft: rgba(232, 168, 124, 0.10);
+    --sp-forest-300: #5ba886;
+    --sp-forest-500: #3d7458;
+    --sp-forest-700: #3d7458;
+    --sp-cream:    #f4cba0;
+    --sp-teal-300: #9ED8B8;
+    --sp-teal-400: #7CC4A4;
+    --sp-teal-500: #5BA886;
+    --sp-crimson:  #D65A54;
+    --text-1: #f5f7f4;
+    --text-2: #a3b0a7;
+    --text-3: #6f7d74;
+    --text-mute: #4a5650;
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+    --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
+  --mascot-sm:   22px;
+  --mascot-md:   30px;
+  --mascot-lg:   40px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+/* === Mood B signature glow (locked 2026-05-05 — SPROUT_UI_SPEC.md §1.3a) === */
+/* Do NOT modify without updating spec section 1.3a first. */
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.06), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 30%, rgba(124,196,164,0.05), transparent 60%);
+  background-attachment: fixed;
+}
+.logo-mascot {
+  box-shadow: 0 0 24px rgba(232,168,124,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-primary {
+  box-shadow: 0 0 20px rgba(232,168,124,0.30);
+}
+.marquee-track .peach { color: var(--sp-peach-200); text-shadow: 0 0 12px rgba(232,168,124,0.4); }
+.marquee-track .teal  { color: var(--sp-teal-300);  text-shadow: 0 0 12px rgba(124,196,164,0.4); }
+.token-card.featured, .tk-card.featured, .card.featured {
+  border-color: rgba(232,168,124,0.55);
+  background: radial-gradient(ellipse 300px 200px at 100% 0%, rgba(232,168,124,0.10), transparent 70%), var(--surface-1);
+  box-shadow: 0 0 32px rgba(232,168,124,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.token-card:hover, .tk-card:hover {
+  box-shadow: 0 0 24px rgba(124,196,164,0.08);
+}
+.token-av, .tk-av { box-shadow: 0 0 16px rgba(124,196,164,0.15); }
+.bar-fill { box-shadow: 0 0 10px rgba(232,168,124,0.5); }
+/* === end Mood B glow === */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        /* Header */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-btn {
+            padding: 10px 20px;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .back-btn:hover {
+            background: var(--card-hover);
+            border-color: var(--primary);
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            background: var(--card2);
+            padding: 8px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        
+        .tab:hover {
+            background: var(--card-hover);
+            color: var(--accent);
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* View Container */
+        .view {
+            display: none;
+        }
+        
+        .view.active {
+            display: block;
+        }
+        
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .stat-sub {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        /* Token List */
+        .token-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .token-item {
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            gap: 16px;
+            align-items: center;
+            padding: 16px;
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .token-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .token-info {
+            flex: 1;
+        }
+        
+        .token-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .token-symbol {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .token-stats {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+        }
+        
+        .badge.graduated {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #059669;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        /* Token Detail View */
+        .token-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 24px;
+            background: var(--card2);
+            border-radius: 16px;
+            border: 1px solid var(--card-boarder);
+            margin-bottom: 24px;
+        }
+        
+        .token-detail-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .token-detail-info {
+            flex: 1;
+        }
+        
+        .token-detail-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .token-detail-symbol {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .token-detail-desc {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+        
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .metric-card {
+            background: var(--card);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .metric-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        /* Settings Section */
+        .settings-section {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            margin-bottom: 16px;
+        }
+        
+        .settings-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--card-boarder);
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-info h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .setting-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .toggle {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: var(--card-boarder);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .toggle.active {
+            background: var(--primary);
+        }
+        
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s;
+        }
+        
+        .toggle.active::after {
+            left: 26px;
+        }
+        
+        /* Posts List */
+        .post-item {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            margin-bottom: 12px;
+        }
+        
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .post-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .post-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .post-content {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .btn-danger {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .green { color: #10b981; }
+        .red { color: #ef4444; }
+    
+/* Back-to-home floating nav */
+.bz-back-nav {
+  position: fixed; top: 14px; left: 14px; z-index: 9999;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px 8px 10px;
+  background: rgba(19, 24, 38, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid #2d4234; border-radius: 999px;
+  color: #e8a87c; font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 12.5px; font-weight: 700; text-decoration: none;
+  letter-spacing: 0.02em; cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bz-back-nav:hover { background: rgba(234, 181, 82, 0.12); border-color: #e8a87c; }
+.bz-back-nav .bz-back-mascot {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: linear-gradient(180deg, #e8a87c, #e8a87c);
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.bz-back-nav svg { width: 16px; height: 16px; }
+.bz-back-nav .bz-back-arrow { color: #a3b0a7; font-size: 14px; line-height: 1; }
+
+</style>
+</head>
+<body>
+<!-- Bazaar back-to-home nav -->
+<a class="bz-back-nav" href="token_list_v4.html">
+  <div class="bz-back-mascot">
+    <svg viewBox="0 0 24 24" fill="none">
+        <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
+        <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
+        <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
+        <rect x="11" y="12" width="2" height="6" fill="#3d7458"/>
+        <circle cx="10" cy="19" r="0.6" fill="#1a1208"/>
+        <circle cx="14" cy="19" r="0.6" fill="#1a1208"/>
+        <path d="M 10 20.5 Q 12 21.5 14 20.5" stroke="#1a1208" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+      </svg>
+  </div>
+  <span class="bz-back-arrow">←</span>
+  <span>Sprout</span>
+</a>
+
+    <div class="container">
+        <!-- LEVEL 1: CREATOR DASHBOARD -->
+        <div id="dashboard-view" class="view active">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Stall Manager</h1>
+                </div>
+            </div>
+            
+            <!-- Tabs Navigation -->
+            <div class="tabs">
+                <button class="tab active" onclick="showDashboardTab(0)">Created Tokens</button>
+                <button class="tab" onclick="showDashboardTab(1)">Creator Revenue</button>
+            </div>
+            
+            <!-- Tab 1: Created Tokens -->
+            <div class="tab-content active" id="dashboard-tab-0">
+                <div class="token-list">
+                    <div class="token-item">
+                        <div class="token-avatar"></div>
+                        <div class="token-info">
+                            <div class="token-name">Pepe Seed</div>
+                            <div class="token-symbol">PSEED • Created 3 days ago</div>
+                        </div>
+                        <div class="token-stats">
+                            <div class="badge active">Active</div>
+                            <div style="margin-top: 8px;">
+                                <button class="btn btn-primary" onclick="showTokenManagement('Pepe Seed', 'PSEED')">Manage Token</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="token-item">
+                        <div class="token-avatar" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                        <div class="token-info">
+                            <div class="token-name">Doge Killer</div>
+                            <div class="token-symbol">DOGEK • Created 1 week ago</div>
+                        </div>
+                        <div class="token-stats">
+                            <div class="badge graduated">Graduated</div>
+                            <div style="margin-top: 8px;">
+                                <button class="btn btn-primary" onclick="showTokenManagement('Doge Killer', 'DOGEK')">Manage Token</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="token-item">
+                        <div class="token-avatar" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                        <div class="token-info">
+                            <div class="token-name">Moon Token</div>
+                            <div class="token-symbol">MOON • Created 2 weeks ago</div>
+                        </div>
+                        <div class="token-stats">
+                            <div class="badge active">Active</div>
+                            <div style="margin-top: 8px;">
+                                <button class="btn btn-primary" onclick="showTokenManagement('Moon Token', 'MOON')">Manage Token</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 2: Creator Revenue -->
+            <div class="tab-content" id="dashboard-tab-1">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-value">12.5 SOL</div>
+                        <div class="stat-sub">≈ $2,450</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Unclaimed Revenue</div>
+                        <div class="stat-value green">3.2 SOL</div>
+                        <div class="stat-sub">≈ $627</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Claimed</div>
+                        <div class="stat-value">9.3 SOL</div>
+                        <div class="stat-sub">≈ $1,823</div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--card); padding: 24px; border-radius: 12px; border: 1px solid var(--card-boarder);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div>
+                            <h3 style="font-size: 18px; margin-bottom: 4px;">Claim Your Revenue</h3>
+                            <p style="font-size: 14px; color: var(--text-secondary);">Withdraw your unclaimed earnings to your wallet</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;">Claim 3.2 SOL</button>
+                </div>
+                
+                <!-- Revenue Breakdown -->
+                <div style="margin-top: 24px;">
+                    <h3 style="font-size: 18px; margin-bottom: 16px;">Revenue by Token</h3>
+                    <div class="token-list">
+                        <div class="token-item">
+                            <div class="token-avatar"></div>
+                            <div class="token-info">
+                                <div class="token-name">Pepe Seed</div>
+                                <div class="token-symbol">PSEED</div>
+                            </div>
+                            <div class="token-stats">
+                                <div style="font-size: 16px; font-weight: 600;">5.8 SOL</div>
+                                <div style="font-size: 14px; color: var(--text-secondary);">≈ $1,136</div>
+                            </div>
+                        </div>
+                        
+                        <div class="token-item">
+                            <div class="token-avatar" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                            <div class="token-info">
+                                <div class="token-name">Doge Killer</div>
+                                <div class="token-symbol">DOGEK</div>
+                            </div>
+                            <div class="token-stats">
+                                <div style="font-size: 16px; font-weight: 600;">4.2 SOL</div>
+                                <div style="font-size: 14px; color: var(--text-secondary);">≈ $823</div>
+                            </div>
+                        </div>
+                        
+                        <div class="token-item">
+                            <div class="token-avatar" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                            <div class="token-info">
+                                <div class="token-name">Moon Token</div>
+                                <div class="token-symbol">MOON</div>
+                            </div>
+                            <div class="token-stats">
+                                <div style="font-size: 16px; font-weight: 600;">2.5 SOL</div>
+                                <div style="font-size: 14px; color: var(--text-secondary);">≈ $491</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- LEVEL 2: TOKEN MANAGEMENT -->
+        <div id="token-management-view" class="view">
+            <div class="page-header">
+                <div>
+                    <div class="breadcrumb">
+                        <a onclick="showDashboard()">Stall Manager</a>
+                        <span>›</span>
+                        <span id="current-token-name">Token Management</span>
+                    </div>
+                    <h1 class="page-title">Manage Token</h1>
+                </div>
+                <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            </div>
+            
+            <!-- Token Detail Header -->
+            <div class="token-detail-header">
+                <div class="token-detail-avatar"></div>
+                <div class="token-detail-info">
+                    <div class="token-detail-name" id="token-manage-name">Pepe Seed</div>
+                    <div class="token-detail-symbol" id="token-manage-symbol">PSEED</div>
+                    <div class="token-detail-desc">The next generation meme token on Solana 🚀</div>
+                </div>
+                <div class="badge active">Active</div>
+            </div>
+            
+            <!-- Tabs Navigation -->
+            <div class="tabs">
+                <button class="tab active" onclick="showManagementTab(0)">Overview</button>
+                <button class="tab" onclick="showManagementTab(1)">Trusted Level</button>
+                <button class="tab" onclick="showManagementTab(2)">Community Management</button>
+            </div>
+            
+            <!-- Tab 1: Overview -->
+            <div class="tab-content active" id="management-tab-0">
+                <!-- Metrics -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Market Cap</div>
+                        <div class="metric-value">$45.2K</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Price</div>
+                        <div class="metric-value">$0.00123</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">24h Volume</div>
+                        <div class="metric-value">$12.8K</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Holders</div>
+                        <div class="metric-value">234</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Total Supply</div>
+                        <div class="metric-value">1B</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Liquidity (SOL)</div>
+                        <div class="metric-value">8.5 SOL</div>
+                    </div>
+                </div>
+                
+                <!-- Chart Placeholder -->
+                <div style="background: var(--card); padding: 40px; border-radius: 12px; border: 1px solid var(--card-boarder); text-align: center; margin-bottom: 24px;">
+                    <div style="color: var(--text-secondary);">📈 Price Chart</div>
+                    <div style="font-size: 14px; color: var(--text-tertiary); margin-top: 8px;">Chart visualization will be displayed here</div>
+                </div>
+                
+                <!-- Token Info -->
+                <div class="settings-section">
+                    <div class="settings-title">Token Information</div>
+                    <div style="display: grid; gap: 16px;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Token Name</div>
+                            <div style="font-size: 14px;">Pepe Seed</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Symbol</div>
+                            <div style="font-size: 14px;">PSEED</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Description</div>
+                            <div style="font-size: 14px;">The next generation meme token on Solana 🚀</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Status</div>
+                            <div style="font-size: 14px;">Active • Created 3 days ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 2: Trusted Level -->
+            <div class="tab-content" id="management-tab-1">
+                <div class="settings-section">
+                    <div class="settings-title">Security Settings</div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>LP Lock</h4>
+                            <p>Lock liquidity pool to prevent rug pulls</p>
+                        </div>
+                        <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Audit Token</h4>
+                            <p>Get your token audited by verified auditors</p>
+                        </div>
+                        <button class="btn btn-outline btn-sm">Request Audit</button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Freeze Authority</h4>
+                            <p>Disable freeze authority to increase trust</p>
+                        </div>
+                        <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--card2); padding: 16px; border-radius: 12px; border: 1px solid var(--card-boarder); margin-top: 16px;">
+                    <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">ℹ️ Trust Score Impact</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+                        Enabling these security features will increase your token's trust score and make it more attractive to traders.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 3: Community Management -->
+            <div class="tab-content" id="management-tab-2">
+                <!-- Create Post Button -->
+                <div style="margin-bottom: 24px;">
+                    <button class="btn btn-primary">+ Create New Post</button>
+                </div>
+                
+                <!-- Posts List -->
+                <div>
+                    <div class="post-item">
+                        <div class="post-header">
+                            <div>
+                                <div class="post-title">🎉 Welcome to Pepe Seed!</div>
+                                <div class="post-meta">Posted 2 days ago • 📌 Pinned</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            Welcome to the official Pepe Seed community! We're excited to have you here. Join us on this journey to the moon! 🚀
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn btn-outline btn-sm">Unpin</button>
+                            <button class="btn btn-sm" style="background: var(--card); color: var(--text-secondary);">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </div>
+                    </div>
+                    
+                    <div class="post-item">
+                        <div class="post-header">
+                            <div>
+                                <div class="post-title">Price Update</div>
+                                <div class="post-meta">Posted 1 day ago</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            Great news! PSEED just hit a new all-time high! Thanks to all our amazing holders 💎🙌
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn btn-outline btn-sm">Pin</button>
+                            <button class="btn btn-sm" style="background: var(--card); color: var(--text-secondary);">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </div>
+                    </div>
+                    
+                    <div class="post-item">
+                        <div class="post-header">
+                            <div>
+                                <div class="post-title">Community Event</div>
+                                <div class="post-meta">Posted 3 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            Join us for a community AMA this Friday at 8PM UTC. Bring your questions!
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn btn-outline btn-sm">Pin</button>
+                            <button class="btn btn-sm" style="background: var(--card); color: var(--text-secondary);">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Dashboard tabs
+        function showDashboardTab(index) {
+            document.querySelectorAll('#dashboard-view .tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('#dashboard-view .tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelectorAll('#dashboard-view .tab')[index].classList.add('active');
+            document.getElementById('dashboard-tab-' + index).classList.add('active');
+        }
+        
+        // Management tabs
+        function showManagementTab(index) {
+            document.querySelectorAll('#token-management-view .tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('#token-management-view .tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelectorAll('#token-management-view .tab')[index].classList.add('active');
+            document.getElementById('management-tab-' + index).classList.add('active');
+        }
+        
+        // Navigation between views
+        function showDashboard() {
+            document.getElementById('dashboard-view').classList.add('active');
+            document.getElementById('token-management-view').classList.remove('active');
+        }
+        
+        function showTokenManagement(name, symbol) {
+            document.getElementById('dashboard-view').classList.remove('active');
+            document.getElementById('token-management-view').classList.add('active');
+            document.getElementById('current-token-name').textContent = name;
+            document.getElementById('token-manage-name').textContent = name;
+            document.getElementById('token-manage-symbol').textContent = symbol;
+        }
+    </script>
+</body>
+</html>

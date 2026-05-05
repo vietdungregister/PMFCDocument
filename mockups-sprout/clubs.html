@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Clubs — Sprout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg:          #0a1610;
+    --surface-1:   #131f18;
+    --surface-2:   #1a2a20;
+    --surface-3:   #243528;
+    --border-1:    #1f2d24;
+    --border-2:    #2d4234;
+    --sp-peach-100: #f4cba0;
+    --sp-peach-200: #e8a87c;
+    --sp-peach-400: #e8a87c;
+    --sp-peach-500: #d68a5b;
+    --sp-peach-soft: rgba(232, 168, 124, 0.10);
+    --sp-forest-300: #5ba886;
+    --sp-forest-500: #3d7458;
+    --sp-forest-700: #3d7458;
+    --sp-cream:    #f4cba0;
+    --sp-teal-300: #9ED8B8;
+    --sp-teal-400: #7CC4A4;
+    --sp-teal-500: #5BA886;
+    --sp-crimson:  #D65A54;
+    --text-1: #f5f7f4;
+    --text-2: #a3b0a7;
+    --text-3: #6f7d74;
+    --text-mute: #4a5650;
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+    --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
+  --mascot-sm:   22px;
+  --mascot-md:   30px;
+  --mascot-lg:   40px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+/* === Mood B signature glow (locked 2026-05-05 — SPROUT_UI_SPEC.md §1.3a) === */
+/* Do NOT modify without updating spec section 1.3a first. */
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.06), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 30%, rgba(124,196,164,0.05), transparent 60%);
+  background-attachment: fixed;
+}
+.logo-mascot {
+  box-shadow: 0 0 24px rgba(232,168,124,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-primary {
+  box-shadow: 0 0 20px rgba(232,168,124,0.30);
+}
+.marquee-track .peach { color: var(--sp-peach-200); text-shadow: 0 0 12px rgba(232,168,124,0.4); }
+.marquee-track .teal  { color: var(--sp-teal-300);  text-shadow: 0 0 12px rgba(124,196,164,0.4); }
+.token-card.featured, .tk-card.featured, .card.featured {
+  border-color: rgba(232,168,124,0.55);
+  background: radial-gradient(ellipse 300px 200px at 100% 0%, rgba(232,168,124,0.10), transparent 70%), var(--surface-1);
+  box-shadow: 0 0 32px rgba(232,168,124,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.token-card:hover, .tk-card:hover {
+  box-shadow: 0 0 24px rgba(124,196,164,0.08);
+}
+.token-av, .tk-av { box-shadow: 0 0 16px rgba(124,196,164,0.15); }
+.bar-fill { box-shadow: 0 0 10px rgba(232,168,124,0.5); }
+/* === end Mood B glow === */
+
+
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--text-1); font-family:var(--font-body); font-size:14px; -webkit-font-smoothing:antialiased; }
+.header { position:fixed; top:0; left:0; right:0; height:var(--header-h); background:var(--surface-1); border-bottom:1px solid var(--border-1); z-index:100; display:flex; align-items:center; padding:0 24px; gap:24px; }
+.logo { display:flex; align-items:center; gap:10px; flex-shrink:0; text-decoration:none; cursor:pointer; }
+.logo-mascot { width: var(--mascot-lg); height: var(--mascot-lg); border-radius:10px; background:linear-gradient(180deg,#e8a87c,#e8a87c); display:grid; place-items:center; }
+.logo-text { font-family:var(--font-display); font-size:17px; font-weight:800; color:var(--sp-peach-400); }
+.logo-sub { display:block; font-size:9px; color:var(--text-3); letter-spacing:0.06em; text-transform:lowercase; }
+.header-search { position:relative; flex:1; max-width:480px; }
+.header-search input { width:100%; height:36px; padding:0 14px 0 38px; background:var(--surface-2); border:1px solid var(--border-1); border-radius:var(--r-md); color:var(--text-1); font-size:13.5px; font-family:inherit; }
+.header-search input:focus { outline:none; border-color:var(--sp-peach-400); }
+.header-search svg { position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--text-3); }
+.header-actions { display:flex; gap:8px; margin-left:auto; align-items:center; }
+.btn-ghost { height:36px; padding:0 14px; background:transparent; border:1px solid var(--border-2); border-radius:var(--r-md); color:var(--text-2); font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
+.btn-primary { height:36px; padding:0 16px; background:linear-gradient(180deg,#e8a87c,#e8a87c); border:none; border-radius:var(--r-md); color:#2a1505; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+.marquee { position:fixed; top:var(--header-h); left:0; right:0; height:var(--marquee-h); background:var(--bg); border-bottom:1px solid var(--border-1); overflow:hidden; display:flex; align-items:center; z-index:99; }
+.marquee-track { display:flex; gap:36px; white-space:nowrap; animation:scroll 40s linear infinite; font-family:var(--font-display); font-size:11px; font-weight:700; letter-spacing:0.08em; color:var(--text-3); }
+.marquee-track .peach { color:var(--sp-peach-400); } .marquee-track .teal { color:var(--sp-teal-400); }
+@keyframes scroll { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
+.sidebar { position:fixed; left:0; top:calc(var(--header-h) + var(--marquee-h)); bottom:0; width:var(--sidebar-w); background:var(--surface-1); border-right:1px solid var(--border-1); padding:20px 14px; overflow-y:auto; display:flex; flex-direction:column; gap:18px; }
+.nav-group { display:flex; flex-direction:column; gap:1px; }
+.nav-label { font-family:var(--font-display); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-3); padding:0 12px 6px; }
+.nav-item { display:flex; align-items:center; gap:12px; padding:9px 12px; border-radius:var(--r-md); color:var(--text-2); font-size:13.5px; font-weight:500; cursor:pointer; transition:all 0.12s; text-decoration:none; }
+.nav-item svg { width:17px; height:17px; flex-shrink:0; opacity:0.85; }
+.nav-item:hover { background:var(--surface-2); color:var(--text-1); }
+.nav-item.active { color:var(--sp-peach-400); background:var(--sp-peach-soft); font-weight:600; }
+.nav-badge { margin-left:auto; background:var(--sp-crimson); color:white; font-size:10px; font-weight:700; padding:1px 6px; border-radius:var(--r-pill); }
+.user-card { margin-top:auto; background:var(--surface-2); border:1px solid var(--border-1); border-radius:var(--r-md); padding:10px; display:flex; align-items:center; gap:10px; cursor:pointer; }
+.user-mascot { width: var(--mascot-lg); height: var(--mascot-lg); border-radius:var(--r-pill); background:var(--surface-3); display:grid; place-items:center; border:1.5px solid var(--sp-peach-400); }
+.user-name { font-size:12.5px; font-weight:600; color:var(--text-1); }
+.user-tier { font-size:10.5px; color:var(--sp-peach-400); font-weight:700; margin-top:1px; }
+
+
+.main { margin-left:var(--sidebar-w); margin-top:calc(var(--header-h) + var(--marquee-h)); padding:28px 32px 60px; }
+.page-head { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:6px; }
+.page-title { font-family:var(--font-display); font-size:28px; font-weight:800; color:var(--text-1); letter-spacing:-0.02em; }
+.page-sub { font-size:13px; color:var(--text-3); margin-bottom:20px; }
+.btn-create { padding:9px 18px; background:linear-gradient(180deg,#e8a87c,#e8a87c); border:none; border-radius:var(--r-md); color:#2a1505; font-size:13px; font-weight:700; cursor:pointer; font-family:var(--font-display); }
+.btn-create:hover { background:linear-gradient(180deg,#ffd08a,#f0bc62); }
+.podium { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:28px; }
+.pod-card { border-radius:var(--r-lg); padding:18px 20px; border:1px solid rgba(255,255,255,0.08); }
+.pod-top { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.pod-emoji { font-size:28px; }
+.pod-name { font-family:var(--font-display); font-size:15px; font-weight:700; color:#fff; }
+.pod-ticker { font-size:11px; color:rgba(255,255,255,0.55); font-family:var(--font-mono); }
+.pod-rank { margin-left:auto; font-family:var(--font-display); font-size:15px; font-weight:800; }
+.pod-stats { display:flex; gap:16px; font-size:12px; color:rgba(255,255,255,0.6); font-family:var(--font-mono); }
+.filter-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px; }
+.filter-tabs { display:flex; gap:4px; flex-wrap:wrap; }
+.ftab { padding:7px 16px; background:transparent; border:none; border-radius:var(--r-pill); color:var(--text-2); font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s; }
+.ftab.active { background:var(--sp-peach-400); color:#2a1505; }
+.ftab:hover:not(.active) { background:var(--surface-2); color:var(--text-1); }
+.sort-wrap { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-2); }
+.sort-sel { background:var(--surface-2); border:1px solid var(--border-1); border-radius:var(--r-md); color:var(--text-1); padding:7px 12px; font-size:13px; font-family:inherit; cursor:pointer; }
+.club-search { position:relative; margin-bottom:20px; max-width:440px; margin-left:auto; margin-right:auto; }
+.club-search input { width:100%; height:40px; padding:0 16px 0 40px; background:var(--surface-2); border:1px solid var(--border-1); border-radius:var(--r-pill); color:var(--text-1); font-size:13.5px; font-family:inherit; }
+.club-search input:focus { outline:none; border-color:var(--sp-peach-400); }
+.club-search svg { position:absolute; left:14px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--text-3); }
+.club-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.club-card { background:var(--surface-1); border:1px solid var(--border-1); border-radius:var(--r-lg); overflow:hidden; cursor:pointer; transition:all 0.15s; }
+.club-card:hover { border-color:var(--sp-peach-400); transform:translateY(-2px); }
+.club-banner { height:72px; position:relative; display:flex; align-items:flex-end; padding:10px 14px; }
+.club-emoji { font-size:28px; }
+.club-hot { position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.5); color:var(--sp-peach-400); font-size:10px; font-weight:700; padding:2px 8px; border-radius:var(--r-pill); font-family:var(--font-mono); }
+.club-lock { position:absolute; top:8px; left:8px; font-size:13px; }
+.club-body { padding:14px 16px; }
+.club-name-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+.club-name { font-family:var(--font-display); font-size:14.5px; font-weight:700; color:var(--sp-peach-400); }
+.club-ticker { font-family:var(--font-mono); font-size:10.5px; color:var(--text-3); }
+.club-rank { margin-left:auto; font-family:var(--font-mono); font-size:11px; font-weight:700; color:var(--text-3); }
+.club-desc { font-size:12px; color:var(--text-3); line-height:1.45; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:10px; }
+.club-tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:12px; }
+.club-tag { padding:3px 9px; background:var(--surface-3); border-radius:var(--r-pill); font-size:10.5px; color:var(--text-2); font-weight:600; }
+.club-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding-top:10px; border-top:1px solid var(--border-1); }
+.club-stat { display:flex; flex-direction:column; gap:2px; }
+.cs-label { font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; }
+.cs-val { font-family:var(--font-mono); font-size:12.5px; font-weight:700; color:var(--text-1); }
+.cs-green { color:var(--sp-teal-400); }
+
+
+/* ===== CONNECTED WALLET ===== */
+.wallet-connected { position: relative; height: 36px; background: var(--surface-2); border: 1px solid var(--border-2); border-radius: var(--r-pill); padding: 3px 12px 3px 4px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.15s var(--ease); font-family: var(--font-body); }
+.wallet-connected:hover { border-color: var(--sp-peach-400); background: var(--sp-peach-soft); }
+.wallet-connected.open { border-color: var(--sp-peach-400); }
+.wc-avatar { width: var(--mascot-md); height: var(--mascot-md); border-radius: 50%; background: linear-gradient(180deg,#e8a87c,#e8a87c); display: grid; place-items: center; flex-shrink: 0; }
+.wc-avatar svg { width: 18px; height: 18px; }
+.wc-info { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
+.wc-balance { font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; color: var(--sp-peach-400); }
+.wc-addr { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-3); margin-top: 1px; }
+.wc-chevron { width: 12px; height: 12px; color: var(--text-3); flex-shrink: 0; transition: transform 0.15s var(--ease); }
+.wallet-connected.open .wc-chevron { transform: rotate(180deg); color: var(--sp-peach-400); }
+.wc-net-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sp-teal-400); flex-shrink: 0; box-shadow: 0 0 0 2px rgba(124,196,164,0.20); }
+.wc-net-dot.wrong { background: var(--sp-crimson); box-shadow: 0 0 0 2px rgba(214,90,84,0.20); }
+.wc-menu { position: absolute; top: calc(100% + 8px); right: 0; width: 220px; background: var(--surface-1); border: 1px solid var(--border-1); border-radius: var(--r-md); padding: 6px; display: none; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.wallet-connected.open .wc-menu { display: block; }
+.wc-menu-head { padding: 10px 10px 8px; border-bottom: 1px solid var(--border-1); margin-bottom: 4px; }
+.wc-menu-net { font-size: 10.5px; color: var(--text-3); font-family: var(--font-display); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+.wc-menu-bal { font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--text-1); margin-top: 2px; }
+.wc-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r-sm); color: var(--text-1); font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none; width: 100%; background: transparent; border: none; font-family: inherit; text-align: left; transition: background 0.12s var(--ease); }
+.wc-item:hover { background: var(--surface-2); }
+.wc-item svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
+.wc-item.danger { color: var(--sp-crimson); }
+.wc-item.danger:hover { background: rgba(214,90,84,0.10); }
+.wc-divider { height: 1px; background: var(--border-1); margin: 4px 0; }
+
+</style>
+</head>
+<body>
+<!-- ============ HEADER (fixed top, pro structure) ============ -->
+<header class="header">
+  <div class="logo" onclick="location.href='token_list_v4.html'" style="cursor:pointer" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
+  <div class="logo-mascot" style="width:var(--mascot-lg);height:var(--mascot-lg);border-radius:10px;background:linear-gradient(180deg,#e8a87c,#e8a87c);display:grid;place-items:center;flex-shrink:0">
+    <svg viewBox="0 0 64 64" fill="none">
+        <ellipse cx="32" cy="46" rx="16" ry="11" fill="#8B4513"/>
+        <ellipse cx="24" cy="28" rx="6" ry="11" transform="rotate(-25 24 28)" fill="#7cc4a4"/>
+        <ellipse cx="40" cy="28" rx="6" ry="11" transform="rotate(25 40 28)" fill="#5ba886"/>
+        <rect x="30" y="30" width="4" height="14" fill="#3d7458"/>
+        <circle cx="27" cy="48" r="1.5" fill="#1a1208"/>
+        <circle cx="37" cy="48" r="1.5" fill="#1a1208"/>
+        <path d="M 27 51 Q 32 53.5 37 51" stroke="#1a1208" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      </svg>
+  </div>
+  <div>
+    <span class="logo-text" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:17px;font-weight:800;color:#e8a87c;letter-spacing:-0.01em">Sprout</span>
+    <span style="display:block;font-size:9px;font-weight:600;color:#6f7d74;letter-spacing:0.06em;text-transform:lowercase">the meme garden</span>
+  </div>
+</div>
+    <span class="logo-text">Sprout</span><span class="logo-sub" style="display:block;font-size:9px;font-weight:600;color:var(--text-3);letter-spacing:0.06em;text-transform:lowercase;margin-top:-1px">the meme garden</span>
+  </a>
+
+  <div class="header-search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" placeholder="Search the garden — tokens, creators, addresses…">
+  </div>
+
+  <div class="header-actions">
+    <div class="wallet-connected" onclick="toggleWalletMenu(event)">
+  <div class="wc-avatar">
+    <svg viewBox="0 0 24 24" fill="none">
+        <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
+        <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
+        <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
+        <rect x="11" y="12" width="2" height="6" fill="#3d7458"/>
+        <circle cx="10" cy="19" r="0.6" fill="#1a1208"/>
+        <circle cx="14" cy="19" r="0.6" fill="#1a1208"/>
+        <path d="M 10 20.5 Q 12 21.5 14 20.5" stroke="#1a1208" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+      </svg>
+  </div>
+  <div class="wc-info">
+    <div class="wc-balance">12.45 SOL</div>
+    <div class="wc-addr">7xK9…mP3q</div>
+  </div>
+  <span class="wc-net-dot" title="Solana mainnet"></span>
+  <svg class="wc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+
+  <div class="wc-menu">
+    <div class="wc-menu-head">
+      <div class="wc-menu-net"><span class="wc-net-dot"></span> Solana mainnet</div>
+      <div class="wc-menu-bal">12.45 SOL</div>
+    </div>
+    <a class="wc-item" href="my_profile.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My profile
+    </a>
+    <button class="wc-item" onclick="event.stopPropagation(); navigator.clipboard&&navigator.clipboard.writeText('7xK9...mP3q')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy address
+    </button>
+    <a class="wc-item" href="edit_profile_privacy.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+    <div class="wc-divider"></div>
+    <button class="wc-item danger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Disconnect
+    </button>
+  </div>
+</div>
+    <button onclick="location.href='create_token.html'" class="btn-primary">Create token</button>
+  </div>
+</header>
+<!-- ============ MARQUEE (kept from MVP) ============ -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="peach">PLANT YOUR SEED</span><span>·</span>
+    <span>WATCH WHAT'S BLOOMING</span><span>·</span>
+    <span class="peach">MAKE MONEY ON THE MEMECONOMY</span><span>·</span>
+    <span>NO BOT DRAMA</span><span>·</span>
+    <span class="teal">TALLEST TREE WINS</span><span>·</span>
+    <span class="peach">SEEDS PLANTED HERE</span><span>·</span>
+    <span class="peach">PLANT YOUR SEED</span><span>·</span>
+    <span>WATCH WHAT'S BLOOMING</span><span>·</span>
+    <span class="peach">MAKE MONEY ON THE MEMECONOMY</span><span>·</span>
+    <span>NO BOT DRAMA</span><span>·</span>
+    <span class="teal">TALLEST TREE WINS</span><span>·</span>
+    <span class="peach">SEEDS PLANTED HERE</span>
+  </div>
+</div>
+<!-- ============ SIDEBAR (grouping, pro structure) ============ -->
+<aside class="sidebar">
+
+  <div class="nav-group">
+    <div class="nav-label">Discover</div>
+    <a class="nav-item active" href="token_list_v4.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg>
+      Discover
+    </a>
+    <a class="nav-item" href="FR-012_TokenWar.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+      Arena
+    </a>
+    <a class="nav-item" href="clubs.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 17.5 4.5 15"/><path d="m17 9-3 6"/><path d="M11 4 7 10"/><path d="M21 9c-2 4-3.5 6.5-7.5 8.5L8 16"/><path d="M14 4c2 4 3.5 6.5 7.5 8.5"/></svg>
+      Clubs
+    </a>
+    <a class="nav-item" href="events.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Events
+    </a>
+    <a class="nav-item" href="leaderboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+      Leader Board
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Personal</div>
+    <a class="nav-item" href="my_profile.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My Profile
+      <span class="nav-badge">3</span>
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Earn</div>
+    <a class="nav-item" href="rewards.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+      Point System
+    </a>
+    <a class="nav-item" href="points.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      Rewards
+    </a>
+    <a class="nav-item" href="referrals.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Referrals
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Stake
+    </a>
+  </div>
+
+  <!-- User card (signature moment: mascot Tier) -->
+  <div class="user-card" onclick="location.href='my_profile.html'" style="cursor:pointer">
+    <div class="user-mascot">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+  <path d="M3 9L12 5L21 9" fill="#3d7458"/>
+  <rect x="5" y="9" width="14" height="11" rx="1" fill="#3d7458"/>
+  <path d="M9 9L10 7L11 9Z" fill="#e8a87c"/>
+  <path d="M13 9L14 7L15 9Z" fill="#e8a87c"/>
+  <circle cx="12" cy="14" r="4" fill="#e8a87c"/>
+  <ellipse cx="10.5" cy="13" rx="0.7" ry="0.9" fill="#3d7458"/>
+  <ellipse cx="13.5" cy="13" rx="0.7" ry="0.9" fill="#3d7458"/>
+  <path d="M10.5 15.5 Q12 16.5 13.5 15.5" stroke="#3d7458" stroke-width="0.6" fill="none" stroke-linecap="round"/>
+</svg>
+    </div>
+    <div class="user-info">
+      <div class="user-name">NobleFlame</div>
+      <div class="user-tier">Sprout · 642 pts</div>
+    </div>
+  </div>
+</aside>
+<main class="main">
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Clubs</h1>
+      <p class="page-sub">12 clubs &middot; 9.2K members</p>
+    </div>
+    <button class="btn-create">+ Create Club</button>
+  </div>
+
+  <div class="podium"><div class="pod-card" style="background:linear-gradient(135deg,#166534,#052e16)"><div class="pod-top"><span class="pod-emoji">🐸</span><div><div class="pod-name">PEPE Army</div><div class="pod-ticker">[PEPE]</div></div><span class="pod-rank" style="color:#eab308">☆ #1</span></div><div class="pod-stats"><span>👥 1.2K</span><span>⚡ 72% WR</span><span>🔥 45.2K pts/w</span></div></div>
+<div class="pod-card" style="background:linear-gradient(135deg,#92400e,#1c0a00)"><div class="pod-top"><span class="pod-emoji">🐕</span><div><div class="pod-name">Doge Pack</div><div class="pod-ticker">[DOGE]</div></div><span class="pod-rank" style="color:#9ca3af">☆ #2</span></div><div class="pod-stats"><span>👥 980</span><span>⚡ 65% WR</span><span>🔥 38.5K pts/w</span></div></div>
+<div class="pod-card" style="background:linear-gradient(135deg,#6d28d9,#2e1065)"><div class="pod-top"><span class="pod-emoji">☀️</span><div><div class="pod-name">SOL Maxis</div><div class="pod-ticker">[SOLM]</div></div><span class="pod-rank" style="color:#b45309">☆ #3</span></div><div class="pod-stats"><span>👥 856</span><span>⚡ 68% WR</span><span>🔥 32.1K pts/w</span></div></div></div>
+
+  <div class="filter-bar">
+    <div class="filter-tabs" id="ftabs">
+      <button class="ftab active" onclick="filterClubs('all',this)">All</button>
+      <button class="ftab" onclick="filterClubs('token',this)">Token Club</button>
+      <button class="ftab" onclick="filterClubs('creator',this)">Creator</button>
+      <button class="ftab" onclick="filterClubs('meme',this)">Meme</button>
+      <button class="ftab" onclick="filterClubs('football',this)">Football</button>
+      <button class="ftab" onclick="filterClubs('anime',this)">Anime</button>
+      <button class="ftab" onclick="filterClubs('shitpost',this)">Shitpost</button>
+    </div>
+    <div class="sort-wrap">Sort: <select class="sort-sel"><option>Rank</option><option>Members</option><option>Win Rate</option><option>Pts/Week</option></select></div>
+  </div>
+
+  <div class="club-search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" placeholder="Search clubs..." oninput="searchClubs(this.value)">
+  </div>
+
+  <div class="club-grid" id="club-grid">
+<div class="club-card" data-cat="token" onclick="location.href='token_list_v4.html'"><div class="club-banner" style="background:linear-gradient(135deg,#166534,#052e16)"><span class="club-hot">6.8M</span><span class="club-emoji">🐸</span></div><div class="club-body"><div class="club-name-row"><span class="club-name">PEPE Army</span><span class="club-ticker">[PEPE]</span><span class="club-rank">#1</span></div><div class="club-desc">The ultimate PEPE holders club. Diamond hands only. We raid, we vote, we win arenas together. Join the frog...</div><div class="club-tags"><span class="club-tag">Meme</span><span class="club-tag">OG</span><span class="club-tag">Diamond Hands</span></div><div class="club-stats"><div class="club-stat"><span class="cs-label">Members</span><span class="cs-val">1.2K</span></div><div class="club-stat"><span class="cs-label">Win Rate</span><span class="cs-val cs-green">72%</span></div><div class="club-stat"><span class="cs-label">Pts/Week</span><span class="cs-val">45.2K</span></div><div class="club-stat"><span class="cs-label">Level</span><span class="cs-val">Lv.12</span></div></div></div></div>
+<div class="club-card" data-cat="token" onclick="location.href='token_list_v4.html'"><div class="club-banner" style="background:linear-gradient(135deg,#92400e,#1c0a00)"><span class="club-hot">6.8M</span><span class="club-emoji">🐕</span></div><div class="club-body"><div class="club-name-row"><span class="club-name">Doge Pack</span><span class="club-ticker">[DOGE]</span><span class="club-rank">#2</span></div><div class="club-desc">Much wow. Very club. Such community. The original meme coin believers unite here for arena wars and me...</div><div class="club-tags"><span class="club-tag">Meme</span><span class="club-tag">OG</span><span class="club-tag">Moon</span></div><div class="club-stats"><div class="club-stat"><span class="cs-label">Members</span><span class="cs-val">980</span></div><div class="club-stat"><span class="cs-label">Win Rate</span><span class="cs-val cs-green">65%</span></div><div class="club-stat"><span class="cs-label">Pts/Week</span><span class="cs-val">38.5K</span></div><div class="club-stat"><span class="cs-label">Level</span><span class="cs-val">Lv.10</span></div></div></div></div>
+<div class="club-card" data-cat="token" onclick="location.href='token_list_v4.html'"><div class="club-banner" style="background:linear-gradient(135deg,#6d28d9,#2e1065)"><span class="club-hot">6.7M</span><span class="club-emoji">☀️</span></div><div class="club-body"><div class="club-name-row"><span class="club-name">SOL Maxis</span><span class="club-ticker">[SOLM]</span><span class="club-rank">#3</span></div><div class="club-desc">Solana believers only. We trade, stake, and dominate arenas on the fastest chain. Speed is our weapon.</div><div class="club-tags"><span class="club-tag">L1</span><span class="club-tag">Speed</span><span class="club-tag">DeFi</span></div><div class="club-stats"><div class="club-stat"><span class="cs-label">Members</span><span class="cs-val">856</span></div><div class="club-stat"><span class="cs-label">Win Rate</span><span class="cs-val cs-green">68%</span></div><div class="club-stat"><span class="cs-label">Pts/Week</span><span class="cs-val">32.1K</span></div><div class="club-stat"><span class="cs-label">Level</span><span class="cs-val">Lv.9</span></div></div></div></div>
+<div class="club-card" data-cat="creator" onclick="location.href='token_list_v4.html'"><div class="club-banner" style="background:linear-gradient(135deg,#7f1d1d,#1c0a00)"><span class="club-emoji">🐒</span></div><div class="club-body"><div class="club-name-row"><span class="club-name">Degen Traders</span><span class="club-ticker">[DEGEN]</span><span class="club-rank">#4</span></div><div class="club-desc">We ape in, we ape out. High risk, high reward. The most aggressive trading club on the platform.</div><div class="club-tags"><span class="club-tag">Trading</span><span class="club-tag">Degen</span><span class="club-tag">Alpha</span></div><div class="club-stats"><div class="club-stat"><span class="cs-label">Members</span><span class="cs-val">678</span></div><div class="club-stat"><span class="cs-label">Win Rate</span><span class="cs-val cs-green">58%</span></div><div class="club-stat"><span class="cs-label">Pts/Week</span><span class="cs-val">28.9K</span></div><div class="club-stat"><span class="cs-label">Level</span><span class="cs-val">Lv.8</span></div></div></div></div>
+<div class="club-card" data-cat="meme" onclick="location.href='token_list_v4.html'"><div class="club-banner" style="background:linear-gradient(135deg,#0f3460,#0a1610)"><span class="club-emoji">👑</span></div><div class="club-body"><div class="club-name-row"><span class="club-name">Meme Lords</span><span class="club-ticker">[MEME]</span><span class="club-rank">#5</span></div><div class="club-desc">We create the memes that move markets. If it goes viral, it started here. Unleash your inner meme lord.</div><div class="club-tags"><span class="club-tag">Meme</span><span class="club-tag">Viral</span><span class="club-tag">Culture</span></div><div class="club-stats"><div class="club-stat"><span class="cs-label">Members</span><span class="cs-val">1.5K</span></div><div class="club-stat"><span class="cs-label">Win Rate</span><span class="cs-val cs-green">70%</span></div><div class="club-stat"><span class="cs-label">Pts/Week</span><span class="cs-val">51.0K</span></div><div class="club-stat"><span class="cs-label">Level</span><span class="cs-val">Lv.14</span></div></div></div></div>
+<div class="club-card" data-cat="football" onclick="location.href='token_list_v4.html'"><div class="club-banner" style="background:linear-gradient(135deg,#14532d,#052e16)"><span class="club-emoji">⚽</span></div><div class="club-body"><div class="club-name-row"><span class="club-name">FC Degens</span><span class="club-ticker">[FCD]</span><span class="club-rank">#6</span></div><div class="club-desc">Football meets crypto. We bet on matches, predict scores, and war with other clubs in the arena.</div><div class="club-tags"><span class="club-tag">Football</span><span class="club-tag">Sports</span><span class="club-tag">Betting</span></div><div class="club-stats"><div class="club-stat"><span class="cs-label">Members</span><span class="cs-val">432</span></div><div class="club-stat"><span class="cs-label">Win Rate</span><span class="cs-val cs-green">62%</span></div><div class="club-stat"><span class="cs-label">Pts/Week</span><span class="cs-val">18.5K</span></div><div class="club-stat"><span class="cs-label">Level</span><span class="cs-val">Lv.6</span></div></div></div></div>
+<div class="club-card" data-cat="anime" onclick="location.href='token_list_v4.html'"><div class="club-banner" style="background:linear-gradient(135deg,#4c1d95,#1e1b4b)"><span class="club-emoji">🃏</span></div><div class="club-body"><div class="club-name-row"><span class="club-name">Anime Degens</span><span class="club-ticker">[WEEB]</span><span class="club-rank">#7</span></div><div class="club-desc">Otaku traders unite! We support anime-themed tokens, create anime memes, and battle in style. Nani?!</div><div class="club-tags"><span class="club-tag">Anime</span><span class="club-tag">Culture</span><span class="club-tag">Art</span></div><div class="club-stats"><div class="club-stat"><span class="cs-label">Members</span><span class="cs-val">567</span></div><div class="club-stat"><span class="cs-label">Win Rate</span><span class="cs-val cs-green">53%</span></div><div class="club-stat"><span class="cs-label">Pts/Week</span><span class="cs-val">22.3K</span></div><div class="club-stat"><span class="cs-label">Level</span><span class="cs-val">Lv.7</span></div></div></div></div>
+<div class="club-card" data-cat="shitpost" onclick="location.href='token_list_v4.html'"><div class="club-banner" style="background:linear-gradient(135deg,#713f12,#1c0a00)"><span class="club-emoji">💩</span></div><div class="club-body"><div class="club-name-row"><span class="club-name">Shitpost Elite</span><span class="club-ticker">[SHIT]</span><span class="club-rank">#8</span></div><div class="club-desc">We post garbage and somehow make money. The most unhinged club on the platform. Warning: brain cells may...</div><div class="club-tags"><span class="club-tag">Shitpost</span><span class="club-tag">Chaos</span><span class="club-tag">Fun</span></div><div class="club-stats"><div class="club-stat"><span class="cs-label">Members</span><span class="cs-val">890</span></div><div class="club-stat"><span class="cs-label">Win Rate</span><span class="cs-val cs-green">52%</span></div><div class="club-stat"><span class="cs-label">Pts/Week</span><span class="cs-val">35.6K</span></div><div class="club-stat"><span class="cs-label">Level</span><span class="cs-val">Lv.11</span></div></div></div></div>
+<div class="club-card" data-cat="token" onclick="location.href='token_list_v4.html'"><div class="club-banner" style="background:linear-gradient(135deg,#1e3a5f,#0a1610)"><span class="club-emoji">🐕</span></div><div class="club-body"><div class="club-name-row"><span class="club-name">WIF Gang</span><span class="club-ticker">[WIF]</span><span class="club-rank">#9</span></div><div class="club-desc">Dog wif hat holders assemble. We are the cutest and most profitable club. Every dog has its day.</div><div class="club-tags"><span class="club-tag">Meme</span><span class="club-tag">Dog</span><span class="club-tag">Solana</span></div><div class="club-stats"><div class="club-stat"><span class="cs-label">Members</span><span class="cs-val">723</span></div><div class="club-stat"><span class="cs-label">Win Rate</span><span class="cs-val cs-green">60%</span></div><div class="club-stat"><span class="cs-label">Pts/Week</span><span class="cs-val">26.8K</span></div><div class="club-stat"><span class="cs-label">Level</span><span class="cs-val">Lv.8</span></div></div></div></div>
+<div class="club-card" data-cat="creator" onclick="location.href='token_list_v4.html'"><div class="club-banner" style="background:linear-gradient(135deg,#134e4a,#042f2e)"><span class="club-lock">🔒</span><span class="club-emoji">🔍</span></div><div class="club-body"><div class="club-name-row"><span class="club-name">Alpha Hunters</span><span class="club-ticker">[ALPHA]</span><span class="club-rank">#10</span></div><div class="club-desc">We find alpha before everyone else. Research-driven, data-backed, and always first. Private intel only.</div><div class="club-tags"><span class="club-tag">Alpha</span><span class="club-tag">Research</span><span class="club-tag">Elite</span></div><div class="club-stats"><div class="club-stat"><span class="cs-label">Members</span><span class="cs-val">345</span></div><div class="club-stat"><span class="cs-label">Win Rate</span><span class="cs-val cs-green">78%</span></div><div class="club-stat"><span class="cs-label">Pts/Week</span><span class="cs-val">41.2K</span></div><div class="club-stat"><span class="cs-label">Level</span><span class="cs-val">Lv.9</span></div></div></div></div>
+<div class="club-card" data-cat="token" onclick="location.href='token_list_v4.html'"><div class="club-banner" style="background:linear-gradient(135deg,#78350f,#1c0700)"><span class="club-emoji">🔨</span></div><div class="club-body"><div class="club-name-row"><span class="club-name">BONK Squad</span><span class="club-ticker">[BONK]</span><span class="club-rank">#11</span></div><div class="club-desc">BONK! We bonk the haters and bonk the charts. The most bonkers community on Solana.</div><div class="club-tags"><span class="club-tag">Meme</span><span class="club-tag">Bonk</span><span class="club-tag">Community</span></div><div class="club-stats"><div class="club-stat"><span class="cs-label">Members</span><span class="cs-val">612</span></div><div class="club-stat"><span class="cs-label">Win Rate</span><span class="cs-val cs-green">57%</span></div><div class="club-stat"><span class="cs-label">Pts/Week</span><span class="cs-val">24.5K</span></div><div class="club-stat"><span class="cs-label">Level</span><span class="cs-val">Lv.7</span></div></div></div></div>
+<div class="club-card" data-cat="football" onclick="location.href='token_list_v4.html'"><div class="club-banner" style="background:linear-gradient(135deg,#1e3a8a,#0c0a09)"><span class="club-emoji">⚽</span></div><div class="club-body"><div class="club-name-row"><span class="club-name">Hala Madrid Crypto</span><span class="club-ticker">[RMCF]</span><span class="club-rank">#12</span></div><div class="club-desc">Real Madrid fans who also trade crypto. We dominate both La Liga arenas and crypto arenas. Hala Madrid!</div><div class="club-tags"><span class="club-tag">Football</span><span class="club-tag">Real Madrid</span><span class="club-tag">La Liga</span></div><div class="club-stats"><div class="club-stat"><span class="cs-label">Members</span><span class="cs-val">389</span></div><div class="club-stat"><span class="cs-label">Win Rate</span><span class="cs-val cs-green">64%</span></div><div class="club-stat"><span class="cs-label">Pts/Week</span><span class="cs-val">16.8K</span></div><div class="club-stat"><span class="cs-label">Level</span><span class="cs-val">Lv.5</span></div></div></div></div>
+  </div>
+</main>
+<script>
+function filterClubs(cat, btn) {
+  document.querySelectorAll('#ftabs .ftab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.club-card').forEach(c => {
+    c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none';
+  });
+}
+function searchClubs(q) {
+  const low = q.toLowerCase();
+  document.querySelectorAll('.club-card').forEach(c => {
+    const txt = c.textContent.toLowerCase();
+    c.style.display = txt.includes(low) ? '' : 'none';
+  });
+}
+</script>
+<script>
+function toggleWalletMenu(e) { e.stopPropagation(); document.querySelectorAll('.wallet-connected').forEach(w => w.classList.toggle('open')); }
+document.addEventListener('click', e => { if (!e.target.closest('.wallet-connected')) document.querySelectorAll('.wallet-connected').forEach(w => w.classList.remove('open')); });
+</script>
+</body></html>
