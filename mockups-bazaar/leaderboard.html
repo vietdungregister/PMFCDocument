@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Leaderboard — Stallspot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg:          #0a0e1a;
+    --surface-1:   #131826;
+    --surface-2:   #1a2138;
+    --surface-3:   #232b46;
+    --border-1:    #1f2640;
+    --border-2:    #2a3456;
+    --bz-amber-100: #F5DBA8;
+    --bz-amber-200: #FAC775;
+    --bz-amber-400: #EAB552;
+    --bz-amber-500: #C49152;
+    --bz-amber-soft: rgba(234, 181, 82, 0.10);
+    --bz-brown-300: #8B5A3C;
+    --bz-brown-500: #5a3818;
+    --bz-brown-700: #3a2410;
+    --bz-cream:    #F5DBA8;
+    --bz-teal-300: #9ED8B8;
+    --bz-teal-400: #7CC4A4;
+    --bz-teal-500: #5BA886;
+    --bz-crimson:  #D65A54;
+    --text-1: #f4f4f5;
+    --text-2: #a1a1aa;
+    --text-3: #71717a;
+    --text-mute: #52525b;
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+    --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
+  --mascot-sm:   22px;
+  --mascot-md:   30px;
+  --mascot-lg:   40px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--text-1); font-family:var(--font-body); font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+.header { position:fixed; top:0; left:0; right:0; height:var(--header-h); background:var(--surface-1); border-bottom:1px solid var(--border-1); z-index:100; display:flex; align-items:center; padding:0 24px; gap:24px; }
+.logo { display:flex; align-items:center; gap:10px; flex-shrink:0; text-decoration:none; cursor:pointer; }
+.logo-mascot { width: var(--mascot-lg); height: var(--mascot-lg); border-radius:10px; background:linear-gradient(180deg,#FAC775,#EAB552); display:grid; place-items:center; flex-shrink:0; }
+.logo-text { font-family:var(--font-display); font-size:17px; font-weight:800; color:var(--bz-amber-400); }
+.logo-sub { display:block; font-size:9px; font-weight:600; color:var(--text-3); letter-spacing:0.06em; text-transform:lowercase; }
+.header-search { position:relative; flex:1; max-width:480px; }
+.header-search input { width:100%; height:36px; padding:0 14px 0 38px; background:var(--surface-2); border:1px solid var(--border-1); border-radius:var(--r-md); color:var(--text-1); font-size:13.5px; font-family:inherit; }
+.header-search input:focus { outline:none; border-color:var(--bz-amber-400); }
+.header-search svg { position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--text-3); }
+.header-actions { display:flex; gap:8px; margin-left:auto; align-items:center; }
+.btn-ghost { height:36px; padding:0 14px; background:transparent; border:1px solid var(--border-2); border-radius:var(--r-md); color:var(--text-2); font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
+.btn-primary { height:36px; padding:0 16px; background:linear-gradient(180deg,#FAC775,#EAB552); border:none; border-radius:var(--r-md); color:#2a1505; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+.marquee { position:fixed; top:var(--header-h); left:0; right:0; height:var(--marquee-h); background:var(--bg); border-bottom:1px solid var(--border-1); overflow:hidden; display:flex; align-items:center; z-index:99; }
+.marquee-track { display:flex; gap:36px; white-space:nowrap; animation:scroll 40s linear infinite; font-family:var(--font-display); font-size:11px; font-weight:700; letter-spacing:0.08em; color:var(--text-3); }
+.marquee-track .amber { color:var(--bz-amber-400); }
+.marquee-track .teal { color:var(--bz-teal-400); }
+@keyframes scroll { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
+.sidebar { position:fixed; left:0; top:calc(var(--header-h) + var(--marquee-h)); bottom:0; width:var(--sidebar-w); background:var(--surface-1); border-right:1px solid var(--border-1); padding:20px 14px; overflow-y:auto; display:flex; flex-direction:column; gap:18px; }
+.nav-group { display:flex; flex-direction:column; gap:1px; }
+.nav-label { font-family:var(--font-display); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-3); padding:0 12px 6px; }
+.nav-item { display:flex; align-items:center; gap:12px; padding:9px 12px; border-radius:var(--r-md); color:var(--text-2); font-size:13.5px; font-weight:500; cursor:pointer; transition:all 0.12s; text-decoration:none; }
+.nav-item svg { width:17px; height:17px; flex-shrink:0; opacity:0.85; }
+.nav-item:hover { background:var(--surface-2); color:var(--text-1); }
+.nav-item.active { color:var(--bz-amber-400); background:var(--bz-amber-soft); font-weight:600; }
+.nav-badge { margin-left:auto; background:var(--bz-crimson); color:white; font-size:10px; font-weight:700; padding:1px 6px; border-radius:var(--r-pill); }
+.user-card { margin-top:auto; background:var(--surface-2); border:1px solid var(--border-1); border-radius:var(--r-md); padding:10px; display:flex; align-items:center; gap:10px; cursor:pointer; }
+.user-mascot { width: var(--mascot-lg); height: var(--mascot-lg); border-radius:var(--r-pill); background:var(--surface-3); display:grid; place-items:center; border:1.5px solid var(--bz-amber-400); }
+.user-name { font-size:12.5px; font-weight:600; color:var(--text-1); }
+.user-tier { font-size:10.5px; color:var(--bz-amber-400); font-weight:700; margin-top:1px; }
+.main { margin-left:var(--sidebar-w); margin-top:calc(var(--header-h) + var(--marquee-h)); padding:28px 32px 60px; max-width:1100px; }
+.page-title { font-family:var(--font-display); font-size:28px; font-weight:800; color:var(--text-1); letter-spacing:-0.02em; margin-bottom:4px; }
+.page-sub { font-size:13px; color:var(--text-3); margin-bottom:20px; }
+.ev-tabs { display:flex; gap:6px; margin-bottom:24px; }
+.ev-tab { padding:7px 16px; background:transparent; border:1px solid var(--border-1); border-radius:var(--r-pill); color:var(--text-2); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; font-family:inherit; display:inline-flex; align-items:center; gap:6px; }
+.ev-tab:hover { color:var(--text-1); border-color:var(--border-2); }
+.ev-tab.active { background:var(--bz-amber-400); border-color:var(--bz-amber-400); color:#2a1505; }
+.ev-count { background:rgba(0,0,0,0.25); border-radius:var(--r-pill); padding:1px 7px; font-size:11px; font-weight:700; }
+.ev-list { display:flex; flex-direction:column; gap:14px; }
+.ev-card { border-radius:var(--r-lg); padding:24px 28px; display:flex; align-items:center; gap:20px; cursor:pointer; transition:transform 0.15s, box-shadow 0.15s; border:1px solid rgba(255,255,255,0.06); }
+.ev-card:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+.ev-card[style*="display:none"] { display:none !important; }
+.ev-card-body { flex:1; min-width:0; }
+.ev-badge { display:inline-block; padding:3px 9px; border-radius:var(--r-pill); font-size:10.5px; font-weight:700; letter-spacing:0.04em; margin-bottom:8px; font-family:var(--font-display); }
+.ev-title { font-family:var(--font-display); font-size:19px; font-weight:700; color:#fff; margin-bottom:5px; letter-spacing:-0.01em; }
+.ev-desc { font-size:13px; color:rgba(255,255,255,0.65); margin-bottom:12px; }
+.ev-meta { display:flex; align-items:center; gap:16px; font-size:12px; color:rgba(255,255,255,0.55); }
+.ev-status { display:inline-flex; align-items:center; gap:5px; font-weight:600; }
+.ev-live-dot { width:7px; height:7px; border-radius:50%; background:#22c55e; display:inline-block; animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+.ev-card-right { display:flex; flex-direction:column; align-items:center; gap:12px; flex-shrink:0; }
+.ev-icon { width:52px; height:52px; border-radius:var(--r-md); background:rgba(255,255,255,0.15); display:grid; place-items:center; border:1px solid rgba(255,255,255,0.2); }
+.ev-icon svg { width:24px; height:24px; stroke:rgba(255,255,255,0.9); }
+.ev-btn { padding:8px 18px; border-radius:var(--r-md); font-size:13px; font-weight:700; cursor:pointer; font-family:var(--font-display); transition:all 0.12s; white-space:nowrap; border:none; }
+.ev-btn-join { background:rgba(255,255,255,0.18); color:#fff; border:1px solid rgba(255,255,255,0.3); }
+.ev-btn-join:hover { background:rgba(255,255,255,0.28); }
+.ev-btn-soon { background:rgba(0,0,0,0.25); color:rgba(255,255,255,0.5); border:1px solid rgba(255,255,255,0.1); cursor:default; }
+.ev-btn-view { background:rgba(255,255,255,0.18); color:#fff; border:1px solid rgba(255,255,255,0.3); }
+.ev-btn-view:hover { background:rgba(255,255,255,0.28); }
+
+/* ===================== LEADERBOARD PAGE CSS ===================== */
+
+/* Top 3 grid */
+.top3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+/* Featured card */
+.lb-card {
+  background:
+    radial-gradient(ellipse 120% 80% at 10% 0%, rgba(234,181,82,0.12), transparent 55%),
+    radial-gradient(ellipse 80% 100% at 90% 100%, rgba(92,168,134,0.10), transparent 60%),
+    var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.18s var(--ease), border-color 0.18s var(--ease);
+}
+.lb-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--bz-amber-400);
+}
+.lb-card.rank-1 { border-color: rgba(234,181,82,0.35); }
+.lb-card.rank-2 { border-color: rgba(156,216,184,0.2); }
+
+.rank-badge {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-mute);
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+.lb-card.rank-1 .rank-badge { color: var(--bz-amber-400); }
+.lb-card.rank-2 .rank-badge { color: var(--bz-teal-400); }
+
+.lb-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.lb-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-md);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.lb-token-info { flex: 1; min-width: 0; }
+.lb-token-name {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--bz-amber-400);
+  margin-bottom: 2px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lb-tagline {
+  font-size: 11.5px;
+  color: var(--text-3);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.lb-buy {
+  height: 32px;
+  padding: 0 16px;
+  background: var(--bz-teal-500);
+  border: none;
+  border-radius: var(--r-md);
+  color: #ecfeff;
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+.lb-buy:hover { background: var(--bz-teal-400); }
+
+.lb-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+.lb-metric-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--text-3);
+}
+.lb-metric-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+.lb-metric-val {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-1);
+  font-size: 13px;
+}
+.lb-metric-change {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.lb-creator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-1);
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+.lb-creator-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--r-pill);
+  flex-shrink: 0;
+  border: 1px solid var(--border-2);
+}
+.lb-creator-name { color: var(--text-2); font-weight: 500; }
+.lb-creator-age { margin-left: auto; color: var(--text-mute); }
+
+/* Table */
+.lb-table {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.lb-table-header {
+  display: grid;
+  grid-template-columns: 2.2fr 1.4fr 0.8fr 1.1fr 0.5fr;
+  padding: 12px 20px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  border-bottom: 1px solid var(--border-1);
+}
+.lb-row {
+  display: grid;
+  grid-template-columns: 2.2fr 1.4fr 0.8fr 1.1fr 0.5fr;
+  align-items: center;
+  padding: 13px 20px;
+  border-top: 1px solid var(--border-1);
+  cursor: pointer;
+  transition: background 0.12s var(--ease);
+}
+.lb-row:first-child { border-top: none; }
+.lb-row:hover { background: var(--surface-2); }
+
+.lb-row-token {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.lb-row-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.lb-row-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-1); /* Group A #5: roster rows desaturate to white */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lb-row-rank {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-mute);
+  margin-top: 1px;
+}
+
+.lb-row-creator {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.lb-row-creator-av {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--r-pill);
+  flex-shrink: 0;
+  border: 1px solid var(--border-2);
+}
+.lb-row-holders {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-2);
+}
+.lb-row-mc {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.lb-row-mc-val {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.lb-row-mc-change {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+.lb-row-buy {
+  height: 30px;
+  padding: 0 14px;
+  background: transparent;
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-md);
+  color: var(--text-2);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.lb-row-buy:hover {
+  border-color: var(--bz-teal-400);
+  color: var(--bz-teal-400);
+}
+
+/* Color helpers */
+.c-up { color: var(--bz-teal-400); }
+.c-down { color: var(--bz-crimson); }
+.c-flat { color: var(--text-3); }
+
+
+/* ===== CONNECTED WALLET ===== */
+.wallet-connected { position: relative; height: 36px; background: var(--surface-2); border: 1px solid var(--border-2); border-radius: var(--r-pill); padding: 3px 12px 3px 4px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.15s var(--ease); font-family: var(--font-body); }
+.wallet-connected:hover { border-color: var(--bz-amber-400); background: var(--bz-amber-soft); }
+.wallet-connected.open { border-color: var(--bz-amber-400); }
+.wc-avatar { width: var(--mascot-md); height: var(--mascot-md); border-radius: 50%; background: linear-gradient(180deg,#FAC775,#EAB552); display: grid; place-items: center; flex-shrink: 0; }
+.wc-avatar svg { width: 18px; height: 18px; }
+.wc-info { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
+.wc-balance { font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; color: var(--bz-amber-400); }
+.wc-addr { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-3); margin-top: 1px; }
+.wc-chevron { width: 12px; height: 12px; color: var(--text-3); flex-shrink: 0; transition: transform 0.15s var(--ease); }
+.wallet-connected.open .wc-chevron { transform: rotate(180deg); color: var(--bz-amber-400); }
+.wc-net-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--bz-teal-400); flex-shrink: 0; box-shadow: 0 0 0 2px rgba(124,196,164,0.20); }
+.wc-net-dot.wrong { background: var(--bz-crimson); box-shadow: 0 0 0 2px rgba(214,90,84,0.20); }
+.wc-menu { position: absolute; top: calc(100% + 8px); right: 0; width: 220px; background: var(--surface-1); border: 1px solid var(--border-1); border-radius: var(--r-md); padding: 6px; display: none; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.wallet-connected.open .wc-menu { display: block; }
+.wc-menu-head { padding: 10px 10px 8px; border-bottom: 1px solid var(--border-1); margin-bottom: 4px; }
+.wc-menu-net { font-size: 10.5px; color: var(--text-3); font-family: var(--font-display); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+.wc-menu-bal { font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--text-1); margin-top: 2px; }
+.wc-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r-sm); color: var(--text-1); font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none; width: 100%; background: transparent; border: none; font-family: inherit; text-align: left; transition: background 0.12s var(--ease); }
+.wc-item:hover { background: var(--surface-2); }
+.wc-item svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
+.wc-item.danger { color: var(--bz-crimson); }
+.wc-item.danger:hover { background: rgba(214,90,84,0.10); }
+.wc-divider { height: 1px; background: var(--border-1); margin: 4px 0; }
+
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="logo" onclick="location.href='token_list_v4.html'" style="cursor:pointer" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
+  <div class="logo-mascot" style="width:var(--mascot-lg);height:var(--mascot-lg);border-radius:10px;background:linear-gradient(180deg,#FAC775,#EAB552);display:grid;place-items:center;flex-shrink:0">
+    <svg viewBox="0 0 64 64" fill="none">
+  <path d="M5 22L32 12L59 22L54 24L32 16L10 24Z" fill="#3a2410" stroke="#3a2410" stroke-linejoin="round" stroke-width="0.5"/>
+  <line x1="14" y1="20" x2="20" y2="17" stroke="#F5DBA8" stroke-width="1.2"/>
+  <line x1="26" y1="15" x2="32" y2="13" stroke="#F5DBA8" stroke-width="1.2"/>
+  <line x1="38" y1="13" x2="44" y2="15" stroke="#F5DBA8" stroke-width="1.2"/>
+  <line x1="50" y1="17" x2="56" y2="20" stroke="#F5DBA8" stroke-width="1.2"/>
+  <rect x="10" y="24" width="44" height="32" rx="2" fill="#3a2410"/>
+  <path d="M24 30L26 25L28 30Z" fill="#EAB552" stroke="#3a2410" stroke-width="0.5"/>
+  <path d="M36 30L38 25L40 30Z" fill="#EAB552" stroke="#3a2410" stroke-width="0.5"/>
+  <circle cx="32" cy="40" r="9" fill="#EAB552" stroke="#3a2410" stroke-width="0.7"/>
+  <ellipse cx="28.5" cy="38.5" rx="1.3" ry="1.7" fill="#3a2410"/>
+  <ellipse cx="35.5" cy="38.5" rx="1.3" ry="1.7" fill="#3a2410"/>
+  <path d="M30 43 Q32 44.5 34 43" stroke="#3a2410" stroke-width="1" fill="none" stroke-linecap="round"/>
+  <line x1="22" y1="40" x2="27" y2="40" stroke="#3a2410" stroke-width="0.5"/>
+  <line x1="37" y1="40" x2="42" y2="40" stroke="#3a2410" stroke-width="0.5"/>
+</svg>
+  </div>
+  <div>
+    <span class="logo-text" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:17px;font-weight:800;color:#EAB552;letter-spacing:-0.01em">Stallspot</span>
+    <span style="display:block;font-size:9px;font-weight:600;color:#71717a;letter-spacing:0.06em;text-transform:lowercase">the meme bazaar</span>
+  </div>
+</div>
+    <span class="logo-text">Stallspot</span><span class="logo-sub" style="display:block;font-size:9px;font-weight:600;color:var(--text-3);letter-spacing:0.06em;text-transform:lowercase;margin-top:-1px">the meme bazaar</span>
+  </a>
+
+  <div class="header-search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" placeholder="Search the bazaar — tokens, vendors, addresses…">
+  </div>
+
+  <div class="header-actions">
+    <div class="wallet-connected" onclick="toggleWalletMenu(event)">
+  <div class="wc-avatar">
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M3 9L12 5L21 9" fill="#3a2410"/>
+      <rect x="5" y="9" width="14" height="11" rx="1" fill="#3a2410"/>
+      <circle cx="9.5" cy="14" r="1" fill="#EAB552"/>
+      <circle cx="14.5" cy="14" r="1" fill="#EAB552"/>
+      <path d="M9 16.5 Q12 17.5 15 16.5" stroke="#EAB552" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="wc-info">
+    <div class="wc-balance">12.45 SOL</div>
+    <div class="wc-addr">7xK9…mP3q</div>
+  </div>
+  <span class="wc-net-dot" title="Solana mainnet"></span>
+  <svg class="wc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+
+  <div class="wc-menu">
+    <div class="wc-menu-head">
+      <div class="wc-menu-net"><span class="wc-net-dot"></span> Solana mainnet</div>
+      <div class="wc-menu-bal">12.45 SOL</div>
+    </div>
+    <a class="wc-item" href="my_profile.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My profile
+    </a>
+    <button class="wc-item" onclick="event.stopPropagation(); navigator.clipboard&&navigator.clipboard.writeText('7xK9...mP3q')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy address
+    </button>
+    <a class="wc-item" href="edit_profile_privacy.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+    <div class="wc-divider"></div>
+    <button class="wc-item danger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Disconnect
+    </button>
+  </div>
+</div>
+    <button onclick="location.href='create_token.html'" class="btn-primary">Create token</button>
+  </div>
+</header>
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="amber">OPEN A STALL</span><span>·</span>
+    <span>TRADE MEMES</span><span>·</span>
+    <span class="amber">WATCH THE CROWD</span><span>·</span>
+    <span>NO RIGGED SCALES</span><span>·</span>
+    <span class="teal">BIGGEST CROWD WINS</span><span>·</span>
+    <span class="amber">TIPS WHISPERED HERE</span><span>·</span>
+    <span class="amber">OPEN A STALL</span><span>·</span>
+    <span>TRADE MEMES</span><span>·</span>
+    <span class="amber">WATCH THE CROWD</span><span>·</span>
+    <span>NO RIGGED SCALES</span><span>·</span>
+    <span class="teal">BIGGEST CROWD WINS</span><span>·</span>
+    <span class="amber">TIPS WHISPERED HERE</span>
+  </div>
+</div>
+<aside class="sidebar">
+
+  <div class="nav-group">
+    <div class="nav-label">Discover</div>
+    <a class="nav-item" href="token_list_v4.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg>
+      Discover
+    </a>
+    <a class="nav-item" href="FR-012_TokenWar.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+      Arena
+    </a>
+    <a class="nav-item" href="clubs.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 17.5 4.5 15"/><path d="m17 9-3 6"/><path d="M11 4 7 10"/><path d="M21 9c-2 4-3.5 6.5-7.5 8.5L8 16"/><path d="M14 4c2 4 3.5 6.5 7.5 8.5"/></svg>
+      Clubs
+    </a>
+    <a class="nav-item" href="events.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Events
+    </a>
+    <a class="nav-item active" href="leaderboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+      Leader Board
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Personal</div>
+    <a class="nav-item" href="my_profile.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My Profile
+      <span class="nav-badge">3</span>
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Earn</div>
+    <a class="nav-item" href="rewards.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+      Point System
+    </a>
+    <a class="nav-item" href="points.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      Rewards
+    </a>
+    <a class="nav-item" href="referrals.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Referrals
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Stake
+    </a>
+  </div>
+
+  <!-- User card (signature moment: mascot Tier) -->
+  <div class="user-card" onclick="location.href='my_profile.html'" style="cursor:pointer">
+    <div class="user-mascot">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+  <path d="M3 9L12 5L21 9" fill="#3a2410"/>
+  <rect x="5" y="9" width="14" height="11" rx="1" fill="#3a2410"/>
+  <path d="M9 9L10 7L11 9Z" fill="#EAB552"/>
+  <path d="M13 9L14 7L15 9Z" fill="#EAB552"/>
+  <circle cx="12" cy="14" r="4" fill="#EAB552"/>
+  <ellipse cx="10.5" cy="13" rx="0.7" ry="0.9" fill="#3a2410"/>
+  <ellipse cx="13.5" cy="13" rx="0.7" ry="0.9" fill="#3a2410"/>
+  <path d="M10.5 15.5 Q12 16.5 13.5 15.5" stroke="#3a2410" stroke-width="0.6" fill="none" stroke-linecap="round"/>
+</svg>
+    </div>
+    <div class="user-info">
+      <div class="user-name">NobleFlame</div>
+      <div class="user-tier">Regular · 642 pts</div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <div style="margin-bottom:24px">
+    <h1 style="font-family:var(--font-display);font-size:28px;font-weight:800;color:var(--text-1);letter-spacing:-0.02em;margin-bottom:4px">Leaderboard</h1>
+    <p style="font-size:13px;color:var(--text-3)">Top tokens ranked by market cap · Updated live</p>
+  </div>
+
+  <div class="top3-grid">
+  <div class="lb-card rank-1" onclick="location.href='token_detail.html'">
+    <div class="rank-badge">#001</div>
+    <div class="lb-card-head">
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#1a3a4a,#2a9d8f)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><circle cx="30" cy="30" r="22" fill="rgba(0,0,0,0.3)"/><circle cx="22" cy="22" rx="14" fill="#2a9d8f"/><circle cx="20" cy="20" r="8" fill="#1a3a4a" opacity="0.8"/></svg></div>
+      <div class="lb-token-info">
+        <div class="lb-token-name">STAR003</div>
+        <div class="lb-tagline">Stellar meme coin 🌟</div>
+      </div>
+      <button class="lb-buy" onclick="event.stopPropagation()">buy</button>
+    </div>
+    <div class="lb-metrics">
+      <div class="lb-metric-row">
+        <span class="lb-metric-label">mc</span>
+        <span class="lb-metric-val c-up">+1.01%</span>
+        <span class="lb-metric-val">$3.57M</span>
+      </div>
+      <div class="lb-metric-row">
+        <span class="lb-metric-label">24h vol</span>
+        <span class="lb-metric-val c-up">+48.45%</span>
+        <span class="lb-metric-val">$10.2K</span>
+      </div>
+    </div>
+    <div class="lb-creator">
+      <div class="lb-creator-avatar" style="background:linear-gradient(135deg,#2a9d8f,#1a3a4a)"></div>
+      <span>stall by</span>
+      <span class="lb-creator-name">kxce...vnWy</span>
+      <span class="lb-creator-age">• 2mos 23d ago</span>
+    </div>
+  </div>
+  <div class="lb-card rank-2" onclick="location.href='token_detail.html'">
+    <div class="rank-badge">#002</div>
+    <div class="lb-card-head">
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#1e3a5f,#4a90d9)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><polygon points="30,10 48,28 30,52 12,28" fill="#4a90d9" opacity="0.9"/><polygon points="30,10 48,28 30,34" fill="#1e3a5f" opacity="0.5"/></svg></div>
+      <div class="lb-token-info">
+        <div class="lb-token-name">DIAMOND098</div>
+        <div class="lb-tagline">Diamond hands only 💎</div>
+      </div>
+      <button class="lb-buy" onclick="event.stopPropagation()">buy</button>
+    </div>
+    <div class="lb-metrics">
+      <div class="lb-metric-row">
+        <span class="lb-metric-label">mc</span>
+        <span class="lb-metric-val c-flat">+1.01%</span>
+        <span class="lb-metric-val">$3.21M</span>
+      </div>
+      <div class="lb-metric-row">
+        <span class="lb-metric-label">24h vol</span>
+        <span class="lb-metric-val c-flat">0.00%</span>
+        <span class="lb-metric-val">$0.00</span>
+      </div>
+    </div>
+    <div class="lb-creator">
+      <div class="lb-creator-avatar" style="background:linear-gradient(135deg,#4a90d9,#1e3a5f)"></div>
+      <span>stall by</span>
+      <span class="lb-creator-name">eLK3...mHAt</span>
+      <span class="lb-creator-age">• 2mos 19d ago</span>
+    </div>
+  </div>
+  <div class="lb-card " onclick="location.href='token_detail.html'">
+    <div class="rank-badge">#003</div>
+    <div class="lb-card-head">
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#5a2a10,#d45a20)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><path d="M30 52 C15 45 10 35 18 25 C20 35 26 38 28 30 C32 38 40 42 30 52Z" fill="#d45a20"/><path d="M30 46 C22 42 20 36 25 30 C26 36 30 38 30 46Z" fill="#5a2a10" opacity="0.7"/></svg></div>
+      <div class="lb-token-info">
+        <div class="lb-token-name">FIRE094</div>
+        <div class="lb-tagline">Hot token of the week 🔥</div>
+      </div>
+      <button class="lb-buy" onclick="event.stopPropagation()">buy</button>
+    </div>
+    <div class="lb-metrics">
+      <div class="lb-metric-row">
+        <span class="lb-metric-label">mc</span>
+        <span class="lb-metric-val c-up">+1.01%</span>
+        <span class="lb-metric-val">$3.21M</span>
+      </div>
+      <div class="lb-metric-row">
+        <span class="lb-metric-label">24h vol</span>
+        <span class="lb-metric-val c-up">+100.00%</span>
+        <span class="lb-metric-val">$4.34</span>
+      </div>
+    </div>
+    <div class="lb-creator">
+      <div class="lb-creator-avatar" style="background:linear-gradient(135deg,#d45a20,#5a2a10)"></div>
+      <span>stall by</span>
+      <span class="lb-creator-name">Ychp...enMU</span>
+      <span class="lb-creator-age">• 2mos 18d ago</span>
+    </div>
+  </div>
+</div>
+
+  <div class="lb-table">
+  <div class="lb-table-header">
+    <div>Token</div>
+    <div>Creator</div>
+    <div>Holders</div>
+    <div>Market Cap</div>
+    <div></div>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#1a3a4a,#2a9d8f)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><circle cx="30" cy="30" r="22" fill="rgba(0,0,0,0.3)"/><circle cx="22" cy="22" rx="14" fill="#2a9d8f"/><circle cx="20" cy="20" r="8" fill="#1a3a4a" opacity="0.8"/></svg></div>
+      <div>
+        <div class="lb-row-name">STAR003</div>
+        <div class="lb-row-rank">#001</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#2a9d8f,#1a3a4a)"></div>
+      kxce...vnWy
+    </div>
+    <div class="lb-row-holders">12,450</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$3.57M</div>
+      <div class="lb-row-mc-change c-up">+1.01%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#1e3a5f,#4a90d9)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><polygon points="30,8 35,22 50,22 38,30 42,45 30,36 18,45 22,30 10,22 25,22" fill="#4a90d9" opacity="0.9"/></svg></div>
+      <div>
+        <div class="lb-row-name">DIAMOND098</div>
+        <div class="lb-row-rank">#002</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#4a90d9,#1e3a5f)"></div>
+      eLK3...mHAt
+    </div>
+    <div class="lb-row-holders">n/a</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$3.21M</div>
+      <div class="lb-row-mc-change c-up">+1.01%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#5a2a10,#d45a20)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><path d="M30 52 C15 45 10 35 18 25 C20 35 26 38 28 30 C32 38 40 42 30 52Z" fill="#d45a20"/><path d="M30 46 C22 42 20 36 25 30 C26 36 30 38 30 46Z" fill="#5a2a10" opacity="0.7"/></svg></div>
+      <div>
+        <div class="lb-row-name">FIRE094</div>
+        <div class="lb-row-rank">#003</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#d45a20,#5a2a10)"></div>
+      Ychp...enMU
+    </div>
+    <div class="lb-row-holders">3,911</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$3.21M</div>
+      <div class="lb-row-mc-change c-up">+1.01%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#2a1a4a,#7c4a9d)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><polygon points="30,10 48,28 30,52 12,28" fill="#7c4a9d" opacity="0.9"/><polygon points="30,10 48,28 30,34" fill="#2a1a4a" opacity="0.5"/></svg></div>
+      <div>
+        <div class="lb-row-name">MOON030</div>
+        <div class="lb-row-rank">#004</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#7c4a9d,#2a1a4a)"></div>
+      pvEM...V1pp
+    </div>
+    <div class="lb-row-holders">8,234</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$3.17M</div>
+      <div class="lb-row-mc-change c-up">+1.01%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#1a3a2a,#2a9d5a)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><path d="M30 8 C30 8 20 25 20 38 L30 44 L40 38 C40 25 30 8 30 8Z" fill="#2a9d5a"/><circle cx="30" cy="32" r="5" fill="#1a3a2a" opacity="0.8"/></svg></div>
+      <div>
+        <div class="lb-row-name">SILVER037</div>
+        <div class="lb-row-rank">#005</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#2a9d5a,#1a3a2a)"></div>
+      24AF...cyEq
+    </div>
+    <div class="lb-row-holders">5,123</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$3.04M</div>
+      <div class="lb-row-mc-change c-up">+1.01%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#3a2a10,#9d7a2a)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><circle cx="30" cy="30" r="22" fill="rgba(0,0,0,0.3)"/><circle cx="22" cy="22" rx="14" fill="#9d7a2a"/><circle cx="20" cy="20" r="8" fill="#3a2a10" opacity="0.8"/></svg></div>
+      <div>
+        <div class="lb-row-name">PEPE</div>
+        <div class="lb-row-rank">#006</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#9d7a2a,#3a2a10)"></div>
+      2Kx9...Qw3L
+    </div>
+    <div class="lb-row-holders">3,456</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$450K</div>
+      <div class="lb-row-mc-change c-up">+12.5%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#3a1a2a,#9d4a6a)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><polygon points="30,8 35,22 50,22 38,30 42,45 30,36 18,45 22,30 10,22 25,22" fill="#9d4a6a" opacity="0.9"/></svg></div>
+      <div>
+        <div class="lb-row-name">DOGE KILLER</div>
+        <div class="lb-row-rank">#007</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#9d4a6a,#3a1a2a)"></div>
+      9Bn4...rT7m
+    </div>
+    <div class="lb-row-holders">2,891</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$320K</div>
+      <div class="lb-row-mc-change c-down">-5.2%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#1a2a4a,#2a5a9d)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><path d="M30 52 C15 45 10 35 18 25 C20 35 26 38 28 30 C32 38 40 42 30 52Z" fill="#2a5a9d"/><path d="M30 46 C22 42 20 36 25 30 C26 36 30 38 30 46Z" fill="#1a2a4a" opacity="0.7"/></svg></div>
+      <div>
+        <div class="lb-row-name">ROCKET SHIP</div>
+        <div class="lb-row-rank">#008</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#2a5a9d,#1a2a4a)"></div>
+      3Wx8...Km5N
+    </div>
+    <div class="lb-row-holders">1,567</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$150K</div>
+      <div class="lb-row-mc-change c-up">+15.3%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+</div>
+
+</main>
+
+<script>
+function toggleWalletMenu(e) { e.stopPropagation(); document.querySelectorAll('.wallet-connected').forEach(w => w.classList.toggle('open')); }
+document.addEventListener('click', e => { if (!e.target.closest('.wallet-connected')) document.querySelectorAll('.wallet-connected').forEach(w => w.classList.remove('open')); });
+</script>
+</body>
+</html>

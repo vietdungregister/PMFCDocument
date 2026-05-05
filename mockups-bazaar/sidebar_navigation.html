@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Navigation — Stallspot</title>
+    <style>
+        :root {
+    --bg:          #0a0e1a;
+    --surface-1:   #131826;
+    --surface-2:   #1a2138;
+    --surface-3:   #232b46;
+    --border-1:    #1f2640;
+    --border-2:    #2a3456;
+    --bz-amber-100: #F5DBA8;
+    --bz-amber-200: #FAC775;
+    --bz-amber-400: #EAB552;
+    --bz-amber-500: #C49152;
+    --bz-amber-soft: rgba(234, 181, 82, 0.10);
+    --bz-brown-300: #8B5A3C;
+    --bz-brown-500: #5a3818;
+    --bz-brown-700: #3a2410;
+    --bz-cream:    #F5DBA8;
+    --bz-teal-300: #9ED8B8;
+    --bz-teal-400: #7CC4A4;
+    --bz-teal-500: #5BA886;
+    --bz-crimson:  #D65A54;
+    --text-1: #f4f4f5;
+    --text-2: #a1a1aa;
+    --text-3: #71717a;
+    --text-mute: #52525b;
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+    --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
+  --mascot-sm:   22px;
+  --mascot-md:   30px;
+  --mascot-lg:   40px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--card2);
+            border-right: 1px solid var(--card-boarder);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .logo {
+            padding: 0 20px 20px 20px;
+            border-bottom: 1px solid var(--card-boarder);
+            margin-bottom: 20px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .nav-section {
+            margin-bottom: 24px;
+        }
+        
+        .nav-section-title {
+            padding: 0 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .nav-item:hover {
+            background: var(--card-hover);
+            color: var(--accent);
+        }
+        
+        .nav-item.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .nav-icon {
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .user-section {
+            margin-top: auto;
+            padding: 20px;
+            border-top: 1px solid var(--card-boarder);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--card);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .user-profile:hover {
+            background: var(--card-hover);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .user-wallet {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            font-family: monospace;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 40px;
+        }
+        
+        .page-header {
+            margin-bottom: 32px;
+        }
+        
+        .page-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        
+        .content-placeholder {
+            background: var(--card);
+            padding: 60px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Logo -->
+        <div class="logo" onclick="location.href='token_list_v4.html'" style="cursor:pointer" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
+  <div class="logo-mascot" style="width:var(--mascot-lg);height:var(--mascot-lg);border-radius:10px;background:linear-gradient(180deg,#FAC775,#EAB552);display:grid;place-items:center;flex-shrink:0">
+    <svg viewBox="0 0 64 64" fill="none">
+  <path d="M5 22L32 12L59 22L54 24L32 16L10 24Z" fill="#3a2410" stroke="#3a2410" stroke-linejoin="round" stroke-width="0.5"/>
+  <line x1="14" y1="20" x2="20" y2="17" stroke="#F5DBA8" stroke-width="1.2"/>
+  <line x1="26" y1="15" x2="32" y2="13" stroke="#F5DBA8" stroke-width="1.2"/>
+  <line x1="38" y1="13" x2="44" y2="15" stroke="#F5DBA8" stroke-width="1.2"/>
+  <line x1="50" y1="17" x2="56" y2="20" stroke="#F5DBA8" stroke-width="1.2"/>
+  <rect x="10" y="24" width="44" height="32" rx="2" fill="#3a2410"/>
+  <path d="M24 30L26 25L28 30Z" fill="#EAB552" stroke="#3a2410" stroke-width="0.5"/>
+  <path d="M36 30L38 25L40 30Z" fill="#EAB552" stroke="#3a2410" stroke-width="0.5"/>
+  <circle cx="32" cy="40" r="9" fill="#EAB552" stroke="#3a2410" stroke-width="0.7"/>
+  <ellipse cx="28.5" cy="38.5" rx="1.3" ry="1.7" fill="#3a2410"/>
+  <ellipse cx="35.5" cy="38.5" rx="1.3" ry="1.7" fill="#3a2410"/>
+  <path d="M30 43 Q32 44.5 34 43" stroke="#3a2410" stroke-width="1" fill="none" stroke-linecap="round"/>
+  <line x1="22" y1="40" x2="27" y2="40" stroke="#3a2410" stroke-width="0.5"/>
+  <line x1="37" y1="40" x2="42" y2="40" stroke="#3a2410" stroke-width="0.5"/>
+</svg>
+  </div>
+  <div>
+    <span class="logo-text" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:17px;font-weight:800;color:#EAB552;letter-spacing:-0.01em">Stallspot</span>
+    <span style="display:block;font-size:9px;font-weight:600;color:#71717a;letter-spacing:0.06em;text-transform:lowercase">the meme bazaar</span>
+  </div>
+</div>
+        </div>
+        
+        <!-- Main Navigation -->
+        <div class="nav-section">
+            <div class="nav-section-title">Main</div>
+            <a href="#" class="nav-item active">
+                <span class="nav-icon">🏠</span>
+                <span>Token List</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🏆</span>
+                <span>Leaderboard</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">➕</span>
+                <span>Create Token</span>
+            </a>
+        </div>
+        
+        <!-- Personal -->
+        <div class="nav-section">
+            <div class="nav-section-title">Personal</div>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span>My Profile</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span>Stall Manager</span>
+            </a>
+        </div>
+        
+        <!-- Rewards -->
+        <div class="nav-section">
+            <div class="nav-section-title">Earn</div>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🎁</span>
+                <span>Rewards</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🤝</span>
+                <span>Referrals</span>
+            </a>
+        </div>
+        
+        <!-- User Profile Section -->
+        <div class="user-section">
+            <div class="user-profile">
+                <div class="user-avatar">D</div>
+                <div class="user-info">
+                    <div class="user-name">dungdev</div>
+                    <div class="user-wallet">7xK9...mP3q</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Welcome to Stallspot</h1>
+            <p class="page-subtitle">Discover and trade meme tokens on Solana</p>
+        </div>
+        
+        <div class="content-placeholder">
+            <h2>Main Content Area</h2>
+            <p>Your page content goes here</p>
+        </div>
+    </div>
+</body>
+</html>
