@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Sprout — Token List v3 (Memeconomy Garden)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  /* ========================================================
+     SPROUT — v3 Preview
+     Story: The Memeconomy Garden (Explorer hero)
+     Visual: Organic earthy + Premium discipline
+     ======================================================== */
+  :root {
+    /* Surfaces — night sky over garden */
+    --bg:          #0a0e1a;
+    --surface-1:   #131826;
+    --surface-2:   #1a2138;
+    --surface-3:   #232b46;
+    --border-1:    #1f2640;
+    --border-2:    #2a3456;
+
+    /* Brand peach — dawn */
+    --peach-300:   #f4cba0;
+    --peach-400:   #e8a87c;
+    --peach-500:   #d68a5b;
+    --peach-soft:  rgba(232, 168, 124, 0.10);
+
+    /* Growth teal — leaves */
+    --teal-300:    #9ed8b8;
+    --teal-400:    #7cc4a4;
+    --teal-500:    #5ba886;
+    --teal-soft:   rgba(124, 196, 164, 0.10);
+
+    /* Harvest amber — mature, milestones */
+    --amber-300:   #e8c08c;
+    --amber-400:   #d4a256;
+    --amber-500:   #b88840;
+    --amber-soft:  rgba(212, 162, 86, 0.10);
+
+    /* Wilt crimson — sell, danger */
+    --crimson-400: #d65a54;
+    --crimson-500: #b94842;
+
+    /* Text */
+    --text-1:      #f4f4f5;
+    --text-2:      #a1a1aa;
+    --text-3:      #71717a;
+    --text-mute:   #52525b;
+
+    /* Typography */
+    --font-display:'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:   'Inter', system-ui, sans-serif;
+    --font-mono:   'JetBrains Mono', 'SF Mono', monospace;
+
+    /* Radius — rounded organic */
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 14px;
+    --r-pill: 999px;
+
+    /* Motion — calm, no bounce */
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-1);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .app {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ========================================================
+     SIDEBAR — flat list (matches MVP) + logged-in user card
+     ======================================================== */
+  .sidebar {
+    background: var(--bg);
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    border-right: 1px solid var(--border-1);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 8px;
+  }
+  .logo-mascot {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--r-md);
+    background: linear-gradient(180deg, #f4cba0, #e8a87c);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .logo-mascot svg { width: 30px; height: 30px; }
+  .logo-text {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--peach-400);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-top: 6px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 12px;
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s var(--ease);
+    text-decoration: none;
+    position: relative;
+  }
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.85; }
+  .nav-item:hover { background: var(--surface-1); color: var(--text-1); }
+  .nav-item.active {
+    color: var(--peach-400);
+    font-weight: 600;
+  }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--crimson-400);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: var(--r-pill);
+    min-width: 18px;
+    text-align: center;
+  }
+
+  .sidebar-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .btn-cta {
+    width: 100%;
+    height: 38px;
+    border-radius: var(--r-md);
+    border: none;
+    font-family: var(--font-display);
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+    color: #2a1505;
+  }
+  .btn-cta-create { background: linear-gradient(180deg, #f4cba0, #e8a87c); }
+  .btn-cta-create:hover { background: linear-gradient(180deg, #f7d4ad, #ecb287); }
+  .btn-cta-connect { background: linear-gradient(180deg, #e8a87c, #d68a5b); }
+  .btn-cta-connect:hover { background: linear-gradient(180deg, #ecb287, #db9568); }
+
+  /* User card — logged-in state, shows current Tier mascot */
+  .user-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .user-mascot {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-pill);
+    background: var(--surface-2);
+    display: grid;
+    place-items: center;
+    border: 1.5px solid var(--peach-400);
+    flex-shrink: 0;
+  }
+  .user-mascot svg { width: 28px; height: 28px; }
+  .user-info { flex: 1; min-width: 0; }
+  .user-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+  .user-tier {
+    font-family: var(--font-display);
+    font-size: 11px;
+    color: var(--peach-400);
+    font-weight: 700;
+    margin-top: 1px;
+  }
+  .tier-progress {
+    height: 3px;
+    background: var(--border-1);
+    border-radius: var(--r-pill);
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  .tier-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--peach-400), var(--teal-400));
+    border-radius: var(--r-pill);
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 4px;
+    font-size: 12.5px;
+    color: var(--text-2);
+  }
+  .toggle-row svg { width: 14px; height: 14px; margin-right: 6px; vertical-align: -2px; }
+  .toggle {
+    width: 32px;
+    height: 18px;
+    background: var(--teal-500);
+    border-radius: var(--r-pill);
+    position: relative;
+    cursor: pointer;
+  }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    right: 2px;
+  }
+  .palette-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
+    font-size: 12.5px;
+    color: var(--text-2);
+  }
+  .palette-dots { display: flex; gap: 5px; }
+  .palette-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid var(--border-2);
+    cursor: pointer;
+  }
+  .palette-dot.active { border-color: var(--text-1); border-width: 1.5px; }
+
+  .social-row { display: flex; gap: 8px; padding: 0 4px; }
+  .social-icon {
+    width: 28px;
+    height: 28px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    color: var(--text-3);
+    cursor: pointer;
+  }
+  .social-icon:hover { color: var(--text-1); border-color: var(--border-2); }
+  .social-icon svg { width: 14px; height: 14px; }
+
+  .footer-links { display: flex; gap: 6px; padding: 0 4px; flex-wrap: wrap; }
+  .footer-link {
+    font-size: 11px;
+    padding: 3px 8px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-sm);
+    color: var(--text-3);
+    cursor: pointer;
+  }
+  .footer-link:hover { color: var(--text-2); }
+  .footer-copy { font-size: 10.5px; color: var(--text-mute); padding: 0 4px; margin-top: 4px; }
+
+  /* ========================================================
+     MAIN
+     ======================================================== */
+  .main {
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* Marquee — Garden voice mixed */
+  .marquee {
+    background: var(--surface-1);
+    border-bottom: 1px solid var(--border-1);
+    height: 32px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 36px;
+    white-space: nowrap;
+    animation: scroll 40s linear infinite;
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+  }
+  .marquee-track .peach { color: var(--peach-400); }
+  .marquee-track .teal { color: var(--teal-400); }
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .content {
+    padding: 28px 36px 40px;
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Page subtitle (small garden voice) */
+  .page-subtitle {
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--peach-400);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .page-subtitle svg { width: 14px; height: 14px; }
+
+  /* Featured row */
+  .featured-row {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    margin-bottom: 22px;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+  .featured-row::-webkit-scrollbar { height: 4px; }
+  .featured-row::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
+
+  .featured-chip {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    transition: border-color 0.15s var(--ease);
+    min-width: 200px;
+  }
+  .featured-chip:hover { border-color: var(--peach-400); }
+  .featured-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--r-sm);
+    flex-shrink: 0;
+  }
+  .featured-name {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--peach-400);
+  }
+
+  /* Search */
+  .search-wrap { display: flex; justify-content: center; margin-bottom: 20px; }
+  .search { position: relative; width: 100%; max-width: 520px; }
+  .search input {
+    width: 100%;
+    height: 40px;
+    padding: 0 14px 0 38px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    color: var(--text-1);
+    font-family: inherit;
+    font-size: 13.5px;
+    transition: border-color 0.15s var(--ease);
+  }
+  .search input::placeholder { color: var(--text-3); }
+  .search input:focus { outline: none; border-color: var(--peach-400); }
+  .search svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--text-3);
+  }
+
+  /* Tab row */
+  .tab-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 9px 18px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--r-pill);
+    color: var(--text-2);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tab:hover { color: var(--text-1); }
+  .tab.active {
+    background: linear-gradient(180deg, #f4cba0, #e8a87c);
+    color: #2a1505;
+  }
+  .tab-leaf { width: 13px; height: 13px; color: var(--teal-400); }
+  .tab.active .tab-leaf { color: #2a1505; }
+
+  .tab-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--text-2);
+    font-size: 12.5px;
+  }
+  .tab-toggle { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .tab-toggle .toggle { width: 28px; height: 16px; }
+  .tab-toggle .toggle::after { width: 12px; height: 12px; }
+  .tab-toggle .toggle.off { background: var(--border-2); }
+  .tab-toggle .toggle.off::after { right: auto; left: 2px; }
+  .filter-btn {
+    padding: 7px 14px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .filter-btn:hover { border-color: var(--peach-400); color: var(--text-1); }
+
+  /* ========================================================
+     TOKEN GRID
+     ======================================================== */
+  .token-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 1100px) {
+    .token-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .token-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-lg);
+    padding: 22px;
+    cursor: pointer;
+    transition: all 0.18s var(--ease);
+    position: relative;
+  }
+  .token-card:hover {
+    border-color: var(--border-2);
+    transform: translateY(-1px);
+  }
+  .token-card.is-hovered {
+    border-color: var(--peach-400);
+    transform: translateY(-1px);
+  }
+  /* Almost-there variant: subtle amber accent */
+  .token-card.almost-there {
+    background: linear-gradient(180deg, var(--amber-soft) 0%, var(--surface-1) 40%);
+  }
+
+  .card-head {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .token-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--r-md);
+    flex-shrink: 0;
+    overflow: hidden;
+    background: var(--surface-2);
+    display: grid;
+    place-items: center;
+  }
+  .token-avatar svg { width: 100%; height: 100%; }
+  .token-meta { flex: 1; min-width: 0; padding-right: 26px; }
+  .token-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+  }
+  .token-name {
+    font-family: var(--font-display);
+    font-size: 16.5px;
+    font-weight: 700;
+    color: var(--peach-400);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Trust = leaf-shaped, color by score */
+  .trust-leaf {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .trust-leaf svg { width: 13px; height: 13px; }
+  .trust-high { color: var(--teal-400); }
+  .trust-mid { color: var(--amber-400); }
+  .trust-low { color: var(--crimson-400); }
+
+  .token-symbol {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text-3);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .favorite {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: var(--text-mute);
+    transition: color 0.15s var(--ease);
+  }
+  .favorite:hover { color: var(--peach-400); }
+  .favorite.active { color: var(--peach-400); }
+  .favorite svg { width: 16px; height: 16px; }
+
+  /* Price row */
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .price-value {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-1);
+    letter-spacing: -0.02em;
+  }
+  .price-change {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .price-up { color: var(--teal-400); }
+  .price-down { color: var(--crimson-400); }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .stat-cell { display: flex; flex-direction: column; gap: 4px; }
+  .stat-label { font-size: 11.5px; color: var(--text-3); font-weight: 500; }
+  .stat-value { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--text-1); }
+
+  /* Footer (age + progress) */
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11.5px;
+    color: var(--text-3);
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .age-info { display: inline-flex; align-items: center; gap: 5px; }
+  .age-info svg { width: 12px; height: 12px; }
+  .progress-text { color: var(--text-2); }
+  .progress-percent {
+    margin-left: 6px;
+    font-family: var(--font-mono);
+    color: var(--peach-400);
+    font-weight: 600;
+  }
+  /* Almost-there milestone */
+  .milestone-amber {
+    color: var(--amber-400);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .milestone-amber svg { width: 12px; height: 12px; }
+
+  /* Slim graduation bar */
+  .graduation-bar {
+    height: 2px;
+    background: var(--border-1);
+    border-radius: var(--r-pill);
+    overflow: hidden;
+  }
+  .graduation-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--peach-400), var(--teal-400));
+    border-radius: var(--r-pill);
+  }
+  .graduation-fill.amber {
+    background: linear-gradient(90deg, var(--peach-400), var(--amber-400));
+  }
+
+  /* "Just sprouted" badge — leaf-shaped, story-aware */
+  .badge-sprouted {
+    position: absolute;
+    top: -1px;
+    left: 14px;
+    background: var(--teal-500);
+    color: #ecfeff;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 4px 10px 4px 8px;
+    border-radius: 0 0 var(--r-sm) var(--r-sm);
+    letter-spacing: 0.03em;
+    font-family: var(--font-display);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .badge-sprouted svg { width: 11px; height: 11px; }
+
+  /* Notice strip */
+  .notice {
+    background: var(--peach-soft);
+    border: 1px solid rgba(232, 168, 124, 0.25);
+    border-radius: var(--r-md);
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    font-size: 12.5px;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .notice strong { color: var(--peach-400); font-family: var(--font-display); }
+
+  .load-more-wrap { display: flex; justify-content: center; margin-top: 32px; }
+  .load-more {
+    padding: 10px 28px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .load-more:hover { border-color: var(--peach-400); color: var(--text-1); }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+
+    <div class="logo">
+      <div class="logo-mascot">
+        <!-- Mascot Sprout (Tier 2) — peach pot + teal leaves -->
+        <svg viewBox="0 0 64 64" fill="none">
+          <ellipse cx="32" cy="46" rx="16" ry="11" fill="#8B4513"/>
+          <ellipse cx="24" cy="28" rx="6" ry="11" transform="rotate(-25 24 28)" fill="#7cc4a4"/>
+          <ellipse cx="40" cy="28" rx="6" ry="11" transform="rotate(25 40 28)" fill="#5ba886"/>
+          <rect x="30" y="30" width="4" height="14" fill="#3d7458"/>
+          <circle cx="27" cy="48" r="1.5" fill="#1a1208"/>
+          <circle cx="37" cy="48" r="1.5" fill="#1a1208"/>
+          <path d="M 27 51 Q 32 53.5 37 51" stroke="#1a1208" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="logo-text">Sprout<br>Clone</div>
+    </div>
+
+    <div class="nav-list">
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        My Profile
+        <span class="nav-badge">3</span>
+      </a>
+      <a class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+        Arena
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg>
+        Events
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 17.5 4.5 15"/><path d="m17 9-3 6"/><path d="M11 4 7 10"/><path d="M21 9c-2 4-3.5 6.5-7.5 8.5L8 16"/><path d="M14 4c2 4 3.5 6.5 7.5 8.5"/><path d="M3 19c2-1 3-2 5-2.5"/></svg>
+        Clubs
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+        Leader Board
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+        Point System
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+        Rewards
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Referrals
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Stake
+      </a>
+    </div>
+
+    <div class="sidebar-cta">
+      <button class="btn-cta btn-cta-create">Plant a token</button>
+      <button class="btn-cta btn-cta-connect">Connect wallet</button>
+    </div>
+
+    <!-- User card — logged in, shows current Tier mascot (signature moment #1) -->
+    <div class="user-card">
+      <div class="user-mascot">
+        <!-- Sprout Tier 2 mini -->
+        <svg viewBox="0 0 64 64" fill="none">
+          <ellipse cx="32" cy="46" rx="14" ry="10" fill="#8B4513"/>
+          <ellipse cx="24" cy="28" rx="6" ry="10" transform="rotate(-25 24 28)" fill="#7cc4a4"/>
+          <ellipse cx="40" cy="28" rx="6" ry="10" transform="rotate(25 40 28)" fill="#5ba886"/>
+          <rect x="30" y="30" width="4" height="14" fill="#3d7458"/>
+        </svg>
+      </div>
+      <div class="user-info">
+        <div class="user-name">NobleFlame</div>
+        <div class="user-tier">Sprout · 642 / 2K pts</div>
+        <div class="tier-progress"><div class="tier-progress-fill" style="width:32%"></div></div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="toggle-row">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Dark mode</span>
+        <div class="toggle"></div>
+      </div>
+      <div class="palette-row">
+        <span>Palette</span>
+        <div class="palette-dots">
+          <div class="palette-dot active" style="background:#e8a87c"></div>
+          <div class="palette-dot" style="background:#7cc4a4"></div>
+          <div class="palette-dot" style="background:#d4a256"></div>
+          <div class="palette-dot" style="background:#9ed8b8"></div>
+        </div>
+      </div>
+      <div class="social-row">
+        <a class="social-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></a>
+        <a class="social-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></a>
+      </div>
+      <div class="footer-links">
+        <a class="footer-link">Doc</a>
+        <a class="footer-link">FAQ</a>
+        <a class="footer-link">How it works</a>
+      </div>
+      <div class="footer-copy">© 2026 Sprout Clone</div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- Marquee — Garden voice mixed (signature moment #8) -->
+    <div class="marquee">
+      <div class="marquee-track">
+        <span class="peach">MAKE MONEY ON THE MEMECONOMY</span><span>•</span>
+        <span class="teal">PLANT YOUR SEED</span><span>•</span>
+        <span class="peach">WATCH WHAT'S BLOOMING</span><span>•</span>
+        <span>NO BOT DRAMA</span><span>•</span>
+        <span class="peach">MAKE MONEY ON THE MEMECONOMY</span><span>•</span>
+        <span class="teal">PLANT YOUR SEED</span><span>•</span>
+        <span class="peach">WATCH WHAT'S BLOOMING</span><span>•</span>
+        <span>NO BOT DRAMA</span><span>•</span>
+        <span class="peach">MAKE MONEY ON THE MEMECONOMY</span><span>•</span>
+        <span class="teal">PLANT YOUR SEED</span><span>•</span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="notice">
+        <span style="font-size:14px">🌱</span>
+        <div><strong>Preview v3 — The Memeconomy Garden</strong> · Story Manifest applied: leaf trust shields, garden voice, mascot Tier in sidebar, "Almost there" milestone for near-graduation.</div>
+      </div>
+
+      <!-- Featured row -->
+      <div class="featured-row">
+        <div class="featured-chip">
+          <div class="featured-avatar" style="background:linear-gradient(135deg,#1a3a4a,#2a9d8f)"></div>
+          <span class="featured-name">Moon Token</span>
+        </div>
+        <div class="featured-chip">
+          <div class="featured-avatar" style="background:linear-gradient(135deg,#7cc4a4,#1f7050)"></div>
+          <span class="featured-name">Pump Token</span>
+        </div>
+        <div class="featured-chip">
+          <div class="featured-avatar" style="background:linear-gradient(135deg,#a89683,#5a4836)"></div>
+          <span class="featured-name">Rock Token</span>
+        </div>
+        <div class="featured-chip">
+          <div class="featured-avatar" style="background:linear-gradient(135deg,#e8a87c,#a05030)"></div>
+          <span class="featured-name">Crystal STAR023</span>
+        </div>
+        <div class="featured-chip">
+          <div class="featured-avatar" style="background:linear-gradient(135deg,#d4a256,#8a5e1e)"></div>
+          <span class="featured-name">Cosmos FIRE094</span>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" placeholder="Search the garden...">
+        </div>
+      </div>
+
+      <!-- Garden voice subheading (signature moment) -->
+      <div class="page-subtitle">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+        Watch what's blooming today
+      </div>
+
+      <!-- Tab row -->
+      <div class="tab-row">
+        <button class="tab active">Trending</button>
+        <button class="tab"><svg class="tab-leaf" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8 5 5 9 5 14c0 4 3 8 7 8s7-4 7-8c0-5-3-9-7-12z"/></svg>Trending Arena</button>
+        <button class="tab">Market Cap</button>
+        <button class="tab">New</button>
+        <button class="tab">Finalized</button>
+        <div class="tab-actions">
+          <span class="tab-toggle">NSFW <div class="toggle off"></div></span>
+          <span class="tab-toggle">Live <div class="toggle off"></div></span>
+          <button class="filter-btn">Filter ▼</button>
+        </div>
+      </div>
+
+      <!-- Token grid -->
+      <div class="token-grid">
+
+        <!-- Card 1: Moon Token — high trust, normal -->
+        <div class="token-card">
+          <span class="favorite active"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+          <div class="card-head">
+            <div class="token-avatar">
+              <svg viewBox="0 0 64 64"><rect width="64" height="64" fill="#0d1f2d"/><circle cx="32" cy="32" r="22" fill="#2a9d8f"/><circle cx="32" cy="32" r="11" fill="#0d1f2d"/></svg>
+            </div>
+            <div class="token-meta">
+              <div class="token-name-row">
+                <span class="token-name">Moon Token</span>
+                <span class="trust-leaf trust-high" title="Trust 75/100">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+                  75
+                </span>
+              </div>
+              <div class="token-symbol">MOON</div>
+            </div>
+          </div>
+          <div class="price-row">
+            <span class="price-value">$0.0234</span>
+            <span class="price-change price-up">↑ 38.5%</span>
+          </div>
+          <div class="stats-row">
+            <div class="stat-cell"><span class="stat-label">Volume</span><span class="stat-value">$1.95M</span></div>
+            <div class="stat-cell"><span class="stat-label">Market cap</span><span class="stat-value">$242.2K</span></div>
+          </div>
+          <div class="card-footer">
+            <span class="age-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3mo</span>
+            <span><span class="progress-text">To DEX</span><span class="progress-percent">22%</span></span>
+          </div>
+          <div class="graduation-bar"><div class="graduation-fill" style="width:22%"></div></div>
+        </div>
+
+        <!-- Card 2: Pump Token — ALMOST THERE milestone (signature moment) -->
+        <div class="token-card almost-there">
+          <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+          <div class="card-head">
+            <div class="token-avatar">
+              <svg viewBox="0 0 64 64"><rect width="64" height="64" fill="#1a2e1f"/><ellipse cx="32" cy="32" rx="20" ry="14" fill="#7cc4a4"/><ellipse cx="32" cy="32" rx="20" ry="14" stroke="#0d1f15" stroke-width="2" fill="none"/><line x1="22" y1="32" x2="42" y2="32" stroke="#0d1f15" stroke-width="2"/></svg>
+            </div>
+            <div class="token-meta">
+              <div class="token-name-row">
+                <span class="token-name">Pump Token</span>
+                <span class="trust-leaf trust-high">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+                  92
+                </span>
+              </div>
+              <div class="token-symbol">PUMP</div>
+            </div>
+          </div>
+          <div class="price-row">
+            <span class="price-value">$0.6450</span>
+            <span class="price-change price-up">↑ 122.3%</span>
+          </div>
+          <div class="stats-row">
+            <div class="stat-cell"><span class="stat-label">Volume</span><span class="stat-value">$981.5K</span></div>
+            <div class="stat-cell"><span class="stat-label">Market cap</span><span class="stat-value">$677.9K</span></div>
+          </div>
+          <div class="card-footer">
+            <span class="age-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3mo</span>
+            <span class="milestone-amber">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L7 7l5 5 5-5-5-5zm0 9l-5 5 5 5 5-5-5-5z"/></svg>
+              Almost there · 93%
+            </span>
+          </div>
+          <div class="graduation-bar"><div class="graduation-fill amber" style="width:93%"></div></div>
+        </div>
+
+        <!-- Card 3: Rock Token — wilting (down trend), mid trust -->
+        <div class="token-card">
+          <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+          <div class="card-head">
+            <div class="token-avatar">
+              <svg viewBox="0 0 64 64"><rect width="64" height="64" fill="#2a2618"/><ellipse cx="32" cy="40" rx="22" ry="14" fill="#7d6a48"/><ellipse cx="22" cy="36" rx="3" ry="4" fill="#fff"/><ellipse cx="42" cy="36" rx="3" ry="4" fill="#fff"/><circle cx="22" cy="36" r="1.5" fill="#000"/><circle cx="42" cy="36" r="1.5" fill="#000"/></svg>
+            </div>
+            <div class="token-meta">
+              <div class="token-name-row">
+                <span class="token-name">Rock Token</span>
+                <span class="trust-leaf trust-mid">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+                  50
+                </span>
+              </div>
+              <div class="token-symbol">ROCK</div>
+            </div>
+          </div>
+          <div class="price-row">
+            <span class="price-value">$0.1245</span>
+            <span class="price-change price-down">↓ 12.8%</span>
+          </div>
+          <div class="stats-row">
+            <div class="stat-cell"><span class="stat-label">Volume</span><span class="stat-value">$67.0K</span></div>
+            <div class="stat-cell"><span class="stat-label">Market cap</span><span class="stat-value">$68.6K</span></div>
+          </div>
+          <div class="card-footer">
+            <span class="age-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3mo</span>
+            <span><span class="progress-text">To DEX</span><span class="progress-percent">35%</span></span>
+          </div>
+          <div class="graduation-bar"><div class="graduation-fill" style="width:35%"></div></div>
+        </div>
+
+        <!-- Card 4: Crystal STAR023 — JUST SPROUTED (signature moment #3) -->
+        <div class="token-card">
+          <span class="badge-sprouted">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+            Just sprouted
+          </span>
+          <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+          <div class="card-head" style="margin-top:8px">
+            <div class="token-avatar">
+              <svg viewBox="0 0 64 64"><rect width="64" height="64" fill="#2a2618"/><ellipse cx="32" cy="40" rx="22" ry="14" fill="#7d6a48"/><ellipse cx="22" cy="36" rx="3" ry="4" fill="#fff"/><ellipse cx="42" cy="36" rx="3" ry="4" fill="#fff"/><circle cx="22" cy="36" r="1.5" fill="#000"/><circle cx="42" cy="36" r="1.5" fill="#000"/></svg>
+            </div>
+            <div class="token-meta">
+              <div class="token-name-row">
+                <span class="token-name">Crystal STAR023</span>
+              </div>
+              <div class="token-symbol">STAR023</div>
+            </div>
+          </div>
+          <div class="price-row">
+            <span class="price-value">$0.000087</span>
+            <span class="price-change price-up">↑ 0.0%</span>
+          </div>
+          <div class="stats-row">
+            <div class="stat-cell"><span class="stat-label">Volume</span><span class="stat-value">$0</span></div>
+            <div class="stat-cell"><span class="stat-label">Market cap</span><span class="stat-value">$87</span></div>
+          </div>
+          <div class="card-footer">
+            <span class="age-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>7m</span>
+            <span><span class="progress-text">To DEX</span><span class="progress-percent">2%</span></span>
+          </div>
+          <div class="graduation-bar"><div class="graduation-fill" style="width:2%"></div></div>
+        </div>
+
+        <!-- Card 5: Cosmos FIRE094 — HOVERED demo, mid-high trust -->
+        <div class="token-card is-hovered">
+          <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+          <div class="card-head">
+            <div class="token-avatar">
+              <svg viewBox="0 0 64 64"><rect width="64" height="64" fill="#2a2618"/><ellipse cx="32" cy="40" rx="22" ry="14" fill="#7d6a48"/><ellipse cx="22" cy="36" rx="3" ry="4" fill="#fff"/><ellipse cx="42" cy="36" rx="3" ry="4" fill="#fff"/><circle cx="22" cy="36" r="1.5" fill="#000"/><circle cx="42" cy="36" r="1.5" fill="#000"/></svg>
+            </div>
+            <div class="token-meta">
+              <div class="token-name-row">
+                <span class="token-name">Cosmos FIRE094</span>
+                <span class="trust-leaf trust-high">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+                  68
+                </span>
+              </div>
+              <div class="token-symbol">FIRE094</div>
+            </div>
+          </div>
+          <div class="price-row">
+            <span class="price-value">$0.0079</span>
+            <span class="price-change price-up">↑ 14.2%</span>
+          </div>
+          <div class="stats-row">
+            <div class="stat-cell"><span class="stat-label">Volume</span><span class="stat-value">$15.5K</span></div>
+            <div class="stat-cell"><span class="stat-label">Market cap</span><span class="stat-value">$3.16M</span></div>
+          </div>
+          <div class="card-footer">
+            <span class="age-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3mo</span>
+            <span><span class="progress-text">To DEX</span><span class="progress-percent">31%</span></span>
+          </div>
+          <div class="graduation-bar"><div class="graduation-fill" style="width:31%"></div></div>
+        </div>
+
+        <!-- Card 6: Silver SILVER037 — high trust, normal -->
+        <div class="token-card">
+          <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+          <div class="card-head">
+            <div class="token-avatar">
+              <svg viewBox="0 0 64 64"><rect width="64" height="64" fill="#2a2618"/><ellipse cx="32" cy="40" rx="22" ry="14" fill="#7d6a48"/><ellipse cx="22" cy="36" rx="3" ry="4" fill="#fff"/><ellipse cx="42" cy="36" rx="3" ry="4" fill="#fff"/><circle cx="22" cy="36" r="1.5" fill="#000"/><circle cx="42" cy="36" r="1.5" fill="#000"/></svg>
+            </div>
+            <div class="token-meta">
+              <div class="token-name-row">
+                <span class="token-name">Silver SILVER037</span>
+                <span class="trust-leaf trust-high">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3c.5.12 1 .18 1.5.18C19 19.88 22 12.88 22 6.88c0-1.5-.5-2.88-1-3.88-3 6-9 4-15.5 8.5"/></svg>
+                  83
+                </span>
+              </div>
+              <div class="token-symbol">SILVER037</div>
+            </div>
+          </div>
+          <div class="price-row">
+            <span class="price-value">$0.0356</span>
+            <span class="price-change price-up">↑ 4.7%</span>
+          </div>
+          <div class="stats-row">
+            <div class="stat-cell"><span class="stat-label">Volume</span><span class="stat-value">$15.4K</span></div>
+            <div class="stat-cell"><span class="stat-label">Market cap</span><span class="stat-value">$3.0M</span></div>
+          </div>
+          <div class="card-footer">
+            <span class="age-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3mo</span>
+            <span><span class="progress-text">To DEX</span><span class="progress-percent">42%</span></span>
+          </div>
+          <div class="graduation-bar"><div class="graduation-fill" style="width:42%"></div></div>
+        </div>
+
+      </div>
+
+      <div class="load-more-wrap">
+        <button class="load-more">Show me more sprouts</button>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Sprout — Token List Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  /* ========================================================
+     SPROUT — Design Tokens v2 (preview, not final)
+     Discipline: peach for headings/brand, teal for buy/success,
+     red for sell/danger. NO purple/yellow/blue accents.
+     ======================================================== */
+  :root {
+    /* Surfaces */
+    --bg:          #0a0e1a;
+    --surface-1:   #131826;   /* cards */
+    --surface-2:   #1a2138;   /* nested, inputs */
+    --surface-3:   #232b46;   /* hover */
+    --border-1:    #232b46;
+    --border-2:    #2e3759;
+    --border-focus:#f4a261;
+
+    /* Brand peach */
+    --peach-300:   #ffd0a8;
+    --peach-400:   #f4a261;
+    --peach-500:   #e76f51;
+    --peach-600:   #c5563a;
+    --peach-glow:  rgba(244, 162, 97, 0.25);
+
+    /* Buy/success teal */
+    --teal-300:    #5eead4;
+    --teal-400:    #2dd4bf;
+    --teal-500:    #2a9d8f;
+    --teal-600:    #1f7a70;
+
+    /* Sell/danger red */
+    --red-400:     #f87171;
+    --red-500:     #e63946;
+    --red-600:     #b91c1c;
+
+    /* Text */
+    --text-1:      #f4f4f5;
+    --text-2:      #a1a1aa;
+    --text-3:      #71717a;
+    --text-mute:   #52525b;
+
+    /* Typography */
+    --font-display:'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:   'Inter', system-ui, sans-serif;
+    --font-mono:   'JetBrains Mono', 'SF Mono', monospace;
+
+    /* Radius */
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 14px;
+    --r-xl: 20px;
+    --r-pill: 999px;
+
+    /* Motion */
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-1);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* Layout */
+  .app {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: 64px 1fr;
+    grid-template-areas:
+      "header header"
+      "sidebar main";
+    min-height: 100vh;
+  }
+
+  /* ========================================================
+     HEADER
+     ======================================================== */
+  .header {
+    grid-area: header;
+    background: var(--surface-1);
+    border-bottom: 1px solid var(--border-1);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+    z-index: 10;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--peach-400);
+    letter-spacing: -0.02em;
+  }
+  .logo svg { width: 28px; height: 28px; }
+
+  .search {
+    flex: 1;
+    max-width: 480px;
+    position: relative;
+  }
+  .search input {
+    width: 100%;
+    height: 38px;
+    padding: 0 14px 0 40px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    color: var(--text-1);
+    font-size: 13.5px;
+    font-family: inherit;
+    transition: border-color 0.15s var(--ease);
+  }
+  .search input::placeholder { color: var(--text-3); }
+  .search input:focus {
+    outline: none;
+    border-color: var(--peach-400);
+    box-shadow: 0 0 0 3px var(--peach-glow);
+  }
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-3);
+  }
+  .search-shortcut {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-3);
+    background: var(--surface-3);
+    padding: 2px 6px;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border-2);
+  }
+
+  .header-actions { display: flex; gap: 10px; align-items: center; margin-left: auto; }
+
+  .btn-ghost {
+    height: 38px;
+    padding: 0 14px;
+    background: transparent;
+    border: 1px solid var(--border-2);
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+  }
+  .btn-ghost:hover { border-color: var(--peach-400); color: var(--peach-400); }
+
+  .btn-primary {
+    height: 38px;
+    padding: 0 18px;
+    background: var(--peach-400);
+    border: 1px solid var(--peach-400);
+    border-radius: var(--r-md);
+    color: #1a1208;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+  }
+  .btn-primary:hover {
+    background: var(--peach-300);
+    border-color: var(--peach-300);
+    transform: translateY(-1px);
+  }
+
+  /* ========================================================
+     SIDEBAR
+     ======================================================== */
+  .sidebar {
+    grid-area: sidebar;
+    background: var(--surface-1);
+    border-right: 1px solid var(--border-1);
+    padding: 24px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .nav-group { display: flex; flex-direction: column; gap: 2px; }
+  .nav-label {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    padding: 0 12px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s var(--ease);
+    text-decoration: none;
+  }
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.85; }
+  .nav-item:hover {
+    background: var(--surface-2);
+    color: var(--text-1);
+  }
+  .nav-item.active {
+    background: linear-gradient(90deg, rgba(244,162,97,0.12), transparent);
+    color: var(--peach-400);
+    font-weight: 600;
+    position: relative;
+  }
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    background: var(--peach-400);
+    border-radius: var(--r-pill);
+  }
+
+  /* User card mini at bottom of sidebar */
+  .user-card {
+    margin-top: auto;
+    background: var(--surface-2);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-lg);
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--surface-3);
+    border-radius: var(--r-pill);
+    display: grid;
+    place-items: center;
+    border: 1.5px solid var(--peach-400);
+  }
+  .user-avatar svg { width: 24px; height: 24px; }
+  .user-info { flex: 1; min-width: 0; }
+  .user-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .user-tier {
+    font-family: var(--font-display);
+    font-size: 11px;
+    color: var(--peach-400);
+    font-weight: 600;
+  }
+
+  /* ========================================================
+     MAIN
+     ======================================================== */
+  .main {
+    grid-area: main;
+    padding: 24px 32px 40px;
+    overflow-y: auto;
+  }
+
+  .page-head { margin-bottom: 20px; }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .page-subtitle {
+    font-size: 13.5px;
+    color: var(--text-2);
+  }
+
+  /* Stats banner */
+  .stats-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-lg);
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card.featured {
+    border-color: rgba(244,162,97,0.25);
+    background: linear-gradient(135deg, rgba(244,162,97,0.05), transparent);
+  }
+  .stat-label {
+    font-size: 11.5px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-1);
+    line-height: 1.2;
+  }
+  .stat-delta {
+    font-size: 11.5px;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  .delta-up { color: var(--teal-400); }
+  .delta-down { color: var(--red-400); }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-1);
+    padding-bottom: 0;
+  }
+  .tab {
+    padding: 10px 16px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: var(--r-md) var(--r-md) 0 0;
+    position: relative;
+    transition: color 0.15s var(--ease);
+  }
+  .tab:hover { color: var(--text-1); }
+  .tab.active {
+    color: var(--peach-400);
+    background: var(--surface-1);
+  }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background: var(--peach-400);
+    border-radius: var(--r-pill) var(--r-pill) 0 0;
+  }
+  .tab-count {
+    margin-left: 6px;
+    background: var(--surface-3);
+    color: var(--text-3);
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: var(--r-pill);
+    font-weight: 500;
+  }
+  .tab.active .tab-count {
+    background: rgba(244,162,97,0.15);
+    color: var(--peach-400);
+  }
+
+  /* Action row */
+  .action-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .filter-chip {
+    height: 34px;
+    padding: 0 14px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s var(--ease);
+  }
+  .filter-chip:hover { border-color: var(--peach-400); color: var(--text-1); }
+  .filter-chip.active {
+    border-color: var(--peach-400);
+    color: var(--peach-400);
+    background: rgba(244,162,97,0.05);
+  }
+  .filter-badge {
+    background: var(--peach-400);
+    color: #1a1208;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 1px 6px;
+    border-radius: var(--r-pill);
+    margin-left: 4px;
+  }
+  .sort-dropdown {
+    margin-left: auto;
+    height: 34px;
+    padding: 0 14px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-size: 12.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .sort-dropdown:hover { border-color: var(--peach-400); color: var(--text-1); }
+
+  /* ========================================================
+     TOKEN GRID
+     ======================================================== */
+  .token-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 16px;
+  }
+
+  .token-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-lg);
+    padding: 18px;
+    position: relative;
+    transition: all 0.2s var(--ease);
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .token-card:hover {
+    border-color: var(--border-2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  /* Hovered demo state */
+  .token-card.is-hovered {
+    border-color: var(--peach-400);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(244,162,97,0.2);
+  }
+  .token-card.is-hovered::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--peach-400), var(--teal-400));
+  }
+
+  /* Card variants */
+  .token-card.near-graduation {
+    border-color: rgba(244,162,97,0.3);
+    background: linear-gradient(180deg, rgba(244,162,97,0.04), transparent 30%);
+  }
+
+  /* Card head */
+  .card-head {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .token-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--r-pill);
+    background: var(--surface-3);
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border: 1.5px solid var(--border-2);
+    position: relative;
+  }
+  .token-avatar.trusted { border-color: var(--teal-400); }
+  .token-avatar svg { width: 28px; height: 28px; }
+  .token-avatar.green { background: rgba(45,212,191,0.15); }
+  .token-avatar.peach { background: rgba(244,162,97,0.15); }
+  .token-avatar.red { background: rgba(230,57,70,0.15); }
+  .token-avatar.blue-gray { background: rgba(160,180,200,0.15); }
+  .token-avatar.purple-gray { background: rgba(180,160,200,0.15); }
+
+  .token-meta { flex: 1; min-width: 0; }
+  .token-name {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-1);
+    line-height: 1.2;
+    margin-bottom: 2px;
+    letter-spacing: -0.01em;
+  }
+  .token-symbol {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text-3);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .token-statement {
+    font-size: 12.5px;
+    color: var(--text-2);
+    line-height: 1.4;
+    margin-top: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .favorite {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--r-pill);
+    background: var(--surface-2);
+    border: 1px solid var(--border-1);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+  }
+  .favorite:hover { border-color: var(--peach-400); background: var(--surface-3); }
+  .favorite svg { width: 14px; height: 14px; color: var(--text-3); }
+  .favorite.active svg { color: var(--peach-400); fill: var(--peach-400); }
+
+  /* Just sprouted badge — top-left corner */
+  .badge-sprouted {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: var(--teal-500);
+    color: #ecfeff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 0 0 var(--r-md) 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: var(--font-display);
+  }
+  .badge-sprouted svg { width: 12px; height: 12px; }
+
+  .badge-whale {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: var(--peach-500);
+    color: #1a0e08;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 0 0 var(--r-md) 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: var(--font-display);
+  }
+
+  /* Trust badges row */
+  .trust-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .trust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: var(--r-sm);
+    font-size: 10.5px;
+    font-weight: 600;
+    border: 1px solid;
+    font-family: var(--font-display);
+  }
+  .trust-badge svg { width: 11px; height: 11px; }
+  .trust-lp {
+    background: rgba(45,212,191,0.1);
+    color: var(--teal-300);
+    border-color: rgba(45,212,191,0.3);
+  }
+  .trust-audit {
+    background: rgba(45,212,191,0.1);
+    color: var(--teal-300);
+    border-color: rgba(45,212,191,0.3);
+  }
+  .trust-freeze {
+    background: rgba(45,212,191,0.1);
+    color: var(--teal-300);
+    border-color: rgba(45,212,191,0.3);
+  }
+  .trust-none {
+    background: var(--surface-2);
+    color: var(--text-3);
+    border-color: var(--border-1);
+  }
+
+  /* Price row */
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .price-value {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-1);
+    letter-spacing: -0.02em;
+  }
+  .price-change {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: var(--r-sm);
+  }
+  .price-up {
+    background: rgba(45,212,191,0.12);
+    color: var(--teal-300);
+  }
+  .price-down {
+    background: rgba(230,57,70,0.12);
+    color: var(--red-400);
+  }
+
+  /* Metrics */
+  .metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 14px;
+    margin-bottom: 14px;
+    padding: 10px 12px;
+    background: var(--surface-2);
+    border-radius: var(--r-md);
+  }
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .metric-label {
+    font-size: 10.5px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+  .metric-value {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-1);
+  }
+  .metric-value.muted { color: var(--text-2); }
+
+  /* Graduation progress */
+  .graduation {
+    margin-bottom: 14px;
+  }
+  .graduation-head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .graduation-label { color: var(--text-3); text-transform: uppercase; letter-spacing: 0.04em; }
+  .graduation-percent { color: var(--peach-400); font-family: var(--font-mono); }
+  .graduation-bar {
+    height: 6px;
+    background: var(--surface-2);
+    border-radius: var(--r-pill);
+    overflow: hidden;
+    position: relative;
+  }
+  .graduation-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--peach-400), var(--teal-400));
+    border-radius: var(--r-pill);
+    transition: width 0.6s var(--ease);
+    position: relative;
+  }
+  .graduation-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2.5s linear infinite;
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* Card actions */
+  .card-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .btn-buy {
+    flex: 1;
+    height: 36px;
+    background: var(--teal-500);
+    border: 1px solid var(--teal-500);
+    border-radius: var(--r-md);
+    color: #ecfeff;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-buy:hover {
+    background: var(--teal-400);
+    border-color: var(--teal-400);
+  }
+
+  /* ========================================================
+     MASCOT EVOLUTION ROW (footer demo)
+     ======================================================== */
+  .mascot-section {
+    margin-top: 40px;
+    padding: 24px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-lg);
+  }
+  .mascot-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .mascot-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-1);
+  }
+  .mascot-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 16px;
+  }
+  .mascot-item {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+  .mascot-item::after {
+    content: '→';
+    position: absolute;
+    right: -10px;
+    top: 30px;
+    color: var(--text-mute);
+    font-size: 18px;
+  }
+  .mascot-item:last-child::after { display: none; }
+  .mascot-svg-box {
+    height: 80px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 8px;
+  }
+  .mascot-svg-box svg { transition: transform 0.3s var(--ease); }
+  .mascot-item:hover .mascot-svg-box svg { transform: scale(1.1); }
+  .mascot-stage {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 2px;
+  }
+  .mascot-tier {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  /* Notice strip at top */
+  .notice {
+    background: linear-gradient(135deg, rgba(244,162,97,0.08), rgba(45,212,191,0.05));
+    border: 1px solid rgba(244,162,97,0.2);
+    border-radius: var(--r-md);
+    padding: 10px 16px;
+    margin-bottom: 20px;
+    font-size: 12.5px;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .notice strong { color: var(--peach-400); font-family: var(--font-display); }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ HEADER ============ -->
+  <header class="header">
+    <div class="logo">
+      <!-- Mascot Sprout (mini, brand mark) -->
+      <svg viewBox="0 0 64 64" fill="none">
+        <!-- pot/seed body -->
+        <ellipse cx="32" cy="46" rx="18" ry="14" fill="#8B4513"/>
+        <ellipse cx="32" cy="44" rx="18" ry="3" fill="#A0522D"/>
+        <!-- 2 leaves -->
+        <ellipse cx="24" cy="28" rx="9" ry="13" transform="rotate(-25 24 28)" fill="#2dd4bf"/>
+        <ellipse cx="40" cy="28" rx="9" ry="13" transform="rotate(25 40 28)" fill="#2a9d8f"/>
+        <!-- stem -->
+        <rect x="30" y="30" width="4" height="14" fill="#1f7a70"/>
+        <!-- happy face -->
+        <circle cx="27" cy="46" r="1.5" fill="#1a1208"/>
+        <circle cx="37" cy="46" r="1.5" fill="#1a1208"/>
+        <path d="M 27 50 Q 32 53 37 50" stroke="#1a1208" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span>Sprout</span>
+    </div>
+
+    <div class="search">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.3-4.3"/>
+      </svg>
+      <input type="text" placeholder="Search tokens, creators, addresses…">
+      <span class="search-shortcut">⌘ K</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn-ghost">Create token</button>
+      <button class="btn-primary">Connect wallet</button>
+    </div>
+  </header>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+
+    <div class="nav-group">
+      <div class="nav-label">Discover</div>
+      <a class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Token list
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11H5a2 2 0 0 0-2 2v7h6v-9zM21 7H17a2 2 0 0 0-2 2v11h6V9zM15 11h-6v9h6v-9z"/></svg>
+        Leaderboard
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83M16.62 12l-5.74 9.94"/></svg>
+        Arena
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Personal</div>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        My profile
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Creator dashboard
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Earn</div>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+        Rewards
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Referrals
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L4 6v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z"/></svg>
+        Points
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Stake
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Events
+      </a>
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        Clubs
+      </a>
+    </div>
+
+    <div class="user-card">
+      <div class="user-avatar">
+        <!-- Mini Sprout stage 2 -->
+        <svg viewBox="0 0 64 64" fill="none">
+          <ellipse cx="32" cy="46" rx="14" ry="10" fill="#8B4513"/>
+          <ellipse cx="26" cy="32" rx="6" ry="9" transform="rotate(-25 26 32)" fill="#2dd4bf"/>
+          <ellipse cx="38" cy="32" rx="6" ry="9" transform="rotate(25 38 32)" fill="#2a9d8f"/>
+          <rect x="30" y="34" width="4" height="12" fill="#1f7a70"/>
+        </svg>
+      </div>
+      <div class="user-info">
+        <div class="user-name">NobleFlame7792</div>
+        <div class="user-tier">🌿 Sprout · 642 pts</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <div class="notice">
+      <span style="font-size:16px;">🎨</span>
+      <div><strong>Preview mode</strong> — Sprout Meme base + Premium discipline. Đây là quick preview, font có thể chưa load đủ. Mở ở Chrome / Safari để có cảm giác đúng nhất.</div>
+    </div>
+
+    <div class="page-head">
+      <h1 class="page-title">Discover tokens</h1>
+      <p class="page-subtitle">Find what's sprouting today on Solana — fair launches, fresh meme tokens, and graduates ready for prime time.</p>
+    </div>
+
+    <!-- Stats banner -->
+    <div class="stats-banner">
+      <div class="stat-card featured">
+        <div class="stat-label">Total tokens</div>
+        <div class="stat-value">49,756</div>
+        <div class="stat-delta delta-up">+1,283 (24h)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">24h volume</div>
+        <div class="stat-value">$911.3M</div>
+        <div class="stat-delta delta-up">+8.2%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Graduated</div>
+        <div class="stat-value">1,048</div>
+        <div class="stat-delta delta-up">+12 today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active traders</div>
+        <div class="stat-value">128.4K</div>
+        <div class="stat-delta delta-down">-2.1%</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active">Discover<span class="tab-count">1.2K</span></button>
+      <button class="tab">Trending</button>
+      <button class="tab">Top volume</button>
+      <button class="tab">Graduated<span class="tab-count">1.0K</span></button>
+      <button class="tab">Favorite</button>
+    </div>
+
+    <!-- Action row -->
+    <div class="action-row">
+      <button class="filter-chip active">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        Filter
+        <span class="filter-badge">3</span>
+      </button>
+      <button class="filter-chip">Hide NSFW</button>
+      <button class="filter-chip">Trust ≥ 50</button>
+      <button class="filter-chip">MC $10K – $100K</button>
+      <button class="sort-dropdown">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+        Sort: Discover score ↓
+      </button>
+    </div>
+
+    <!-- Token grid -->
+    <div class="token-grid">
+
+      <!-- Card 1: Regular hot token -->
+      <div class="token-card">
+        <div class="favorite active">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="card-head">
+          <div class="token-avatar trusted green">
+            <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" fill="#2a9d8f"/><circle cx="16" cy="16" r="6" fill="#0a0e1a"/><circle cx="22" cy="14" r="2" fill="#2dd4bf"/></svg>
+          </div>
+          <div class="token-meta">
+            <div class="token-name">Moon Token</div>
+            <div class="token-symbol">$MOON</div>
+            <div class="token-statement">To the moon and beyond — a community-driven meme reaching escape velocity.</div>
+          </div>
+        </div>
+        <div class="trust-row">
+          <span class="trust-badge trust-lp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>LP locked</span>
+          <span class="trust-badge trust-audit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Audited</span>
+          <span class="trust-badge trust-freeze">🛡 Freeze off</span>
+        </div>
+        <div class="price-row">
+          <span class="price-value">$0.0234</span>
+          <span class="price-change price-up">↑ 38.5%</span>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span class="metric-label">Market cap</span><span class="metric-value">$1.5K</span></div>
+          <div class="metric"><span class="metric-label">24h vol</span><span class="metric-value">$237K</span></div>
+          <div class="metric"><span class="metric-label">Holders</span><span class="metric-value muted">142 ↑</span></div>
+          <div class="metric"><span class="metric-label">Liquidity</span><span class="metric-value muted">12.4 SOL</span></div>
+        </div>
+        <div class="graduation">
+          <div class="graduation-head">
+            <span class="graduation-label">Progress to DEX</span>
+            <span class="graduation-percent">22%</span>
+          </div>
+          <div class="graduation-bar"><div class="graduation-fill" style="width:22%"></div></div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-buy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Buy
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 2: Near graduation (HIGHLIGHTED variant) -->
+      <div class="token-card near-graduation">
+        <div class="favorite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="card-head">
+          <div class="token-avatar trusted peach">
+            <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" fill="#f4a261"/><path d="M16 8 L20 16 L16 24 L12 16 Z" fill="#0a0e1a"/></svg>
+          </div>
+          <div class="token-meta">
+            <div class="token-name">Pump Token</div>
+            <div class="token-symbol">$PMP</div>
+            <div class="token-statement">Almost graduated. The original pump that started it all — now seconds away from Raydium.</div>
+          </div>
+        </div>
+        <div class="trust-row">
+          <span class="trust-badge trust-lp">🔒 LP locked</span>
+          <span class="trust-badge trust-audit">✓ Audited</span>
+          <span class="trust-badge trust-freeze">🛡 Freeze off</span>
+        </div>
+        <div class="price-row">
+          <span class="price-value">$0.6450</span>
+          <span class="price-change price-up">↑ 122.3%</span>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span class="metric-label">Market cap</span><span class="metric-value">$64.2K</span></div>
+          <div class="metric"><span class="metric-label">24h vol</span><span class="metric-value">$1.8M</span></div>
+          <div class="metric"><span class="metric-label">Holders</span><span class="metric-value muted">2,847 ↑</span></div>
+          <div class="metric"><span class="metric-label">Liquidity</span><span class="metric-value muted">68.1 SOL</span></div>
+        </div>
+        <div class="graduation">
+          <div class="graduation-head">
+            <span class="graduation-label">Progress to DEX</span>
+            <span class="graduation-percent">93%</span>
+          </div>
+          <div class="graduation-bar"><div class="graduation-fill" style="width:93%"></div></div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-buy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Buy now
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 3: Just sprouted (HOVERED state demo) -->
+      <div class="token-card is-hovered">
+        <div class="badge-sprouted">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L8 8h3v6l-3 6h8l-3-6V8h3l-4-6z"/></svg>
+          Just sprouted
+        </div>
+        <div class="favorite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="card-head" style="margin-top: 8px;">
+          <div class="token-avatar peach">
+            <!-- Seed mascot inside token -->
+            <svg viewBox="0 0 32 32" fill="none">
+              <ellipse cx="16" cy="22" rx="9" ry="7" fill="#8B4513"/>
+              <ellipse cx="13" cy="14" rx="3" ry="5" transform="rotate(-25 13 14)" fill="#2dd4bf"/>
+              <ellipse cx="19" cy="14" rx="3" ry="5" transform="rotate(25 19 14)" fill="#2a9d8f"/>
+              <rect x="15" y="16" width="2" height="6" fill="#1f7a70"/>
+            </svg>
+          </div>
+          <div class="token-meta">
+            <div class="token-name">Crystal STAR</div>
+            <div class="token-symbol">$STAR022</div>
+            <div class="token-statement">Fresh launch — 7 minutes old. The community is still gathering. Be early or be late.</div>
+          </div>
+        </div>
+        <div class="trust-row">
+          <span class="trust-badge trust-none">No badges yet</span>
+        </div>
+        <div class="price-row">
+          <span class="price-value">$0.000087</span>
+          <span class="price-change price-up">↑ 0.0%</span>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span class="metric-label">Market cap</span><span class="metric-value">$87</span></div>
+          <div class="metric"><span class="metric-label">24h vol</span><span class="metric-value">$0</span></div>
+          <div class="metric"><span class="metric-label">Holders</span><span class="metric-value muted">1 →</span></div>
+          <div class="metric"><span class="metric-label">Age</span><span class="metric-value muted">7 min</span></div>
+        </div>
+        <div class="graduation">
+          <div class="graduation-head">
+            <span class="graduation-label">Progress to DEX</span>
+            <span class="graduation-percent">0%</span>
+          </div>
+          <div class="graduation-bar"><div class="graduation-fill" style="width:1%"></div></div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-buy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Be the first to buy
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 4: Whale activity -->
+      <div class="token-card">
+        <div class="badge-whale">
+          🐋 Whale bought 5m ago
+        </div>
+        <div class="favorite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="card-head" style="margin-top: 8px;">
+          <div class="token-avatar trusted blue-gray">
+            <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" fill="#a0b4c8"/><circle cx="16" cy="16" r="8" fill="#0a0e1a"/><circle cx="16" cy="13" r="2" fill="#a0b4c8"/></svg>
+          </div>
+          <div class="token-meta">
+            <div class="token-name">Cosmos FIRE</div>
+            <div class="token-symbol">$FIRE094</div>
+            <div class="token-statement">Cosmic energy meets meme culture. A whale just dropped 12 SOL — momentum building.</div>
+          </div>
+        </div>
+        <div class="trust-row">
+          <span class="trust-badge trust-lp">🔒 LP locked</span>
+          <span class="trust-badge trust-freeze">🛡 Freeze off</span>
+        </div>
+        <div class="price-row">
+          <span class="price-value">$0.0079</span>
+          <span class="price-change price-up">↑ 14.2%</span>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span class="metric-label">Market cap</span><span class="metric-value">$15.7K</span></div>
+          <div class="metric"><span class="metric-label">24h vol</span><span class="metric-value">$48.3K</span></div>
+          <div class="metric"><span class="metric-label">Holders</span><span class="metric-value muted">428 ↑</span></div>
+          <div class="metric"><span class="metric-label">Liquidity</span><span class="metric-value muted">22.5 SOL</span></div>
+        </div>
+        <div class="graduation">
+          <div class="graduation-head">
+            <span class="graduation-label">Progress to DEX</span>
+            <span class="graduation-percent">31%</span>
+          </div>
+          <div class="graduation-bar"><div class="graduation-fill" style="width:31%"></div></div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-buy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Buy
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 5: Down trend -->
+      <div class="token-card">
+        <div class="favorite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="card-head">
+          <div class="token-avatar red">
+            <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" fill="#e63946"/><path d="M11 12 L21 12 L19 22 L13 22 Z" fill="#0a0e1a"/></svg>
+          </div>
+          <div class="token-meta">
+            <div class="token-name">Rock Token</div>
+            <div class="token-symbol">$ROCK</div>
+            <div class="token-statement">Solid as a rock. Currently in correction — dip buyers welcome.</div>
+          </div>
+        </div>
+        <div class="trust-row">
+          <span class="trust-badge trust-audit">✓ Audited</span>
+        </div>
+        <div class="price-row">
+          <span class="price-value">$0.1245</span>
+          <span class="price-change price-down">↓ 12.8%</span>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span class="metric-label">Market cap</span><span class="metric-value">$58.7K</span></div>
+          <div class="metric"><span class="metric-label">24h vol</span><span class="metric-value">$884K</span></div>
+          <div class="metric"><span class="metric-label">Holders</span><span class="metric-value muted">1,204 ↓</span></div>
+          <div class="metric"><span class="metric-label">Liquidity</span><span class="metric-value muted">42.0 SOL</span></div>
+        </div>
+        <div class="graduation">
+          <div class="graduation-head">
+            <span class="graduation-label">Progress to DEX</span>
+            <span class="graduation-percent">85%</span>
+          </div>
+          <div class="graduation-bar"><div class="graduation-fill" style="width:85%"></div></div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-buy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Buy
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 6: Regular -->
+      <div class="token-card">
+        <div class="favorite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="card-head">
+          <div class="token-avatar trusted purple-gray">
+            <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" fill="#b4a0c8"/><path d="M10 18 L16 8 L22 18 Z" fill="#0a0e1a"/></svg>
+          </div>
+          <div class="token-meta">
+            <div class="token-name">SOL Silver</div>
+            <div class="token-symbol">$SILVER057</div>
+            <div class="token-statement">Silver lining for the SOL ecosystem. Slow and steady accumulation phase.</div>
+          </div>
+        </div>
+        <div class="trust-row">
+          <span class="trust-badge trust-lp">🔒 LP locked</span>
+          <span class="trust-badge trust-audit">✓ Audited</span>
+          <span class="trust-badge trust-freeze">🛡 Freeze off</span>
+        </div>
+        <div class="price-row">
+          <span class="price-value">$0.0356</span>
+          <span class="price-change price-up">↑ 4.7%</span>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span class="metric-label">Market cap</span><span class="metric-value">$28.4K</span></div>
+          <div class="metric"><span class="metric-label">24h vol</span><span class="metric-value">$112K</span></div>
+          <div class="metric"><span class="metric-label">Holders</span><span class="metric-value muted">689 ↑</span></div>
+          <div class="metric"><span class="metric-label">Liquidity</span><span class="metric-value muted">31.8 SOL</span></div>
+        </div>
+        <div class="graduation">
+          <div class="graduation-head">
+            <span class="graduation-label">Progress to DEX</span>
+            <span class="graduation-percent">42%</span>
+          </div>
+          <div class="graduation-bar"><div class="graduation-fill" style="width:42%"></div></div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-buy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Buy
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Mascot evolution showcase -->
+    <div class="mascot-section">
+      <div class="mascot-head">
+        <h2 class="mascot-title">Your sprout grows with you</h2>
+        <span style="font-size:12.5px;color:var(--text-3);">Mascot evolves through 5 tiers as you earn points</span>
+      </div>
+      <div class="mascot-row">
+
+        <!-- Stage 1: Seed -->
+        <div class="mascot-item">
+          <div class="mascot-svg-box">
+            <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+              <ellipse cx="32" cy="40" rx="14" ry="11" fill="#8B4513"/>
+              <ellipse cx="32" cy="38" rx="14" ry="2.5" fill="#A0522D"/>
+              <circle cx="32" cy="32" r="2" fill="#2dd4bf"/>
+              <circle cx="28" cy="42" r="1" fill="#1a1208"/>
+              <circle cx="36" cy="42" r="1" fill="#1a1208"/>
+            </svg>
+          </div>
+          <div class="mascot-stage">Seed</div>
+          <div class="mascot-tier">Tier 1 · 0 pts</div>
+        </div>
+
+        <!-- Stage 2: Sprout -->
+        <div class="mascot-item">
+          <div class="mascot-svg-box">
+            <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+              <ellipse cx="32" cy="44" rx="14" ry="10" fill="#8B4513"/>
+              <ellipse cx="24" cy="28" rx="6" ry="11" transform="rotate(-25 24 28)" fill="#2dd4bf"/>
+              <ellipse cx="40" cy="28" rx="6" ry="11" transform="rotate(25 40 28)" fill="#2a9d8f"/>
+              <rect x="30" y="30" width="4" height="14" fill="#1f7a70"/>
+              <circle cx="28" cy="46" r="1" fill="#1a1208"/>
+              <circle cx="36" cy="46" r="1" fill="#1a1208"/>
+              <path d="M 28 49 Q 32 51 36 49" stroke="#1a1208" stroke-width="1.2" fill="none"/>
+            </svg>
+          </div>
+          <div class="mascot-stage">Sprout</div>
+          <div class="mascot-tier">Tier 2 · 500 pts</div>
+        </div>
+
+        <!-- Stage 3: Sapling -->
+        <div class="mascot-item">
+          <div class="mascot-svg-box">
+            <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+              <rect x="29" y="20" width="6" height="30" rx="1" fill="#5a3a1a"/>
+              <ellipse cx="20" cy="22" rx="9" ry="6" transform="rotate(-15 20 22)" fill="#2dd4bf"/>
+              <ellipse cx="44" cy="22" rx="9" ry="6" transform="rotate(15 44 22)" fill="#2a9d8f"/>
+              <ellipse cx="22" cy="32" rx="8" ry="5" transform="rotate(-15 22 32)" fill="#2a9d8f"/>
+              <ellipse cx="42" cy="32" rx="8" ry="5" transform="rotate(15 42 32)" fill="#1f7a70"/>
+              <ellipse cx="32" cy="56" rx="14" ry="4" fill="#3a2a0a"/>
+            </svg>
+          </div>
+          <div class="mascot-stage">Sapling</div>
+          <div class="mascot-tier">Tier 3 · 2K pts</div>
+        </div>
+
+        <!-- Stage 4: Tree -->
+        <div class="mascot-item">
+          <div class="mascot-svg-box">
+            <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+              <rect x="27" y="36" width="10" height="20" rx="1" fill="#5a3a1a"/>
+              <circle cx="32" cy="22" r="14" fill="#2a9d8f"/>
+              <circle cx="22" cy="28" r="8" fill="#2dd4bf"/>
+              <circle cx="42" cy="28" r="8" fill="#2dd4bf"/>
+              <circle cx="32" cy="14" r="9" fill="#5eead4"/>
+              <circle cx="40" cy="20" r="2" fill="#f4a261"/>
+              <ellipse cx="32" cy="58" rx="16" ry="3" fill="#3a2a0a"/>
+            </svg>
+          </div>
+          <div class="mascot-stage">Tree</div>
+          <div class="mascot-tier">Tier 4 · 10K pts</div>
+        </div>
+
+        <!-- Stage 5: Ancient Tree -->
+        <div class="mascot-item">
+          <div class="mascot-svg-box">
+            <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+              <rect x="24" y="32" width="16" height="26" rx="2" fill="#3a2410"/>
+              <rect x="22" y="46" width="20" height="12" rx="2" fill="#2a1a08"/>
+              <circle cx="32" cy="20" r="18" fill="#1f7a70"/>
+              <circle cx="18" cy="22" r="10" fill="#2a9d8f"/>
+              <circle cx="46" cy="22" r="10" fill="#2a9d8f"/>
+              <circle cx="32" cy="10" r="11" fill="#2dd4bf"/>
+              <circle cx="22" cy="14" r="2" fill="#f4a261"/>
+              <circle cx="42" cy="14" r="2" fill="#f4a261"/>
+              <circle cx="32" cy="22" r="2" fill="#f4a261"/>
+              <ellipse cx="32" cy="60" rx="20" ry="3" fill="#1a1004"/>
+            </svg>
+          </div>
+          <div class="mascot-stage">Ancient tree</div>
+          <div class="mascot-tier">Tier 5 · 50K pts</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer note -->
+    <div style="margin-top: 32px; padding: 16px 20px; background: var(--surface-1); border: 1px dashed var(--border-2); border-radius: var(--r-md); font-size: 12.5px; color: var(--text-3); line-height: 1.6;">
+      <strong style="color: var(--peach-400); font-family: var(--font-display);">Color discipline check</strong><br>
+      ✓ Peach (#f4a261) chỉ xuất hiện ở: brand logo, headings, CTA primary, "near-graduation" highlight, mascot fruit accent<br>
+      ✓ Teal (#2dd4bf) chỉ ở: trust badges, buy button, price up, mascot leaves<br>
+      ✓ Red (#e63946) chỉ ở: price down, sell context (chưa hiển thị trong list này)<br>
+      ✗ KHÔNG có purple/yellow/blue/pink accents — đây là rule sẽ áp xuyên suốt 15 màn.
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
