@@ -772,6 +772,7 @@ PMFCDocument/
   - Task 3: `"stall by"` replaced with `"by"` in all 6 token cards in `token_list_v4.html`. Leaderboard top-3 podium cards retain `"stall by"` (spec 4.4 hero surface rule). No residue in data table rows.
   - Task 4: `rewards.html` subtitle `"lucky vendor draw"` → `"The lucky draw."`. `.reel-multiplier` CSS added; `×1–×5` labels injected under each reel emoji. `.reel-cell` updated to flex column layout for stacking.
   - Task 5: `leaderboard.html` `.lb-row-name` color `var(--bz-amber-400)` → `var(--text-1)`. Top-3 `.lb-token-name` (podium cards) unmodified — retains amber.
+- **2026-05-06 — Sidebar polish mirrored from Sprout (17 files):** footer utility block added below user card (Telegram + X icons, Doc/FAQ/How-it-works pills, `© 2026 Stallspot` copyright); active item amber glow (`box-shadow: 0 0 16px rgba(234,181,82,0.18)`); group label amber dot (`.nav-label::before` 4px dot, `letter-spacing: 0.12em`); user card amber border-top + glow (`border-top: 1px solid rgba(234,181,82,0.20)`, `box-shadow: 0 0 20px rgba(234,181,82,0.10)`); hover lift on inactive nav items (`translateY(-1px)` + amber-soft bg, `transform: none` on active); stat badges 642/12 removed if present. Icons remain amber per brand — no teal icon change. Architecture parity with Sprout sidebar maintained. Applied via `scripts/final_sidebar_polish.py`.
 
 ---
 

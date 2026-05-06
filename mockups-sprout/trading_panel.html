@@ -621,6 +621,72 @@ body {
 .bz-back-nav svg { width: 16px; height: 16px; }
 .bz-back-nav .bz-back-arrow { color: #a3b0a7; font-size: 14px; line-height: 1; }
 
+  /* === Patch 4a: Sidebar footer utility block === */
+  .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border-1); display: flex; flex-direction: column; gap: 10px; }
+  .sf-social { display: flex; gap: 12px; }
+  .sf-social a { color: var(--text-3); display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; transition: color 0.15s; text-decoration: none; }
+  .sf-social a:hover { color: var(--sp-peach-400); }
+  .sf-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sf-pill { font-size: 10.5px; font-weight: 600; color: var(--text-3); background: var(--surface-2); padding: 4px 10px; border-radius: 999px; text-decoration: none; transition: all 0.15s; }
+  .sf-pill:hover { color: var(--sp-peach-400); background: var(--sp-peach-soft); }
+  .sf-copyright { font-size: 10px; color: var(--text-mute); text-align: center; margin-top: 2px; }
+  /* === Patch 4b: Active item glow + group label refinement === */
+  .nav-item.active {
+    box-shadow: 0 0 16px rgba(232, 168, 124, 0.18);
+  }
+  .nav-label {
+    letter-spacing: 0.12em;
+    position: relative;
+    padding-left: 14px;
+  }
+  .nav-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--sp-peach-400);
+    opacity: 0.6;
+  }
+  /* === Patch 4c: User card anchor + tier-aware points color === */
+  .user-card {
+    box-shadow: 0 0 20px rgba(232, 168, 124, 0.10);
+    border-top: 1px solid rgba(232, 168, 124, 0.20);
+  }
+  .uc-pts.tier-seed,
+  .uc-pts.tier-sprout      { color: var(--text-1); }
+  .uc-pts.tier-sapling     { color: var(--sp-peach-400); }
+  .uc-pts.tier-tree        { color: var(--sp-teal-400); }
+  .uc-pts.tier-ancient     { color: var(--sp-peach-200); text-shadow: 0 0 8px rgba(232,168,124,0.4); }
+  /* === Patch 7: Hover lift micro-interaction === */
+  .nav-item {
+    transition: transform 0.15s var(--ease, ease), background 0.15s var(--ease, ease), color 0.12s var(--ease, ease), box-shadow 0.12s var(--ease, ease);
+  }
+  .nav-item:hover {
+    transform: translateY(-1px);
+    background: var(--sp-peach-soft);
+    color: var(--text-1);
+  }
+  .nav-item.active:hover {
+    transform: none;
+  }
+  /* === Patch 5: Peach stroke icons — color via currentColor only === */
+  .nav-item .icon {
+    color: var(--sp-peach-200);
+    opacity: 0.85;
+    transition: fill 0.15s, color 0.15s, opacity 0.15s;
+  }
+  .nav-item.active .icon {
+    color: var(--sp-peach-400);
+    opacity: 1;
+  }
+  .nav-item:hover:not(.active) .icon {
+    color: var(--sp-peach-100);
+    opacity: 1;
+  }
 </style>
 </head>
 <body>
