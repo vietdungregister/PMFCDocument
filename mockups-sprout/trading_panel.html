@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Panel - Buy/Sell</title>
+    <style>
+        :root {
+    --bg:          #0a1610;
+    --surface-1:   #131f18;
+    --surface-2:   #1a2a20;
+    --surface-3:   #243528;
+    --border-1:    #1f2d24;
+    --border-2:    #2d4234;
+    --sp-peach-100: #f4cba0;
+    --sp-peach-200: #e8a87c;
+    --sp-peach-400: #e8a87c;
+    --sp-peach-500: #d68a5b;
+    --sp-peach-soft: rgba(232, 168, 124, 0.10);
+    --sp-forest-300: #5ba886;
+    --sp-forest-500: #3d7458;
+    --sp-forest-700: #3d7458;
+    --sp-cream:    #f4cba0;
+    --sp-teal-300: #9ED8B8;
+    --sp-teal-400: #7CC4A4;
+    --sp-teal-500: #5BA886;
+    --sp-crimson:  #D65A54;
+    --text-1: #f5f7f4;
+    --text-2: #a3b0a7;
+    --text-3: #6f7d74;
+    --text-mute: #4a5650;
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+    --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
+  --mascot-sm:   22px;
+  --mascot-md:   30px;
+  --mascot-lg:   40px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+/* === Mood B signature glow (locked 2026-05-05 — SPROUT_UI_SPEC.md §1.3a) === */
+/* Do NOT modify without updating spec section 1.3a first. */
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.06), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 30%, rgba(124,196,164,0.05), transparent 60%);
+  background-attachment: fixed;
+}
+.logo-mascot {
+  box-shadow: 0 0 24px rgba(232,168,124,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-primary {
+  box-shadow: 0 0 20px rgba(232,168,124,0.30);
+}
+.marquee-track .peach { color: var(--sp-peach-200); text-shadow: 0 0 12px rgba(232,168,124,0.4); }
+.marquee-track .teal  { color: var(--sp-teal-300);  text-shadow: 0 0 12px rgba(124,196,164,0.4); }
+.token-card.featured, .tk-card.featured, .card.featured {
+  border-color: rgba(232,168,124,0.55);
+  background: radial-gradient(ellipse 300px 200px at 100% 0%, rgba(232,168,124,0.10), transparent 70%), var(--surface-1);
+  box-shadow: 0 0 32px rgba(232,168,124,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.token-card:hover, .tk-card:hover {
+  box-shadow: 0 0 24px rgba(124,196,164,0.08);
+}
+.token-av, .tk-av { box-shadow: 0 0 16px rgba(124,196,164,0.15); }
+.bar-fill { box-shadow: 0 0 10px rgba(232,168,124,0.5); }
+/* === end Mood B glow === */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .trading-panel {
+            width: 380px;
+            background: var(--card2);
+            border-radius: 16px;
+            border: 1px solid var(--card-boarder);
+            padding: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Header */
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .token-info {
+            flex: 1;
+        }
+        
+        .token-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .token-price {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        
+        .settings-btn {
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        
+        .settings-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--primary);
+        }
+        
+        /* Primary Toggle - BUY/SELL */
+        .primary-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .primary-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background: var(--card);
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .primary-btn.buy {
+            border-color: var(--card-boarder);
+        }
+        
+        .primary-btn.buy.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .primary-btn.sell {
+            border-color: var(--card-boarder);
+        }
+        
+        .primary-btn.sell.active {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+        
+        /* Secondary Toggle - Market/Limit */
+        .secondary-toggle {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .secondary-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        
+        .secondary-option:hover {
+            color: var(--text-primary);
+        }
+        
+        .secondary-option input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+        
+        /* Amount Input */
+        .input-group {
+            margin-bottom: 16px;
+        }
+        
+        .input-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .currency-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--card);
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-primary);
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 10px;
+            padding: 14px;
+            transition: border-color 0.2s;
+        }
+        
+        .input-wrapper:focus-within {
+            border-color: var(--primary);
+        }
+        
+        .input-wrapper input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 600;
+            outline: none;
+        }
+        
+        .input-wrapper input::placeholder {
+            color: var(--text-tertiary);
+        }
+        
+        .max-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .max-btn:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        /* Quick Buttons */
+        .quick-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .quick-btn {
+            flex: 1;
+            padding: 8px;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quick-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        /* Swap Button */
+        .swap-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+        
+        .swap-btn:hover {
+            color: var(--primary);
+        }
+        
+        /* Preview Panel */
+        .preview-panel {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .preview-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        
+        .preview-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .preview-label {
+            color: var(--text-secondary);
+        }
+        
+        .preview-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .preview-divider {
+            height: 1px;
+            background: var(--card-boarder);
+            margin: 12px 0;
+        }
+        
+        /* Settings Expandable */
+        .settings-expandable {
+            margin-bottom: 16px;
+        }
+        
+        .settings-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .settings-header:hover {
+            border-color: var(--primary);
+        }
+        
+        .settings-header.expanded {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom-color: transparent;
+        }
+        
+        .settings-icon {
+            font-size: 16px;
+        }
+        
+        .settings-title {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .settings-summary {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        
+        .chevron {
+            color: var(--text-secondary);
+            transition: transform 0.2s;
+        }
+        
+        .chevron.rotated {
+            transform: rotate(180deg);
+        }
+        
+        .settings-content {
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-top: none;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            padding: 16px;
+            display: none;
+        }
+        
+        .settings-content.show {
+            display: block;
+        }
+        
+        .setting-item {
+            margin-bottom: 16px;
+        }
+        
+        .setting-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .setting-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .setting-options {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .setting-btn {
+            flex: 1;
+            padding: 8px;
+            background: var(--card2);
+            border: 1px solid var(--card-boarder);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .setting-btn:hover {
+            border-color: var(--primary);
+        }
+        
+        .setting-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .toggle-label {
+            flex: 1;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: var(--card-boarder);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .toggle.active {
+            background: var(--primary);
+        }
+        
+        .toggle-knob {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s;
+        }
+        
+        .toggle.active .toggle-knob {
+            transform: translateX(20px);
+        }
+        
+        /* Risk Badge */
+        .risk-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .risk-badge.low {
+            border-color: var(--primary);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .risk-badge.medium {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+        
+        .risk-badge.high {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        .risk-icon {
+            font-size: 20px;
+        }
+        
+        .risk-text {
+            flex: 1;
+        }
+        
+        .risk-level {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .risk-level.low {
+            color: var(--primary);
+        }
+        
+        .risk-level.medium {
+            color: #f59e0b;
+        }
+        
+        .risk-level.high {
+            color: var(--danger);
+        }
+        
+        .risk-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        
+        /* Execute Button */
+        .execute-btn {
+            width: 100%;
+            padding: 18px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .execute-btn.buy {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .execute-btn.buy:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .execute-btn.sell {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .execute-btn.sell:hover {
+            background: var(--danger-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+        
+        .execute-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .execute-btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+    
+/* Back-to-home floating nav */
+.bz-back-nav {
+  position: fixed; top: 14px; left: 14px; z-index: 9999;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px 8px 10px;
+  background: rgba(19, 24, 38, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid #2d4234; border-radius: 999px;
+  color: #e8a87c; font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 12.5px; font-weight: 700; text-decoration: none;
+  letter-spacing: 0.02em; cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bz-back-nav:hover { background: rgba(234, 181, 82, 0.12); border-color: #e8a87c; }
+.bz-back-nav .bz-back-mascot {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: linear-gradient(180deg, #e8a87c, #e8a87c);
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.bz-back-nav svg { width: 16px; height: 16px; }
+.bz-back-nav .bz-back-arrow { color: #a3b0a7; font-size: 14px; line-height: 1; }
+
+  /* === Patch 4a: Sidebar footer utility block === */
+  .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border-1); display: flex; flex-direction: column; gap: 10px; }
+  .sf-social { display: flex; gap: 12px; }
+  .sf-social a { color: var(--text-3); display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; transition: color 0.15s; text-decoration: none; }
+  .sf-social a:hover { color: var(--sp-peach-400); }
+  .sf-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sf-pill { font-size: 10.5px; font-weight: 600; color: var(--text-3); background: var(--surface-2); padding: 4px 10px; border-radius: 999px; text-decoration: none; transition: all 0.15s; }
+  .sf-pill:hover { color: var(--sp-peach-400); background: var(--sp-peach-soft); }
+  .sf-copyright { font-size: 10px; color: var(--text-mute); text-align: center; margin-top: 2px; }
+  /* === Patch 4b: Active item glow + group label refinement === */
+  .nav-item.active {
+    box-shadow: 0 0 16px rgba(232, 168, 124, 0.18);
+  }
+  .nav-label {
+    letter-spacing: 0.12em;
+    position: relative;
+    padding-left: 14px;
+  }
+  .nav-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--sp-peach-400);
+    opacity: 0.6;
+  }
+  /* === Patch 4c: User card anchor + tier-aware points color === */
+  .user-card {
+    box-shadow: 0 0 20px rgba(232, 168, 124, 0.10);
+    border-top: 1px solid rgba(232, 168, 124, 0.20);
+  }
+  .uc-pts.tier-seed,
+  .uc-pts.tier-sprout      { color: var(--text-1); }
+  .uc-pts.tier-sapling     { color: var(--sp-peach-400); }
+  .uc-pts.tier-tree        { color: var(--sp-teal-400); }
+  .uc-pts.tier-ancient     { color: var(--sp-peach-200); text-shadow: 0 0 8px rgba(232,168,124,0.4); }
+  /* === Patch 7: Hover lift micro-interaction === */
+  .nav-item {
+    transition: transform 0.15s var(--ease, ease), background 0.15s var(--ease, ease), color 0.12s var(--ease, ease), box-shadow 0.12s var(--ease, ease);
+  }
+  .nav-item:hover {
+    transform: translateY(-1px);
+    background: var(--sp-peach-soft);
+    color: var(--text-1);
+  }
+  .nav-item.active:hover {
+    transform: none;
+  }
+  /* === Patch 5: Peach stroke icons — color via currentColor only === */
+  .nav-item .icon {
+    color: var(--sp-peach-200);
+    opacity: 0.85;
+    transition: fill 0.15s, color 0.15s, opacity 0.15s;
+  }
+  .nav-item.active .icon {
+    color: var(--sp-peach-400);
+    opacity: 1;
+  }
+  .nav-item:hover:not(.active) .icon {
+    color: var(--sp-peach-100);
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+<!-- Bazaar back-to-home nav -->
+<a class="bz-back-nav" href="token_list_v4.html">
+  <div class="bz-back-mascot">
+    <svg viewBox="0 0 24 24" fill="none">
+        <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
+        <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
+        <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
+        <rect x="11" y="12" width="2" height="6" fill="#3d7458"/>
+        <circle cx="10" cy="19" r="0.6" fill="#1a1208"/>
+        <circle cx="14" cy="19" r="0.6" fill="#1a1208"/>
+        <path d="M 10 20.5 Q 12 21.5 14 20.5" stroke="#1a1208" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+      </svg>
+  </div>
+  <span class="bz-back-arrow">←</span>
+  <span>Sprout</span>
+</a>
+
+    <div class="trading-panel">
+        <!-- Header -->
+        <div class="panel-header">
+            <div class="token-info">
+                <div class="token-name">Pepe Seed (PSEED)</div>
+                <div class="token-price">$0.00123 <span style="color: #10b981;">↑ 24.5%</span></div>
+            </div>
+        </div>
+        
+        <!-- Primary Toggle: BUY/SELL -->
+        <div class="primary-toggle">
+            <button class="primary-btn buy active" onclick="toggleMode('buy')">BUY</button>
+            <button class="primary-btn sell" onclick="toggleMode('sell')">SELL</button>
+        </div>
+        
+        <!-- Secondary Toggle: Market/Limit -->
+        <div class="secondary-toggle">
+            <label class="secondary-option">
+                <input type="radio" name="trade-type" checked onchange="toggleType('market')">
+                <span>Market</span>
+            </label>
+            <label class="secondary-option">
+                <input type="radio" name="trade-type" onchange="toggleType('limit')">
+                <span>Limit</span>
+            </label>
+        </div>
+        
+        <!-- Amount Input -->
+        <div class="input-group" id="market-form">
+            <div class="input-label">
+                <span>Amount</span>
+                <span class="currency-switch" onclick="toggleCurrency()">
+                    <span id="currency-label">SOL</span>
+                    <span>⇄</span>
+                </span>
+            </div>
+            <div class="input-wrapper">
+                <input type="number" placeholder="0.00" id="amount-input">
+                <button class="max-btn">MAX</button>
+            </div>
+            <div class="input-label" style="margin-top: 8px;">
+                <span></span>
+                <span style="font-size: 11px;">Balance: 10.5 SOL</span>
+            </div>
+            <!-- Quick Buttons -->
+            <div class="quick-buttons">
+                <button class="quick-btn">0.1</button>
+                <button class="quick-btn">0.5</button>
+                <button class="quick-btn">1.0</button>
+                <button class="quick-btn">MAX</button>
+            </div>
+        </div>
+        
+        <!-- Target Price (Limit Order Only) -->
+        <div class="input-group" id="target-price-group" style="display: none;">
+            <div class="input-label">
+                <span>Target Price</span>
+                <span class="currency-switch" onclick="togglePriceMode()" style="cursor: pointer;">
+                    <span id="price-mode-label">USD</span>
+                    <span>⇄</span>
+                </span>
+            </div>
+            
+            <!-- Absolute Price Mode -->
+            <div id="price-absolute-mode">
+                <div class="input-wrapper">
+                    <span style="color: var(--text-secondary); margin-right: 8px;">$</span>
+                    <input type="number" placeholder="0.00150" id="target-price-input" step="0.00001" style="flex: 1;">
+                </div>
+                <div class="input-label" style="margin-top: 8px;">
+                    <span></span>
+                    <span id="price-diff" style="font-size: 11px; color: #10b981;">+21.9% from current</span>
+                </div>
+            </div>
+            
+            <!-- Percentage Mode -->
+            <div id="price-percentage-mode" style="display: none;">
+                <div class="input-wrapper">
+                    <input type="number" placeholder="20" id="target-percent-input" step="1" style="flex: 1;">
+                    <span style="color: var(--text-secondary); margin-left: 8px;">%</span>
+                </div>
+                <div class="input-label" style="margin-top: 8px;">
+                    <span></span>
+                    <span id="price-from-percent" style="font-size: 11px; color: #10b981;">= $0.00148</span>
+                </div>
+            </div>
+            
+            <div class="input-label" style="margin-top: 4px;">
+                <span style="font-size: 11px; color: var(--text-tertiary);">Current: $0.00123</span>
+            </div>
+        </div>
+        
+        <!-- Swap Icon -->
+        <button class="swap-btn">⇅</button>
+        
+        <!-- To Field -->
+        <div class="input-group" id="to-field-group">
+            <div class="input-label">
+                <span>You Receive (Estimated)</span>
+                <span style="font-size: 11px;">Balance: 0 PSEED</span>
+            </div>
+            <div class="input-wrapper">
+                <input type="text" placeholder="0.00" readonly value="~410,000">
+            </div>
+        </div>
+        
+        <!-- Preview Panel - Market Order -->
+        <div id="preview-market">
+            <!-- Min Received (always visible) -->
+            <div class="preview-panel" style="margin-bottom: 12px;">
+                <div class="preview-row">
+                    <span class="preview-label">Min Received (2% slippage)</span>
+                    <span class="preview-value">~401,800 PSEED</span>
+                </div>
+            </div>
+            
+            <!-- Fees (Collapsible) -->
+            <div class="settings-expandable">
+                <div class="settings-header" onclick="toggleFees()" style="padding: 10px 12px;">
+                    <span class="settings-title" style="font-size: 13px;">Fees</span>
+                    <span class="chevron" id="fees-chevron">▼</span>
+                </div>
+                <div class="settings-content" id="fees-content">
+                    <div class="preview-row" style="margin-bottom: 8px;">
+                        <span class="preview-label">Solana network fee</span>
+                        <span class="preview-value">~0.00001 SOL</span>
+                    </div>
+                    <div class="preview-row">
+                        <span class="preview-label">Anti-MEV fee (0.5%)</span>
+                        <span class="preview-value">0.005 SOL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Preview Panel - Limit Order -->
+        <div id="preview-limit" style="display: none;">
+            <!-- Reserved Balance (always visible) -->
+            <div class="preview-panel" style="margin-bottom: 12px; border-color: #f59e0b; background: rgba(245, 158, 11, 0.05);">
+                <div class="preview-row">
+                    <span class="preview-label" style="color: #f59e0b;">Reserved Balance</span>
+                    <span class="preview-value" style="color: #f59e0b;">1.00001 SOL</span>
+                </div>
+                <div class="preview-row" style="margin-top: 4px;">
+                    <span class="preview-label" style="font-size: 11px; opacity: 0.8; color: var(--text-secondary);">Locked until executed or cancelled</span>
+                </div>
+            </div>
+            
+            <!-- Fees (Collapsible) -->
+            <div class="settings-expandable">
+                <div class="settings-header" onclick="toggleFeesLimit()" style="padding: 10px 12px;">
+                    <span class="settings-title" style="font-size: 13px;">Fees (when executed)</span>
+                    <span class="chevron" id="fees-limit-chevron">▼</span>
+                </div>
+                <div class="settings-content" id="fees-limit-content">
+                    <div class="preview-row">
+                        <span class="preview-label">Solana network fee</span>
+                        <span class="preview-value">~0.00001 SOL</span>
+                    </div>
+                    <div class="preview-row" style="margin-top: 8px; font-size: 11px; color: var(--text-tertiary);">
+                        <span>No slippage (exact target price)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Advanced Settings (Expandable) -->
+        <div class="settings-expandable">
+            <div class="settings-header" onclick="toggleSettings()">
+                <span class="settings-icon">⚙️</span>
+                <span class="settings-title">Advanced Settings</span>
+                <span class="settings-summary">2% • Anti-MEV ON</span>
+                <span class="chevron" id="chevron">▼</span>
+            </div>
+            <div class="settings-content" id="settings-content">
+                <!-- Slippage -->
+                <div class="setting-item">
+                    <div class="setting-label">Slippage Tolerance</div>
+                    <div class="setting-options">
+                        <button class="setting-btn">0.5%</button>
+                        <button class="setting-btn">1%</button>
+                        <button class="setting-btn active">2%</button>
+                        <button class="setting-btn">5%</button>
+                        <button class="setting-btn">Custom</button>
+                    </div>
+                </div>
+                
+                <!-- Anti-MEV -->
+                <div class="setting-item">
+                    <div class="toggle-switch">
+                        <span class="toggle-label">Anti-MEV Protection (+0.5%)</span>
+                        <div class="toggle active" onclick="toggleAntiMEV()">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Priority Fee -->
+                <div class="setting-item">
+                    <div class="setting-label">Priority Fee (Speed)</div>
+                    <div class="setting-options">
+                        <button class="setting-btn active">Normal</button>
+                        <button class="setting-btn">Fast<br><small style="font-size: 10px; opacity: 0.7;">+0.0001 SOL</small></button>
+                        <button class="setting-btn">Instant<br><small style="font-size: 10px; opacity: 0.7;">+0.0005 SOL</small></button>
+                    </div>
+                </div>
+                
+                <!-- Auto-retry -->
+                <div class="setting-item">
+                    <div class="toggle-switch">
+                        <span class="toggle-label">Auto-retry (Max 3x)</span>
+                        <div class="toggle" onclick="toggleAutoRetry()">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Risk Badge -->
+        <div class="risk-badge low">
+            <span class="risk-icon">🟢</span>
+            <div class="risk-text">
+                <div class="risk-level low">Low Risk</div>
+                <div class="risk-subtitle">Good liquidity • Verified contract</div>
+            </div>
+        </div>
+        
+        <!-- Execute Button -->
+        <button class="execute-btn buy" id="execute-btn">
+            Buy 410,000 PSEED
+        </button>
+    </div>
+    
+    <script>
+        let currentMode = 'buy';
+        let currentType = 'market';
+        let currentCurrency = 'SOL';
+        let currentPriceMode = 'usd'; // 'usd' or 'percent'
+        
+        function toggleMode(mode) {
+            currentMode = mode;
+            
+            // Update button styles
+            document.querySelectorAll('.primary-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const executeBtn = document.getElementById('execute-btn');
+            
+            if (mode === 'buy') {
+                document.querySelector('.primary-btn.buy').classList.add('active');
+                executeBtn.className = 'execute-btn buy';
+                
+                // Update text based on current type
+                if (currentType === 'limit') {
+                    executeBtn.textContent = 'Place Buy Order';
+                } else {
+                    executeBtn.textContent = 'Buy 410,000 PSEED';
+                }
+            } else {
+                document.querySelector('.primary-btn.sell').classList.add('active');
+                executeBtn.className = 'execute-btn sell';
+                
+                // Update text based on current type
+                if (currentType === 'limit') {
+                    executeBtn.textContent = 'Place Sell Order';
+                } else {
+                    executeBtn.textContent = 'Sell 410,000 PSEED';
+                }
+            }
+        }
+        
+        function toggleType(type) {
+            currentType = type;
+            
+            const targetPriceGroup = document.getElementById('target-price-group');
+            const swapBtn = document.querySelector('.swap-btn');
+            const toField = document.getElementById('to-field-group');
+            const previewMarket = document.getElementById('preview-market');
+            const previewLimit = document.getElementById('preview-limit');
+            const executeBtn = document.getElementById('execute-btn');
+            
+            console.log('Toggling to:', type);
+            console.log('Target Price Group:', targetPriceGroup);
+            
+            if (type === 'limit') {
+                // Show limit order fields
+                targetPriceGroup.style.display = 'block';
+                
+                // Hide market order elements
+                swapBtn.style.display = 'none';
+                toField.style.display = 'none';
+                
+                // Switch preview panels
+                previewMarket.style.display = 'none';
+                previewLimit.style.display = 'block';
+                
+                // Update button text
+                if (currentMode === 'buy') {
+                    executeBtn.textContent = 'Place Buy Order';
+                } else {
+                    executeBtn.textContent = 'Place Sell Order';
+                }
+            } else {
+                // Show market order elements
+                targetPriceGroup.style.display = 'none';
+                swapBtn.style.display = 'block';
+                toField.style.display = 'block';
+                
+                // Switch preview panels
+                previewMarket.style.display = 'block';
+                previewLimit.style.display = 'none';
+                
+                // Update button text
+                if (currentMode === 'buy') {
+                    executeBtn.textContent = 'Buy 410,000 PSEED';
+                } else {
+                    executeBtn.textContent = 'Sell 410,000 PSEED';
+                }
+            }
+        }
+        
+        function toggleCurrency() {
+            currentCurrency = currentCurrency === 'SOL' ? 'PSEED' : 'SOL';
+            document.getElementById('currency-label').textContent = currentCurrency;
+        }
+        
+        function togglePriceMode() {
+            currentPriceMode = currentPriceMode === 'usd' ? 'percent' : 'usd';
+            
+            const absoluteMode = document.getElementById('price-absolute-mode');
+            const percentMode = document.getElementById('price-percentage-mode');
+            const modeLabel = document.getElementById('price-mode-label');
+            
+            if (currentPriceMode === 'percent') {
+                absoluteMode.style.display = 'none';
+                percentMode.style.display = 'block';
+                modeLabel.textContent = '%';
+            } else {
+                absoluteMode.style.display = 'block';
+                percentMode.style.display = 'none';
+                modeLabel.textContent = 'USD';
+            }
+        }
+        
+        function toggleSettings() {
+            const content = document.getElementById('settings-content');
+            const chevron = document.getElementById('chevron');
+            const header = document.querySelector('.settings-header');
+            
+            content.classList.toggle('show');
+            chevron.classList.toggle('rotated');
+            header.classList.toggle('expanded');
+        }
+        
+        function toggleFees() {
+            const content = document.getElementById('fees-content');
+            const chevron = document.getElementById('fees-chevron');
+            const header = event.currentTarget;
+            
+            content.classList.toggle('show');
+            chevron.classList.toggle('rotated');
+            header.classList.toggle('expanded');
+        }
+        
+        function toggleFeesLimit() {
+            const content = document.getElementById('fees-limit-content');
+            const chevron = document.getElementById('fees-limit-chevron');
+            const header = event.currentTarget;
+            
+            content.classList.toggle('show');
+            chevron.classList.toggle('rotated');
+            header.classList.toggle('expanded');
+        }
+        
+        function toggleAntiMEV() {
+            const toggle = event.currentTarget;
+            toggle.classList.toggle('active');
+        }
+        
+        function toggleAutoRetry() {
+            const toggle = event.currentTarget;
+            toggle.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

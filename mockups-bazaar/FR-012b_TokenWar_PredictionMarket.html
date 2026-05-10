@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FR-012b: Meme Bazaar Showdown — Prediction Market</title>
+<style>
+  :root {
+    --mascot-sm:   22px;
+    --mascot-md:   30px;
+    --mascot-lg:   40px;
+    /* Bazaar vars referenced by wallet component */
+    --surface-1: #131826; --surface-2: #1a2138; --border-1: #1f2640; --border-2: #2a3456;
+    --bz-amber-400: #EAB552; --bz-amber-soft: rgba(234,181,82,0.10); --bz-teal-400: #7CC4A4; --bz-crimson: #D65A54;
+    --text-1: #f4f4f5; --text-2: #a1a1aa; --text-3: #71717a;
+    --font-body: 'Inter', system-ui, sans-serif; --font-mono: 'JetBrains Mono', monospace; --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0d0d0d; color: #e0e0e0; }
+
+  /* ── TABS ── */
+  .top-tabs { display: flex; gap: 2px; background: #111; padding: 12px 20px 0; border-bottom: 1px solid #222; }
+  .top-tab { padding: 10px 22px; cursor: pointer; border-radius: 8px 8px 0 0; font-size: 13px; font-weight: 600; color: #888; background: #1a1a1a; border: 1px solid #222; border-bottom: none; transition: all .2s; }
+  .top-tab.active { background: #1e1e2e; color: #fff; border-color: #333; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── SPEC ── */
+  .spec { max-width: 860px; margin: 32px auto; padding: 0 24px 60px; }
+  .spec h1 { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .spec .tag { display: inline-block; background: #1a2a1a; color: #7ec97e; border: 1px solid #3a5a3a; border-radius: 4px; font-size: 11px; font-weight: 700; padding: 2px 8px; margin-bottom: 6px; }
+  .spec .subtitle { color: #666; font-size: 13px; margin-bottom: 32px; }
+  .spec h2 { font-size: 15px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: .8px; margin: 28px 0 12px; }
+  .spec p { font-size: 14px; color: #bbb; line-height: 1.7; margin-bottom: 10px; }
+  .spec ul { padding-left: 18px; margin-bottom: 12px; }
+  .spec ul li { font-size: 14px; color: #bbb; line-height: 1.9; }
+  .spec pre { background: #161622; border: 1px solid #2a2a3a; border-radius: 8px; padding: 16px; font-size: 13px; color: #c9d1d9; line-height: 1.7; overflow-x: auto; margin: 10px 0 16px; font-family: 'Consolas', monospace; }
+  .spec table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  .spec th { background: #1a1a2e; color: #888; padding: 8px 12px; text-align: left; font-weight: 600; border-bottom: 1px solid #2a2a3a; }
+  .spec td { padding: 8px 12px; border-bottom: 1px solid #1e1e1e; color: #bbb; }
+  .spec td:first-child { color: #e0e0e0; }
+  .divider { border: none; border-top: 1px solid #1e1e1e; margin: 24px 0; }
+  .vs-box { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; }
+  .vs-col { background: #161622; border: 1px solid #2a2a3a; border-radius: 8px; padding: 14px 16px; }
+  .vs-col h4 { font-size: 12px; font-weight: 700; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+  .vs-col p { font-size: 13px; color: #bbb; line-height: 1.7; margin: 0; }
+  .highlight { background: #1a2a3a; border-left: 3px solid #4fc3f7; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 14px; color: #c9d1d9; line-height: 1.7; }
+
+  /* ── MOCK SHELL ── */
+  .mock-shell { display: flex; height: calc(100vh - 50px); }
+  .sidebar { width: 200px; background: #111; border-right: 1px solid #1e1e1e; padding: 16px 0; flex-shrink: 0; }
+  .sidebar-logo { padding: 0 16px 16px; font-size: 15px; font-weight: 800; color: #fff; border-bottom: 1px solid #1e1e1e; margin-bottom: 8px; }
+  .sidebar-logo span { color: #7c6af7; }
+  .nav-section { padding: 8px 16px 4px; font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 1px; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 16px; font-size: 13px; color: #888; cursor: pointer; transition: all .15s; }
+  .nav-item:hover { background: #1a1a1a; color: #ccc; }
+  .nav-item.active { background: #1e1e2e; color: #fff; border-right: 2px solid #7c6af7; }
+  .nav-badge { background: #ff4f4f; color: #fff; font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 10px; margin-left: auto; }
+  .mock-body { flex: 1; overflow-y: auto; background: #0d0d0d; }
+
+  /* ── WARS LIST ── */
+  .wars-header { padding: 24px 28px 0; display: flex; align-items: center; justify-content: space-between; }
+  .wars-header h2 { font-size: 20px; font-weight: 700; }
+  .wars-header h2 span { color: #7c6af7; }
+  .wars-tabs { display: flex; gap: 4px; padding: 16px 28px; }
+  .wars-tab { padding: 7px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #222; color: #666; background: transparent; }
+  .wars-tab.active { background: #7c6af722; color: #7c6af7; border-color: #7c6af744; }
+  .wars-grid { padding: 0 28px 40px; display: flex; flex-direction: column; gap: 12px; }
+
+  /* WAR CARD */
+  .war-card { background: #141420; border: 1px solid #2a2a3a; border-radius: 12px; padding: 20px; cursor: pointer; transition: border-color .2s; }
+  .war-card:hover { border-color: #444; }
+  .war-card.live { border-left: 3px solid #7c6af7; }
+  .war-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .live-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #7c6af7; }
+  .live-dot { width: 7px; height: 7px; background: #7c6af7; border-radius: 50%; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .countdown { font-size: 13px; font-weight: 700; color: #888; font-family: monospace; }
+  .war-tokens { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .war-token { display: flex; align-items: center; gap: 8px; flex: 1; }
+  .war-token.right { flex-direction: row-reverse; }
+  .token-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .token-name { font-size: 14px; font-weight: 700; color: #fff; }
+  .token-price { font-size: 13px; font-weight: 700; }
+  .token-prob { font-size: 11px; color: #666; }
+  .war-token.right .token-info { text-align: right; }
+  .vs { font-size: 16px; font-weight: 900; color: #444; flex-shrink: 0; }
+
+  /* PROB BAR */
+  .prob-bar-wrap { margin-bottom: 12px; }
+  .prob-bar { height: 8px; background: #1e1e2e; border-radius: 4px; overflow: hidden; display: flex; }
+  .bar-a { background: linear-gradient(90deg, #4fc3f7, #0288d1); border-radius: 4px 0 0 4px; transition: width .5s ease; }
+  .bar-b { background: linear-gradient(90deg, #a78bfa, #7c6af7); border-radius: 0 4px 4px 0; transition: width .5s ease; }
+  .bar-labels { display: flex; justify-content: space-between; margin-top: 6px; font-size: 12px; font-weight: 700; }
+  .bar-labels .a { color: #4fc3f7; }
+  .bar-labels .b { color: #a78bfa; }
+
+  .war-footer { display: flex; align-items: center; justify-content: space-between; }
+  .vol-traded { font-size: 13px; color: #888; }
+  .vol-traded strong { color: #f0c040; }
+  .buy-btn { padding: 7px 18px; border-radius: 8px; background: #7c6af722; color: #7c6af7; border: 1px solid #7c6af744; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .buy-btn:hover { background: #7c6af733; }
+
+  /* ── DETAIL ── */
+  .detail-back { padding: 20px 28px 0; font-size: 13px; color: #666; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .detail-back:hover { color: #aaa; }
+  .detail-header { padding: 16px 28px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .detail-title { font-size: 18px; font-weight: 700; }
+  .detail-countdown { font-size: 22px; font-weight: 800; color: #7c6af7; font-family: monospace; }
+  .detail-countdown small { font-size: 12px; color: #666; display: block; text-align: center; font-family: sans-serif; font-weight: 400; }
+
+  /* PROB DISPLAY */
+  .prob-section { margin: 0 28px 20px; background: #141420; border: 1px solid #2a2a3a; border-radius: 12px; padding: 20px; }
+  .prob-row { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+  .prob-token { display: flex; align-items: center; gap: 10px; flex: 1; }
+  .prob-token.right { flex-direction: row-reverse; text-align: right; }
+  .prob-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .prob-name { font-size: 15px; font-weight: 700; }
+  .prob-share-price { font-size: 20px; font-weight: 800; }
+  .prob-share-price.blue { color: #4fc3f7; }
+  .prob-share-price.purple { color: #a78bfa; }
+  .prob-pct { font-size: 12px; color: #666; }
+  .big-prob-bar { height: 14px; background: #1e1e2e; border-radius: 7px; overflow: hidden; display: flex; margin-bottom: 10px; }
+  .big-bar-a { background: linear-gradient(90deg, #4fc3f7, #0288d1); }
+  .big-bar-b { background: linear-gradient(90deg, #a78bfa, #7c6af7); }
+  .big-bar-labels { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; }
+  .big-bar-labels .a { color: #4fc3f7; }
+  .big-bar-labels .b { color: #a78bfa; }
+
+  /* MINI CHART */
+  .mini-chart-wrap { margin: 14px 0 0; }
+  .mini-chart-label { font-size: 11px; color: #555; margin-bottom: 6px; }
+  .mini-chart { width: 100%; height: 48px; }
+
+  /* BUY PANEL */
+  .buy-panel { margin: 0 28px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .buy-side { background: #141420; border: 1px solid #2a2a3a; border-radius: 12px; padding: 18px; }
+  .buy-side.blue { border-top: 2px solid #4fc3f7; }
+  .buy-side.purple { border-top: 2px solid #a78bfa; }
+  .buy-side-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .buy-side.blue .buy-side-title { color: #4fc3f7; }
+  .buy-side.purple .buy-side-title { color: #a78bfa; }
+  .buy-side-sub { font-size: 11px; color: #555; margin-bottom: 14px; }
+  .buy-input-wrap { display: flex; align-items: center; background: #0d0d0d; border: 1px solid #2a2a3a; border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
+  .buy-input { flex: 1; background: transparent; border: none; padding: 10px 12px; font-size: 15px; font-weight: 700; color: #fff; outline: none; }
+  .buy-unit { padding: 0 12px; color: #666; font-size: 13px; border-left: 1px solid #2a2a3a; }
+  .presets { display: flex; gap: 6px; margin-bottom: 14px; }
+  .preset { padding: 4px 10px; border-radius: 6px; border: 1px solid #2a2a3a; background: transparent; color: #666; font-size: 11px; cursor: pointer; }
+  .preset:hover { border-color: #444; color: #aaa; }
+  .buy-breakdown { background: #0d0d12; border-radius: 8px; padding: 12px; margin-bottom: 14px; }
+  .breakdown-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; }
+  .breakdown-row .label { color: #555; }
+  .breakdown-row .val { color: #aaa; font-weight: 600; }
+  .breakdown-row.highlight-row .val { color: #5ce05c; font-weight: 700; font-size: 13px; }
+  .action-btn { width: 100%; padding: 11px; border-radius: 8px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; }
+  .action-btn.blue { background: #4fc3f722; color: #4fc3f7; border: 1px solid #4fc3f744; }
+  .action-btn.blue:hover { background: #4fc3f733; }
+  .action-btn.purple { background: #a78bfa22; color: #a78bfa; border: 1px solid #a78bfa44; }
+  .action-btn.purple:hover { background: #a78bfa33; }
+
+  /* POSITIONS */
+  .positions-section { margin: 0 28px 20px; background: #141420; border: 1px solid #2a2a3a; border-radius: 12px; padding: 18px; }
+  .positions-section h3 { font-size: 13px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 14px; }
+  .position-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1a1a1a; font-size: 13px; }
+  .position-row:last-child { border: none; }
+  .pos-token { display: flex; align-items: center; gap: 8px; flex: 1; }
+  .pos-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .pos-detail { color: #888; flex: 1; }
+  .pos-detail strong { color: #ccc; }
+  .pos-payout { text-align: right; }
+  .pos-payout .if-win { font-size: 12px; color: #555; }
+  .pos-payout .amount { font-weight: 700; color: #5ce05c; }
+
+  /* TRADE FEED */
+  .trade-feed { margin: 0 28px 40px; }
+  .trade-feed h3 { font-size: 13px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 12px; }
+  .feed-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #141414; font-size: 13px; }
+  .feed-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .feed-dot.a { background: #4fc3f7; }
+  .feed-dot.b { background: #a78bfa; }
+  .feed-user { color: #888; flex: 1; }
+  .feed-user strong { color: #ccc; }
+  .feed-shares { font-weight: 700; }
+  .feed-shares.a { color: #4fc3f7; }
+  .feed-shares.b { color: #a78bfa; }
+  .feed-time { color: #444; font-size: 11px; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #111; }
+  ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 3px; }
+
+/* ===== CONNECTED WALLET ===== */
+.wallet-connected { position: relative; height: 36px; background: var(--surface-2); border: 1px solid var(--border-2); border-radius: var(--r-pill); padding: 3px 12px 3px 4px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.15s var(--ease); font-family: var(--font-body); }
+.wallet-connected:hover { border-color: var(--bz-amber-400); background: var(--bz-amber-soft); }
+.wallet-connected.open { border-color: var(--bz-amber-400); }
+.wc-avatar { width: var(--mascot-md); height: var(--mascot-md); border-radius: 50%; background: linear-gradient(180deg,#FAC775,#EAB552); display: grid; place-items: center; flex-shrink: 0; }
+.wc-avatar svg { width: 18px; height: 18px; }
+.wc-info { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
+.wc-balance { font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; color: var(--bz-amber-400); }
+.wc-addr { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-3); margin-top: 1px; }
+.wc-chevron { width: 12px; height: 12px; color: var(--text-3); flex-shrink: 0; transition: transform 0.15s var(--ease); }
+.wallet-connected.open .wc-chevron { transform: rotate(180deg); color: var(--bz-amber-400); }
+.wc-net-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--bz-teal-400); flex-shrink: 0; box-shadow: 0 0 0 2px rgba(124,196,164,0.20); }
+.wc-net-dot.wrong { background: var(--bz-crimson); box-shadow: 0 0 0 2px rgba(214,90,84,0.20); }
+.wc-menu { position: absolute; top: calc(100% + 8px); right: 0; width: 220px; background: var(--surface-1); border: 1px solid var(--border-1); border-radius: var(--r-md); padding: 6px; display: none; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.wallet-connected.open .wc-menu { display: block; }
+.wc-menu-head { padding: 10px 10px 8px; border-bottom: 1px solid var(--border-1); margin-bottom: 4px; }
+.wc-menu-net { font-size: 10.5px; color: var(--text-3); font-family: var(--font-display); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+.wc-menu-bal { font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--text-1); margin-top: 2px; }
+.wc-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r-sm); color: var(--text-1); font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none; width: 100%; background: transparent; border: none; font-family: inherit; text-align: left; transition: background 0.12s var(--ease); }
+.wc-item:hover { background: var(--surface-2); }
+.wc-item svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
+.wc-item.danger { color: var(--bz-crimson); }
+.wc-item.danger:hover { background: rgba(214,90,84,0.10); }
+.wc-divider { height: 1px; background: var(--border-1); margin: 4px 0; }
+
+  /* === Bazaar Sidebar P1: Footer utility block === */
+  .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border-1); display: flex; flex-direction: column; gap: 10px; }
+  .sf-social { display: flex; gap: 12px; }
+  .sf-social a { color: var(--text-3); display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; transition: color 0.15s; text-decoration: none; }
+  .sf-social a:hover { color: var(--bz-amber-400); }
+  .sf-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sf-pill { font-size: 10.5px; font-weight: 600; color: var(--text-3); background: var(--surface-2); padding: 4px 10px; border-radius: 999px; text-decoration: none; transition: all 0.15s; }
+  .sf-pill:hover { color: var(--bz-amber-400); background: var(--bz-amber-soft); }
+  .sf-copyright { font-size: 10px; color: var(--text-mute); text-align: center; margin-top: 2px; }
+  /* === Bazaar Sidebar P2: Active item amber glow === */
+  .nav-item.active {
+    box-shadow: 0 0 16px rgba(234, 181, 82, 0.18);
+  }
+  /* === Bazaar Sidebar P3: Group label amber dot === */
+  .nav-label {
+    letter-spacing: 0.12em;
+    position: relative;
+    padding-left: 14px;
+  }
+  .nav-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--bz-amber-400);
+    opacity: 0.6;
+  }
+  /* === Bazaar Sidebar P4: User card amber glow + border === */
+  .user-card {
+    box-shadow: 0 0 20px rgba(234, 181, 82, 0.10);
+    border-top: 1px solid rgba(234, 181, 82, 0.20);
+  }
+  /* === Bazaar Sidebar P5: Hover lift === */
+  .nav-item {
+    transition: transform 0.15s var(--ease, ease), background 0.15s var(--ease, ease), color 0.12s var(--ease, ease), box-shadow 0.12s var(--ease, ease);
+  }
+  .nav-item:hover:not(.active) {
+    transform: translateY(-1px);
+    background: var(--bz-amber-soft);
+  }
+</style>
+</head>
+<body>
+
+<div class="top-tabs">
+  <div class="top-tab active" onclick="switchTab('spec')">📋 BA Spec</div>
+  <div class="top-tab" onclick="switchTab('list')">⚔️ Wars List</div>
+  <div class="top-tab" onclick="switchTab('detail')">📈 War Detail</div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: SPEC -->
+<div id="tab-spec" class="tab-content active">
+<div class="spec">
+  <div class="tag">Phương án B — Prediction Market</div>
+  <h1>FR-012b: Meme Bazaar Showdown</h1>
+  <p class="subtitle">Informal BA — team internal read</p>
+
+  <hr class="divider">
+
+  <h2>Vấn đề cần giải quyết</h2>
+  <p>Phương án pari-mutuel (FR-012) không thể trả lời câu hỏi: <strong>"Lúc tôi bỏ tiền vào, tôi ăn bao nhiêu?"</strong> vì odds thay đổi cho đến khi war kết thúc. Prediction market giải quyết đúng vấn đề này.</p>
+
+  <hr class="divider">
+
+  <h2>Cơ chế cốt lõi</h2>
+  <p>Thay vì "gom tiền vào pool rồi chia", user mua <strong>share của một kết quả</strong>. Mỗi share có giá thị trường thay đổi theo cung cầu, nhưng <strong>payout khi thắng luôn cố định: 1 SOL/share</strong>.</p>
+
+  <pre>War: DOGE vs PEPE
+
+Hiện tại:
+  Share "DOGE wins": 0.58 SOL  →  thị trường tin DOGE thắng 58%
+  Share "PEPE wins": 0.42 SOL  →  thị trường tin PEPE thắng 42%
+
+Bạn mua 2 share "PEPE wins" @ 0.42 SOL/share:
+  Bỏ ra: 0.84 SOL
+  Nếu PEPE thắng: nhận 2 × 1 SOL = 2 SOL  →  lời 1.16 SOL (2.38x)
+  Nếu DOGE thắng: nhận 0 SOL              →  mất 0.84 SOL
+
+→ Payout (2 SOL nếu thắng) biết ngay lúc mua. Không thay đổi sau đó.</pre>
+
+  <div class="highlight">
+    Sau khi bạn mua, dù 100 người khác vào sau và giá share PEPE tăng lên 0.70 SOL — shares của bạn vẫn đổi được 1 SOL/share khi PEPE thắng. Giống mua cổ phiếu ở giá 42, người vào sau mua giá 70, nhưng cổ tức trả như nhau.
+  </div>
+
+  <hr class="divider">
+
+  <h2>Giá share được quyết định thế nào</h2>
+  <p>Không ai quyết định. Giá hình thành tự nhiên qua AMM (Automated Market Maker) — cơ chế tương tự bonding curve đang dùng cho meme tokens trong platform.</p>
+  <pre>Ban đầu platform seed pool: 50/50
+  → Share "DOGE wins": 0.50 SOL
+  → Share "PEPE wins": 0.50 SOL
+
+Cộng đồng DOGE đổ xô mua "DOGE wins":
+  → Giá DOGE wins tăng lên 0.65 SOL
+  → Giá PEPE wins tự động giảm xuống 0.35 SOL
+  (2 loại share luôn cộng lại = 1 SOL)
+
+Giá share = xác suất thị trường nghĩ team đó thắng.</pre>
+
+  <hr class="divider">
+
+  <h2>Platform kiếm tiền ở đâu — có rủi ro không</h2>
+  <pre>Mỗi lần user mua/bán share → platform thu 2% phí giao dịch
+
+Ví dụ:
+  Tổng volume giao dịch share trong 1 war: 200 SOL
+  Platform thu: 200 × 2% = 4 SOL
+
+Platform không cần biết ai thắng.
+Platform không bỏ tiền ra để trả thưởng.
+Tiền thưởng của người thắng = tiền của người thua (qua pool).</pre>
+
+  <div class="vs-box">
+    <div class="vs-col">
+      <h4>Pari-mutuel (FR-012)</h4>
+      <p>Platform thu rake từ pool. Không rủi ro. Nhưng user không biết payout lúc vào tiền.</p>
+    </div>
+    <div class="vs-col">
+      <h4>Prediction Market (FR-012b)</h4>
+      <p>Platform thu fee từ trading. Không rủi ro. User biết chính xác payout ngay lúc mua share.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>Initial Liquidity — ai bỏ tiền seed?</h2>
+  <p>Platform cần bỏ một lượng SOL nhỏ để tạo pool ban đầu (ví dụ 10 SOL mỗi war). Không phải chi phí mất đi — đây là liquidity position, platform thu lại dần qua phí trading và rút về sau khi war kết thúc.</p>
+  <pre>Platform seed: 10 SOL (5 SOL mỗi bên)
+War tạo ra 200 SOL trading volume → thu 4 SOL phí
+Platform rút seed 10 SOL lại sau war kết thúc
+Net: platform lời 4 SOL, không mất gì</pre>
+
+  <hr class="divider">
+
+  <h2>Thắng thua dựa vào gì</h2>
+  <p>Giữ nguyên như FR-012: <strong>BUY volume</strong> trong thời gian war. Token nào được mua nhiều SOL hơn thắng.</p>
+
+  <hr class="divider">
+
+  <h2>Edge cases</h2>
+  <table>
+    <tr><th>Tình huống</th><th>Xử lý</th></tr>
+    <tr><td>Không có ai mua share</td><td>Platform rút seed, hủy war</td></tr>
+    <tr><td>Một bên share không ai mua</td><td>Giá bên đó → gần 0, bên kia → gần 1. War vẫn chạy.</td></tr>
+    <tr><td>User muốn bán share trước khi war kết thúc</td><td>Cho phép bán lại qua AMM (giá thị trường lúc bán)</td></tr>
+    <tr><td>War bị cancel (lý do kỹ thuật)</td><td>Hoàn SOL cho tất cả share holders theo giá mua</td></tr>
+  </table>
+
+  <hr class="divider">
+
+  <h2>Chưa quyết định</h2>
+  <ul>
+    <li>Seed amount mỗi war: bao nhiêu SOL là đủ tạo thanh khoản ban đầu</li>
+    <li>Fee rate: 2% hay khác</li>
+    <li>Có cho sell share trong lúc war không, hay chỉ buy và hold đến khi kết thúc</li>
+    <li>Duration war: 1h / 6h / 24h</li>
+  </ul>
+
+  <hr class="divider">
+
+  <h2>So sánh 2 phương án</h2>
+  <table>
+    <tr><th></th><th>Pari-mutuel</th><th>Prediction Market</th></tr>
+    <tr><td>Biết payout lúc vào</td><td>❌ Không</td><td>✅ Có</td></tr>
+    <tr><td>Platform chịu rủi ro</td><td>❌ Không</td><td>❌ Không</td></tr>
+    <tr><td>Platform cần seed vốn</td><td>❌ Không</td><td>⚠️ Có (nhỏ, thu lại được)</td></tr>
+    <tr><td>Độ phức tạp build</td><td>Thấp</td><td>Trung bình</td></tr>
+    <tr><td>User dễ hiểu</td><td>Cao</td><td>Trung bình</td></tr>
+    <tr><td>Data thú vị</td><td>Thấp</td><td>Cao (giá share = sentiment thị trường)</td></tr>
+  </table>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: LIST -->
+<div id="tab-list" class="tab-content">
+<div class="mock-shell">
+  <div class="sidebar">
+    <div class="sidebar-logo" onclick="location.href='token_list_v4.html'" style="cursor:pointer">🐱 <span>Stallspot</span></div>
+    <div class="nav-section">Main</div>
+    <div onclick="location.href='token_list_v4.html'" style="cursor:pointer" class="nav-item">🏠 Token List</div>
+    <div onclick="location.href='leaderboard.html'" style="cursor:pointer" class="nav-item">🏆 Leaderboard</div>
+    <div class="nav-item active">⚔️ Wars <span class="nav-badge">3</span></div>
+    <div class="nav-item">➕ Create Token</div>
+    <div class="nav-section">Personal</div>
+    <div onclick="location.href='my_profile.html'" style="cursor:pointer" class="nav-item">👤 My Profile</div>
+    <div class="nav-item">⚙️ Dashboard</div>
+    <div class="nav-section">Earn</div>
+    <div onclick="location.href='rewards.html'" style="cursor:pointer" class="nav-item">🎁 Rewards</div>
+    <div onclick="location.href='referrals.html'" style="cursor:pointer" class="nav-item">👥 Referrals</div>
+    <div onclick="location.href='rewards.html'" style="cursor:pointer" class="nav-item">🌿 Points</div>
+  </div>
+
+  <div class="mock-body">
+    <div class="wars-header">
+      <h2>⚔️ Token <span>Wars</span></h2>
+    </div>
+    <div class="wars-tabs">
+      <div class="wars-tab active">🔴 Live (3)</div>
+      <div class="wars-tab">🕐 Upcoming (5)</div>
+      <div class="wars-tab">✅ Ended</div>
+    </div>
+
+    <div class="wars-grid">
+
+      <!-- Card 1 -->
+      <div class="war-card live" onclick="switchTab('detail')">
+        <div class="war-meta">
+          <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+          <div class="countdown">⏱ 03:24:17 left</div>
+        </div>
+        <div class="war-tokens">
+          <div class="war-token">
+            <div class="token-avatar" style="background:#1a2a3a">🐕</div>
+            <div class="token-info">
+              <div class="token-name">DOGE</div>
+              <div class="token-price" style="color:#4fc3f7">0.58 SOL/share</div>
+              <div class="token-prob">58% chance</div>
+            </div>
+          </div>
+          <div class="vs">VS</div>
+          <div class="war-token right">
+            <div class="token-avatar" style="background:#1e1a2e">🐸</div>
+            <div class="token-info">
+              <div class="token-name">PEPE</div>
+              <div class="token-price" style="color:#a78bfa">0.42 SOL/share</div>
+              <div class="token-prob">42% chance</div>
+            </div>
+          </div>
+        </div>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar">
+            <div class="bar-a" style="width:58%"></div>
+            <div class="bar-b" style="width:42%"></div>
+          </div>
+          <div class="bar-labels">
+            <span class="a">DOGE 58%</span>
+            <span class="b">PEPE 42%</span>
+          </div>
+        </div>
+        <div class="war-footer">
+          <div class="vol-traded">📊 Vol: <strong>87.4 SOL</strong> traded</div>
+          <button class="buy-btn">Buy Shares →</button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="war-card live">
+        <div class="war-meta">
+          <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+          <div class="countdown">⏱ 00:41:05 left</div>
+        </div>
+        <div class="war-tokens">
+          <div class="war-token">
+            <div class="token-avatar" style="background:#1a1a3a">🦊</div>
+            <div class="token-info">
+              <div class="token-name">FOXY</div>
+              <div class="token-price" style="color:#4fc3f7">0.31 SOL/share</div>
+              <div class="token-prob">31% chance</div>
+            </div>
+          </div>
+          <div class="vs">VS</div>
+          <div class="war-token right">
+            <div class="token-avatar" style="background:#1a2a1a">🐻</div>
+            <div class="token-info">
+              <div class="token-name">BEAR</div>
+              <div class="token-price" style="color:#a78bfa">0.69 SOL/share</div>
+              <div class="token-prob">69% chance</div>
+            </div>
+          </div>
+        </div>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar">
+            <div class="bar-a" style="width:31%"></div>
+            <div class="bar-b" style="width:69%"></div>
+          </div>
+          <div class="bar-labels">
+            <span class="a">FOXY 31%</span>
+            <span class="b">BEAR 69%</span>
+          </div>
+        </div>
+        <div class="war-footer">
+          <div class="vol-traded">📊 Vol: <strong>32.1 SOL</strong> traded</div>
+          <button class="buy-btn">Buy Shares →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════ TAB: DETAIL -->
+<div id="tab-detail" class="tab-content">
+<div class="mock-shell">
+  <div class="sidebar">
+    <div class="sidebar-logo" onclick="location.href='token_list_v4.html'" style="cursor:pointer">🐱 <span>Stallspot</span></div>
+    <div class="nav-section">Main</div>
+    <div onclick="location.href='token_list_v4.html'" style="cursor:pointer" class="nav-item">🏠 Token List</div>
+    <div onclick="location.href='leaderboard.html'" style="cursor:pointer" class="nav-item">🏆 Leaderboard</div>
+    <div class="nav-item active">⚔️ Wars <span class="nav-badge">3</span></div>
+    <div class="nav-item">➕ Create Token</div>
+    <div class="nav-section">Personal</div>
+    <div onclick="location.href='my_profile.html'" style="cursor:pointer" class="nav-item">👤 My Profile</div>
+    <div class="nav-item">⚙️ Dashboard</div>
+    <div class="nav-section">Earn</div>
+    <div onclick="location.href='points.html'" style="cursor:pointer" class="nav-item">🎁 Rewards</div>
+    <div onclick="location.href='referrals.html'" style="cursor:pointer" class="nav-item">👥 Referrals</div>
+    <div onclick="location.href='points.html'" style="cursor:pointer" class="nav-item">🌿 Points</div>
+  </div>
+
+  <div class="mock-body">
+    <div class="detail-back" onclick="switchTab('list')">← Back to Wars</div>
+    <div class="detail-header">
+      <div class="detail-title">⚔️ DOGE vs PEPE — Who wins?</div>
+      <div class="detail-countdown">03:24:17<small>remaining</small></div>
+    </div>
+
+    <!-- Prob Display -->
+    <div class="prob-section">
+      <div class="prob-row">
+        <div class="prob-token">
+          <div class="prob-avatar" style="background:#1a2a3a">🐕</div>
+          <div>
+            <div class="prob-name">DOGE</div>
+            <div class="prob-share-price blue">0.58 SOL</div>
+            <div class="prob-pct">per share · 58% implied</div>
+          </div>
+        </div>
+        <div style="font-size:24px;color:#333;font-weight:900">VS</div>
+        <div class="prob-token right">
+          <div class="prob-avatar" style="background:#1e1a2e">🐸</div>
+          <div style="text-align:right">
+            <div class="prob-name">PEPE</div>
+            <div class="prob-share-price purple">0.42 SOL</div>
+            <div class="prob-pct">per share · 42% implied</div>
+          </div>
+        </div>
+      </div>
+      <div class="big-prob-bar">
+        <div class="big-bar-a" style="width:58%"></div>
+        <div class="big-bar-b" style="width:42%"></div>
+      </div>
+      <div class="big-bar-labels">
+        <span class="a">DOGE 58% · 1.72x if wins</span>
+        <span class="b">2.38x if wins · PEPE 42%</span>
+      </div>
+
+      <div class="mini-chart-wrap">
+        <div class="mini-chart-label">PEPE win probability — last 3h</div>
+        <svg class="mini-chart" viewBox="0 0 400 48" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,28 C30,26 60,30 90,25 C120,20 150,18 180,22 C210,26 240,20 270,16 C300,12 330,18 360,22 C380,24 400,20 400,20" fill="none" stroke="#a78bfa" stroke-width="2"/>
+          <path d="M0,28 C30,26 60,30 90,25 C120,20 150,18 180,22 C210,26 240,20 270,16 C300,12 330,18 360,22 C380,24 400,20 400,20 L400,48 L0,48Z" fill="url(#grad)"/>
+          <!-- current dot -->
+          <circle cx="400" cy="20" r="4" fill="#a78bfa"/>
+        </svg>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;margin-top:6px">
+        <span>📊 Total volume: 87.4 SOL</span>
+        <span>2% platform fee per trade</span>
+      </div>
+    </div>
+
+    <!-- Buy Panel -->
+    <div class="buy-panel">
+
+      <!-- Buy DOGE wins -->
+      <div class="buy-side blue">
+        <div class="buy-side-title">🐕 Buy "DOGE wins" shares</div>
+        <div class="buy-side-sub">Current price: 0.58 SOL/share · Payout: 1 SOL/share if DOGE wins</div>
+        <div class="buy-input-wrap">
+          <input class="buy-input" type="number" placeholder="0.00" id="input-doge" oninput="calc('doge')">
+          <div class="buy-unit">SOL</div>
+        </div>
+        <div class="presets">
+          <button class="preset" onclick="setVal('doge',0.5)">0.5</button>
+          <button class="preset" onclick="setVal('doge',1)">1</button>
+          <button class="preset" onclick="setVal('doge',2)">2</button>
+          <button class="preset" onclick="setVal('doge',5)">5</button>
+        </div>
+        <div class="buy-breakdown" id="breakdown-doge">
+          <div class="breakdown-row"><span class="label">Shares received</span><span class="val" id="shares-doge">—</span></div>
+          <div class="breakdown-row"><span class="label">Platform fee (2%)</span><span class="val" id="fee-doge">—</span></div>
+          <div class="breakdown-row highlight-row"><span class="label">Payout if DOGE wins</span><span class="val" id="payout-doge">—</span></div>
+          <div class="breakdown-row"><span class="label">Payout if DOGE loses</span><span class="val" style="color:#666">0 SOL</span></div>
+        </div>
+        <button class="action-btn blue">Buy DOGE wins shares 🐕</button>
+      </div>
+
+      <!-- Buy PEPE wins -->
+      <div class="buy-side purple">
+        <div class="buy-side-title">🐸 Buy "PEPE wins" shares</div>
+        <div class="buy-side-sub">Current price: 0.42 SOL/share · Payout: 1 SOL/share if PEPE wins</div>
+        <div class="buy-input-wrap">
+          <input class="buy-input" type="number" placeholder="0.00" id="input-pepe" oninput="calc('pepe')">
+          <div class="buy-unit">SOL</div>
+        </div>
+        <div class="presets">
+          <button class="preset" onclick="setVal('pepe',0.5)">0.5</button>
+          <button class="preset" onclick="setVal('pepe',1)">1</button>
+          <button class="preset" onclick="setVal('pepe',2)">2</button>
+          <button class="preset" onclick="setVal('pepe',5)">5</button>
+        </div>
+        <div class="buy-breakdown" id="breakdown-pepe">
+          <div class="breakdown-row"><span class="label">Shares received</span><span class="val" id="shares-pepe">—</span></div>
+          <div class="breakdown-row"><span class="label">Platform fee (2%)</span><span class="val" id="fee-pepe">—</span></div>
+          <div class="breakdown-row highlight-row"><span class="label">Payout if PEPE wins</span><span class="val" id="payout-pepe">—</span></div>
+          <div class="breakdown-row"><span class="label">Payout if PEPE loses</span><span class="val" style="color:#666">0 SOL</span></div>
+        </div>
+        <button class="action-btn purple">Buy PEPE wins shares 🐸</button>
+      </div>
+
+    </div>
+
+    <!-- My Positions -->
+    <div class="positions-section">
+      <h3>My Positions</h3>
+      <div class="position-row">
+        <div class="pos-dot" style="background:#a78bfa"></div>
+        <div class="pos-detail">
+          <strong>3 shares "PEPE wins"</strong> @ avg 0.38 SOL
+          <div style="font-size:11px;color:#555;margin-top:2px">Bought for 1.14 SOL total</div>
+        </div>
+        <div class="pos-payout">
+          <div class="if-win">if PEPE wins:</div>
+          <div class="amount">3.00 SOL (+1.86)</div>
+        </div>
+      </div>
+      <div class="position-row">
+        <div class="pos-dot" style="background:#4fc3f7"></div>
+        <div class="pos-detail">
+          <strong>1 share "DOGE wins"</strong> @ 0.55 SOL
+          <div style="font-size:11px;color:#555;margin-top:2px">Bought for 0.55 SOL</div>
+        </div>
+        <div class="pos-payout">
+          <div class="if-win">if DOGE wins:</div>
+          <div class="amount">1.00 SOL (+0.45)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trade Feed -->
+    <div class="trade-feed">
+      <h3>Recent Trades</h3>
+      <div class="feed-item">
+        <div class="feed-dot b"></div>
+        <div class="feed-user"><strong>@moon_bro</strong> bought PEPE wins</div>
+        <div class="feed-shares b">5 shares @ 0.42</div>
+        <div class="feed-time">4s ago</div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot a"></div>
+        <div class="feed-user"><strong>@whale99</strong> bought DOGE wins</div>
+        <div class="feed-shares a">10 shares @ 0.58</div>
+        <div class="feed-time">18s ago</div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot b"></div>
+        <div class="feed-user"><strong>@pepe_maxi</strong> bought PEPE wins</div>
+        <div class="feed-shares b">2 shares @ 0.41</div>
+        <div class="feed-time">35s ago</div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot a"></div>
+        <div class="feed-user"><strong>@degen_ape</strong> bought DOGE wins</div>
+        <div class="feed-shares a">3 shares @ 0.57</div>
+        <div class="feed-time">1m ago</div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot b"></div>
+        <div class="feed-user"><strong>@anon_x</strong> sold PEPE wins</div>
+        <div class="feed-shares b">1 share @ 0.40</div>
+        <div class="feed-time">2m ago</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+function switchTab(name) {
+  const names = ['spec','list','detail'];
+  document.querySelectorAll('.top-tab').forEach((t,i) => t.classList.toggle('active', names[i] === name));
+  document.querySelectorAll('.tab-content').forEach((c,i) => c.classList.toggle('active', ['tab-spec','tab-list','tab-detail'][i] === 'tab-'+name));
+}
+
+const PRICE_DOGE = 0.58, PRICE_PEPE = 0.42, FEE = 0.02;
+
+function calc(side) {
+  const input = parseFloat(document.getElementById('input-'+side).value) || 0;
+  if (input <= 0) {
+    ['shares','fee','payout'].forEach(id => document.getElementById(id+'-'+side).textContent = '—');
+    return;
+  }
+  const price = side === 'doge' ? PRICE_DOGE : PRICE_PEPE;
+  const afterFee = input * (1 - FEE);
+  const shares = afterFee / price;
+  const payout = shares * 1;
+  const mult = (payout / input).toFixed(2);
+  document.getElementById('shares-'+side).textContent = shares.toFixed(4) + ' shares';
+  document.getElementById('fee-'+side).textContent = (input * FEE).toFixed(4) + ' SOL';
+  document.getElementById('payout-'+side).textContent = payout.toFixed(4) + ' SOL (' + mult + 'x)';
+}
+
+function setVal(side, val) {
+  document.getElementById('input-'+side).value = val;
+  calc(side);
+}
+</script>
+<script>
+function toggleWalletMenu(e) { e.stopPropagation(); document.querySelectorAll('.wallet-connected').forEach(w => w.classList.toggle('open')); }
+document.addEventListener('click', e => { if (!e.target.closest('.wallet-connected')) document.querySelectorAll('.wallet-connected').forEach(w => w.classList.remove('open')); });
+</script>
+</body>
+</html>
