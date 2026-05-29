@@ -1,0 +1,74 @@
+[
+  {
+    "file": "clubs.html",
+    "errors": []
+  },
+  {
+    "file": "create_token.html",
+    "errors": []
+  },
+  {
+    "file": "creator_dashboard.html",
+    "errors": []
+  },
+  {
+    "file": "edit_profile_privacy.html",
+    "errors": []
+  },
+  {
+    "file": "events.html",
+    "errors": []
+  },
+  {
+    "file": "FR-012b_TokenWar_PredictionMarket.html",
+    "errors": []
+  },
+  {
+    "file": "FR-012_TokenWar.html",
+    "errors": []
+  },
+  {
+    "file": "home_full_layout.html",
+    "errors": []
+  },
+  {
+    "file": "leaderboard.html",
+    "errors": []
+  },
+  {
+    "file": "my_profile.html",
+    "errors": []
+  },
+  {
+    "file": "points.html",
+    "errors": []
+  },
+  {
+    "file": "public_profile.html",
+    "errors": []
+  },
+  {
+    "file": "referrals.html",
+    "errors": []
+  },
+  {
+    "file": "rewards.html",
+    "errors": []
+  },
+  {
+    "file": "sidebar_navigation.html",
+    "errors": []
+  },
+  {
+    "file": "token_detail.html",
+    "errors": []
+  },
+  {
+    "file": "token_list_v4.html",
+    "errors": []
+  },
+  {
+    "file": "trading_panel.html",
+    "errors": []
+  }
+]

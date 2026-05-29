@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stall Manager — Sprout</title>
+    <style>
+        :root {
+    --bg:          #0a1610;
+    --surface-1:   #131f18;
+    --surface-2:   #1a2a20;
+    --surface-3:   #243528;
+    --border-1:    #1f2d24;
+    --border-2:    #2d4234;
+    --sp-peach-100: #f4cba0;
+    --sp-peach-200: #e8a87c;
+    --sp-peach-400: #e8a87c;
+    --sp-peach-500: #d68a5b;
+    --sp-peach-soft: rgba(232, 168, 124, 0.10);
+    --sp-forest-300: #5ba886;
+    --sp-forest-500: #3d7458;
+    --sp-forest-700: #3d7458;
+    --sp-cream:    #f4cba0;
+    --sp-teal-300: #9ED8B8;
+    --sp-teal-400: #7CC4A4;
+    --sp-teal-500: #5BA886;
+    --sp-crimson:  #D65A54;
+    --text-1: #f5f7f4;
+    --text-2: #a3b0a7;
+    --text-3: #6f7d74;
+    --text-mute: #4a5650;
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+    --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
+  --mascot-sm:   22px;
+  --mascot-md:   30px;
+  --mascot-lg:   40px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+/* === Mood B signature glow (locked 2026-05-05 — SPROUT_UI_SPEC.md §1.3a) === */
+/* Do NOT modify without updating spec section 1.3a first. */
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.06), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 30%, rgba(124,196,164,0.05), transparent 60%);
+  background-attachment: fixed;
+}
+.logo-mascot {
+  box-shadow: 0 0 24px rgba(232,168,124,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-primary {
+  box-shadow: 0 0 20px rgba(232,168,124,0.30);
+}
+.marquee-track .peach { color: var(--sp-peach-200); text-shadow: 0 0 12px rgba(232,168,124,0.4); }
+.marquee-track .teal  { color: var(--sp-teal-300);  text-shadow: 0 0 12px rgba(124,196,164,0.4); }
+.token-card.featured, .tk-card.featured, .card.featured {
+  border-color: rgba(232,168,124,0.55);
+  background: radial-gradient(ellipse 300px 200px at 100% 0%, rgba(232,168,124,0.10), transparent 70%), var(--surface-1);
+  box-shadow: 0 0 32px rgba(232,168,124,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.token-card:hover, .tk-card:hover {
+  box-shadow: 0 0 24px rgba(124,196,164,0.08);
+}
+.token-av, .tk-av { box-shadow: 0 0 16px rgba(124,196,164,0.15); }
+.bar-fill { box-shadow: 0 0 10px rgba(232,168,124,0.5); }
+/* === end Mood B glow === */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        /* Header */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-btn {
+            padding: 10px 20px;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .back-btn:hover {
+            background: var(--card-hover);
+            border-color: var(--primary);
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            background: var(--card2);
+            padding: 8px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        
+        .tab:hover {
+            background: var(--card-hover);
+            color: var(--accent);
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* View Container */
+        .view {
+            display: none;
+        }
+        
+        .view.active {
+            display: block;
+        }
+        
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .stat-sub {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        /* Token List */
+        .token-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .token-item {
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            gap: 16px;
+            align-items: center;
+            padding: 16px;
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .token-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .token-info {
+            flex: 1;
+        }
+        
+        .token-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .token-symbol {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .token-stats {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+        }
+        
+        .badge.graduated {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #059669;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        /* Token Detail View */
+        .token-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 24px;
+            background: var(--card2);
+            border-radius: 16px;
+            border: 1px solid var(--card-boarder);
+            margin-bottom: 24px;
+        }
+        
+        .token-detail-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .token-detail-info {
+            flex: 1;
+        }
+        
+        .token-detail-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .token-detail-symbol {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .token-detail-desc {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+        
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .metric-card {
+            background: var(--card);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .metric-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        /* Settings Section */
+        .settings-section {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            margin-bottom: 16px;
+        }
+        
+        .settings-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--card-boarder);
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-info h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .setting-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .toggle {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: var(--card-boarder);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .toggle.active {
+            background: var(--primary);
+        }
+        
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s;
+        }
+        
+        .toggle.active::after {
+            left: 26px;
+        }
+        
+        /* Posts List */
+        .post-item {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-boarder);
+            margin-bottom: 12px;
+        }
+        
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .post-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .post-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .post-content {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .btn-danger {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--card);
+            border: 1px solid var(--card-boarder);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .green { color: #10b981; }
+        .red { color: #ef4444; }
+    
+/* Back-to-home floating nav */
+.bz-back-nav {
+  position: fixed; top: 14px; left: 14px; z-index: 9999;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px 8px 10px;
+  background: rgba(19, 24, 38, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid #2d4234; border-radius: 999px;
+  color: #e8a87c; font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 12.5px; font-weight: 700; text-decoration: none;
+  letter-spacing: 0.02em; cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bz-back-nav:hover { background: rgba(234, 181, 82, 0.12); border-color: #e8a87c; }
+.bz-back-nav .bz-back-mascot {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: linear-gradient(180deg, #e8a87c, #e8a87c);
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.bz-back-nav svg { width: 16px; height: 16px; }
+.bz-back-nav .bz-back-arrow { color: #a3b0a7; font-size: 14px; line-height: 1; }
+
+  /* === Patch 4a: Sidebar footer utility block === */
+  .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border-1); display: flex; flex-direction: column; gap: 10px; }
+  .sf-social { display: flex; gap: 12px; }
+  .sf-social a { color: var(--text-3); display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; transition: color 0.15s; text-decoration: none; }
+  .sf-social a:hover { color: var(--sp-peach-400); }
+  .sf-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sf-pill { font-size: 10.5px; font-weight: 600; color: var(--text-3); background: var(--surface-2); padding: 4px 10px; border-radius: 999px; text-decoration: none; transition: all 0.15s; }
+  .sf-pill:hover { color: var(--sp-peach-400); background: var(--sp-peach-soft); }
+  .sf-copyright { font-size: 10px; color: var(--text-mute); text-align: center; margin-top: 2px; }
+  /* === Patch 4b: Active item glow + group label refinement === */
+  .nav-item.active {
+    box-shadow: 0 0 16px rgba(232, 168, 124, 0.18);
+  }
+  .nav-label {
+    letter-spacing: 0.12em;
+    position: relative;
+    padding-left: 14px;
+  }
+  .nav-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--sp-peach-400);
+    opacity: 0.6;
+  }
+  /* === Patch 4c: User card anchor + tier-aware points color === */
+  .user-card {
+    box-shadow: 0 0 20px rgba(232, 168, 124, 0.10);
+    border-top: 1px solid rgba(232, 168, 124, 0.20);
+  }
+  .uc-pts.tier-seed,
+  .uc-pts.tier-sprout      { color: var(--text-1); }
+  .uc-pts.tier-sapling     { color: var(--sp-peach-400); }
+  .uc-pts.tier-tree        { color: var(--sp-teal-400); }
+  .uc-pts.tier-ancient     { color: var(--sp-peach-200); text-shadow: 0 0 8px rgba(232,168,124,0.4); }
+  /* === Patch 7: Hover lift micro-interaction === */
+  .nav-item {
+    transition: transform 0.15s var(--ease, ease), background 0.15s var(--ease, ease), color 0.12s var(--ease, ease), box-shadow 0.12s var(--ease, ease);
+  }
+  .nav-item:hover {
+    transform: translateY(-1px);
+    background: var(--sp-peach-soft);
+    color: var(--text-1);
+  }
+  .nav-item.active:hover {
+    transform: none;
+  }
+  /* === Patch 5: Peach stroke icons — color via currentColor only === */
+  .nav-item .icon {
+    color: var(--sp-peach-200);
+    opacity: 0.85;
+    transition: fill 0.15s, color 0.15s, opacity 0.15s;
+  }
+  .nav-item.active .icon {
+    color: var(--sp-peach-400);
+    opacity: 1;
+  }
+  .nav-item:hover:not(.active) .icon {
+    color: var(--sp-peach-100);
+    opacity: 1;
+  }
+
+
+/* === Recovery R2 Wild base — root tokens + body + marquee + fonts === */
+:root {
+  --bg:          #0a1610;
+  --surface-1:   #131f18;
+  --surface-2:   #1a2a20;
+  --surface-3:   #243528;
+  --border-1:    #1f2d24;
+  --border-2:    #2d4234;
+  --sp-peach-100: #f4cba0;
+  --sp-peach-200: #e8a87c;
+  --sp-peach-400: #e8a87c;
+  --sp-peach-500: #d68a5b;
+  --sp-peach-soft: rgba(232, 168, 124, 0.10);
+  --sp-forest-300: #5ba886;
+  --sp-forest-500: #3d7458;
+  --sp-cream:    #f4cba0;
+  --sp-teal-300: #9ED8B8;
+  --sp-teal-400: #7CC4A4;
+  --sp-teal-500: #5BA886;
+  --sp-crimson:  #D65A54;
+  --crimson-soft: rgba(214, 90, 84, 0.10);
+  --teal-soft:    rgba(124, 196, 164, 0.10);
+  --text-1: #f5f7f4;
+  --text-2: #a3b0a7;
+  --text-3: #6f7d74;
+  --text-mute: #4a5650;
+  --w-paper:    #fdf8ec;
+  --w-cream:    #f4ecdc;
+  --w-ink:      #2a1505;
+  --w-ink-2:    #6b4a30;
+  --w-tape-y:   rgba(255, 216, 130, 0.60);
+  --w-tape-p:   rgba(255, 107, 138, 0.40);
+  --w-tape-g:   rgba(184, 226, 92, 0.55);
+  --w-coral:    #ff8b5e;
+  --w-pink:     #ff6b8a;
+  --w-sunshine: #ffd35e;
+  --w-lime:     #b8e25c;
+  --w-sky:      #5ee2ff;
+  --w-grape:    #a878ff;
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+  --font-disp-it: 'Fraunces', 'Plus Jakarta Sans', serif;
+  --font-hand:    'Caveat', cursive;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+  --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
+  --mascot-sm: 22px; --mascot-md: 30px; --mascot-lg: 40px;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  /* legacy aliases for broken-token files */
+  --card:           var(--surface-1);
+  --card2:          var(--surface-2);
+  --card-boarder:   var(--border-1);
+  --card-hover:     var(--surface-3);
+  --primary:        var(--sp-peach-400);
+  --primary-hover:  var(--sp-peach-500);
+  --accent:         var(--sp-teal-400);
+  --danger:         var(--sp-crimson);
+  --danger-hover:   #c14844;
+  --text-primary:   var(--text-1);
+  --text-secondary: var(--text-2);
+  --text-tertiary:  var(--text-3);
+}
+body {
+  background: var(--bg) !important;
+  background-image:
+    radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.06), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 30%, rgba(124,196,164,0.05), transparent 60%) !important;
+  background-attachment: fixed !important;
+  color: var(--text-1);
+  font-family: var(--font-body);
+}
+.marquee {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--marquee-h);
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--border-1);
+  overflow: hidden; display: flex; align-items: center; z-index: 100;
+}
+.marquee-track {
+  display: flex; gap: 36px; white-space: nowrap;
+  animation: marqueeScroll 42s linear infinite;
+  font-family: var(--font-display);
+  font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
+  color: var(--text-3);
+}
+.marquee:hover .marquee-track { animation-duration: 14s; }
+.marquee-track .peach { color: var(--sp-peach-400); text-shadow: 0 0 12px rgba(232,168,124,0.35); }
+.marquee-track .teal  { color: var(--sp-teal-400); text-shadow: 0 0 12px rgba(124,196,164,0.35); }
+@keyframes marqueeScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+/* === end Recovery R2 Wild base === */
+
+
+/* === Recovery R3 canonical sidebar === */
+╔═══════════════════════════════════════════════════════════╗
+     ║ "STICKER + TEXT" — sidebar v0.4 (2026-05-27)              ║
+     ║ Combo: small sticker icon LEFT + italic label RIGHT.       ║
+     ║ Overrides v0.3 dock-only-icon styles.                      ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  :root { --sidebar-w: 204px; }
+
+  .sidebar {
+    width: 204px !important;
+    padding: 16px 12px 14px !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+  .main { margin-left: 204px !important; }
+
+  /* Show "today's garden" banner again */
+  .sidebar::before {
+    display: block !important;
+    content: "🌱 today's garden" !important;
+    background: var(--w-sunshine) !important;
+    color: var(--w-ink) !important;
+    border: 2px solid var(--w-ink) !important;
+    border-radius: 10px !important;
+    padding: 6px 12px !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 900 !important;
+    font-size: 12px !important;
+    box-shadow: 3px 3px 0 var(--w-ink) !important;
+    margin: 0 0 4px !important;
+    text-align: center !important;
+    width: 100% !important;
+    max-width: none !important;
+    text-transform: lowercase !important;
+    letter-spacing: 0.02em !important;
+    position: relative !important;
+  }
+  .sidebar::after { display: none !important; }
+
+  /* Hide the v0.3 decorative big mascot at top of first nav group */
+  .sidebar > .nav-group:first-of-type::before { display: none !important; }
+
+  /* Group: stacked items, dashed divider, tiny handwritten label */
+  .nav-group {
+    width: 100% !important;
+    align-items: stretch !important;
+    gap: 3px !important;
+    border-bottom: 1.5px dashed rgba(255,216,130,0.25) !important;
+    padding-bottom: 10px !important;
+  }
+  .nav-group:last-of-type { border-bottom: none !important; padding-bottom: 0 !important; }
+
+  /* Restore group labels — small handwritten note */
+  .nav-label {
+    display: block !important;
+    font-family: var(--font-hand) !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    text-transform: lowercase !important;
+    letter-spacing: 0 !important;
+    color: var(--w-sunshine) !important;
+    padding: 0 4px 4px !important;
+    position: relative;
+  }
+  .nav-label::before {
+    content: '✿' !important;
+    position: absolute !important;
+    left: -4px !important;
+    top: 1px !important;
+    transform: none !important;
+    color: var(--w-pink) !important;
+    background: none !important;
+    width: auto !important;
+    height: auto !important;
+    font-size: 9px !important;
+    opacity: 0.9 !important;
+  }
+  /* push the actual label to clear the dot */
+  .nav-label { padding-left: 12px !important; }
+
+  /* ===== Nav item: pill with sticker icon on LEFT, italic text on RIGHT ===== */
+  .nav-item {
+    width: 100% !important;
+    height: 46px !important;
+    border-radius: 999px !important;
+    padding: 4px 14px 4px 4px !important;
+    margin: 0 !important;
+    display: flex !important;
+    place-items: center !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    background: rgba(244, 236, 220, 0.92) !important;
+    border: 2px solid var(--w-ink) !important;
+    box-shadow: 0 3px 0 var(--w-ink) !important;
+    color: var(--w-ink) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    position: relative;
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s, background 0.18s !important;
+  }
+  .nav-item .ni-text {
+    flex: 1;
+    color: inherit;
+    font-family: inherit;
+    font-style: italic;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-item:hover {
+    transform: translateX(3px) !important;
+    background: var(--w-sunshine) !important;
+    box-shadow: 0 5px 0 var(--w-ink) !important;
+  }
+
+  /* Sticker icon circle (the SVG wrapper) on the LEFT */
+  .nav-item .icon {
+    width: 36px !important;
+    height: 36px !important;
+    padding: 7px !important;
+    border-radius: 50% !important;
+    border: 2px solid var(--w-ink) !important;
+    flex-shrink: 0 !important;
+    color: var(--w-ink) !important;
+    opacity: 1 !important;
+    stroke-width: 2 !important;
+    box-sizing: border-box !important;
+    box-shadow: 1px 1px 0 var(--w-ink);
+  }
+  /* Color cycle for stickers */
+  .nav-item:nth-of-type(6n+1) .icon { background: #ffeab0 !important; }
+  .nav-item:nth-of-type(6n+2) .icon { background: #ffcfb8 !important; }
+  .nav-item:nth-of-type(6n+3) .icon { background: #d6c8fa !important; }
+  .nav-item:nth-of-type(6n+4) .icon { background: #b8e6fc !important; }
+  .nav-item:nth-of-type(6n+5) .icon { background: #ccecaa !important; }
+  .nav-item:nth-of-type(6n+6) .icon { background: #ffc0cf !important; }
+  .nav-item:hover .icon { transform: rotate(-6deg) scale(1.08); }
+
+  /* Active state */
+  .nav-item.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+    color: #fff !important;
+    transform: none !important;
+    box-shadow: 0 4px 0 var(--w-ink), 0 0 22px rgba(255,107,138,0.4) !important;
+  }
+  .nav-item.active .ni-text { color: #fff !important; }
+  .nav-item.active .icon {
+    background: #fff !important;
+    color: var(--w-ink) !important;
+  }
+
+  /* Hide v0.3 tooltip pop-out and arrow (text is visible now) */
+  .nav-item::after, .nav-item::before { display: none !important; }
+
+  /* Badge moves back to inline-right of pill */
+  .nav-badge {
+    position: static !important;
+    margin-left: auto !important;
+    min-width: 22px;
+    height: 20px;
+    padding: 0 8px !important;
+    border-radius: 999px !important;
+    background: var(--w-ink) !important;
+    color: var(--w-sunshine) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    display: grid !important;
+    place-items: center !important;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.4) !important;
+    flex-shrink: 0;
+  }
+  .nav-item.active .nav-badge {
+    background: #fff !important;
+    color: var(--w-coral) !important;
+  }
+
+  /* ===== User card: expanded back ===== */
+  .user-card {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: auto !important;
+    background: linear-gradient(135deg, var(--w-paper), var(--w-cream)) !important;
+    border-radius: 14px !important;
+    border: 2px solid var(--w-ink) !important;
+    box-shadow: 0 4px 0 var(--w-ink), inset 0 0 0 1px rgba(0,0,0,0.04) !important;
+    padding: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    place-items: stretch !important;
+    overflow: visible !important;
+    position: relative;
+  }
+  .user-card:hover { transform: translateY(-2px) !important; }
+  .user-card .user-mascot {
+    display: grid !important;
+    width: 40px !important;
+    height: 40px !important;
+    background: var(--w-sunshine) !important;
+    border: 2px solid var(--w-ink) !important;
+    border-radius: 50% !important;
+    box-shadow: 1px 1px 0 var(--w-ink) !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+  }
+  .user-card .user-mascot svg { width: 28px !important; height: 28px !important; }
+  .user-card .user-info {
+    display: block !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  .user-card .user-name {
+    color: var(--w-ink) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 800 !important;
+    font-size: 13px !important;
+    line-height: 1.15 !important;
+  }
+  .user-card .user-tier {
+    color: var(--w-ink-2) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-size: 11px !important;
+    margin-top: 1px !important;
+  }
+  .user-card .uc-pts.tier-sprout { color: var(--w-coral) !important; }
+  .user-card::before, .user-card::after { display: none !important; }
+
+  /* ===== Sidebar footer: restore pills + copyright ===== */
+  .sidebar-footer {
+    padding: 10px 4px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    border-top: 1.5px dashed rgba(255,216,130,0.25) !important;
+  }
+  .sidebar-footer .sf-social {
+    display: flex !important;
+    gap: 6px !important;
+    justify-content: center !important;
+  }
+  .sidebar-footer .sf-social a {
+    width: 26px !important;
+    height: 26px !important;
+    background: rgba(255,211,94,0.15) !important;
+    border: 1.5px solid rgba(255,211,94,0.4) !important;
+    color: var(--w-sunshine) !important;
+    border-radius: 50% !important;
+  }
+  .sidebar-footer .sf-social a:hover {
+    background: var(--w-pink) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 0 var(--w-ink);
+  }
+  .sidebar-footer .sf-pills {
+    display: flex !important;
+    gap: 4px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+  .sidebar-footer .sf-pill {
+    background: rgba(255,211,94,0.12) !important;
+    color: var(--w-sunshine) !important;
+    border: 1px solid rgba(255,211,94,0.35) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 700 !important;
+    font-size: 10px !important;
+    padding: 3px 8px !important;
+  }
+  .sidebar-footer .sf-pill:hover {
+    background: var(--w-sunshine) !important;
+    color: var(--w-ink) !important;
+  }
+  .sidebar-footer .sf-copyright {
+    display: block !important;
+    color: var(--w-cream) !important;
+    opacity: 0.5 !important;
+    font-family: var(--font-hand) !important;
+    font-size: 11px !important;
+    text-align: center !important;
+  }
+
+  /* ╚═══ end "STICKER + TEXT" sidebar v0.4 ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ v0.5 SIMPLIFY (2026-05-28) — user feedback                ║
+     ║   (1) hide "Discover what's blooming" hero banner         ║
+     ║   (2) flat sidebar list — no group labels/dividers        ║
+     ║   (3) hide "Wild · v0.2" edition chip                     ║
+     ║   (4) one unified background for all nav sticker icons    ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  /* (1) Hide hero banner */
+  .page-head { display: none !important; }
+
+  /* (2) Flat nav list — no group labels, no group dividers */
+  .nav-label { display: none !important; }
+  .nav-group {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+    gap: 4px !important;
+  }
+  .sidebar { gap: 6px !important; }
+  .sidebar > .nav-group + .nav-group { margin-top: 0 !important; }
+
+  /* (3) Hide edition chip */
+  .wild-edition { display: none !important; }
+
+  /* (4) v0.6 FIX — unify nav-item PILL background (not the sticker icon).
+       Sticker icons keep their color cycle (cream/peach/grape/sky/lime/pink).
+       Override v0.3 dock's per-item gradient pill backgrounds. */
+  .sidebar .nav-item,
+  .sidebar .nav-item:nth-of-type(6n+1),
+  .sidebar .nav-item:nth-of-type(6n+2),
+  .sidebar .nav-item:nth-of-type(6n+3),
+  .sidebar .nav-item:nth-of-type(6n+4),
+  .sidebar .nav-item:nth-of-type(6n+5),
+  .sidebar .nav-item:nth-of-type(6n+6) {
+    background: rgba(244, 236, 220, 0.92) !important;
+  }
+  /* But keep active state's coral→pink gradient */
+  .sidebar .nav-item.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+  }
+
+  /* (5) Grid auto-fit — stretch cards to fill empty right-side space */
+  .token-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+  }
+
+  /* ╚═══ end v0.5 SIMPLIFY ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ v0.7 — sticker unify + hide bubble + live activity panel  ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  /* (1) Unify all card sticker badges to brand peach */
+  .sticker-badge.s-hot,
+  .sticker-badge.s-fresh,
+  .sticker-badge.s-gem,
+  .sticker-badge.s-rising,
+  .sticker-badge.s-rare,
+  .sticker-badge.s-yum {
+    background: var(--sp-peach-400) !important;
+    color: var(--w-ink) !important;
+  }
+
+  /* (2) Hide Sprout mascot speech bubble — keep body + label */
+  .mascot-character .mc-bubble,
+  .mascot-character .helper-bubble { display: none !important; }
+
+  /* (3) Live Activity right panel — fills empty right space */
+  :root { --la-w: 280px; }
+
+  .main { margin-right: var(--la-w) !important; }
+
+  .live-activity {
+    position: fixed;
+    top: calc(var(--header-h) + var(--marquee-h));
+    right: 0;
+    bottom: 0;
+    width: var(--la-w);
+    background: var(--surface-1);
+    border-left: 1.5px dashed rgba(255,216,130,0.30);
+    padding: 16px 12px 14px;
+    display: flex;
+    flex-direction: column;
+    z-index: 80;
+    overflow: hidden;
+  }
+
+  .la-header {
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 17px;
+    color: var(--w-sunshine);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .la-subhead {
+    font-family: var(--font-hand);
+    font-size: 13px;
+    color: var(--text-3);
+    margin-bottom: 12px;
+  }
+  .la-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2e8b57;
+    box-shadow: 0 0 0 3px rgba(46,139,87,0.3);
+    animation: laPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes laPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(46,139,87,0.6); }
+    50%      { box-shadow: 0 0 0 6px rgba(46,139,87,0); }
+  }
+
+  .la-feed {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 4px;
+    scrollbar-width: thin;
+  }
+  .la-feed::-webkit-scrollbar { width: 5px; }
+  .la-feed::-webkit-scrollbar-thumb { background: rgba(255,211,94,0.25); border-radius: 3px; }
+
+  .la-item {
+    background: var(--w-paper);
+    border: 1.5px solid var(--w-ink);
+    border-radius: 10px;
+    padding: 9px 11px 10px;
+    color: var(--w-ink);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: 2px 2px 0 var(--w-ink);
+    transition: transform 0.18s var(--ease);
+    position: relative;
+  }
+  .la-item:hover {
+    transform: translateY(-2px) translateX(-2px);
+    box-shadow: 4px 4px 0 var(--w-ink);
+  }
+  .la-item.fresh {
+    animation: laFresh 1.5s ease-out;
+  }
+  @keyframes laFresh {
+    0%   { background: var(--w-sunshine); transform: translateX(8px); }
+    100% { background: var(--w-paper); transform: translateX(0); }
+  }
+
+  .la-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .la-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--w-ink);
+    flex-shrink: 0;
+  }
+  .la-name {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 11.5px;
+    color: var(--w-ink);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .la-time {
+    font-size: 10px;
+    color: var(--w-ink-2);
+    font-family: var(--font-body);
+    opacity: 0.7;
+  }
+
+  .la-body {
+    font-size: 11.5px;
+    color: var(--w-ink-2);
+    line-height: 1.35;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .la-verb {
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 800;
+    color: var(--w-ink);
+  }
+  .la-verb.buy  { color: #2e8b57; }
+  .la-verb.sell { color: #b94842; }
+  .la-verb.mint { color: var(--sp-peach-500); }
+  .la-verb.grad { color: var(--w-grape); }
+
+  .la-token {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--w-ink);
+    background: rgba(0,0,0,0.07);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10.5px;
+  }
+  .la-amount {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 11px;
+  }
+  .la-amount.up   { color: #2e8b57; }
+  .la-amount.down { color: #b94842; }
+
+  /* Hide live activity on narrow screens */
+  @media (max-width: 1100px) {
+    .live-activity { display: none; }
+    .main { margin-right: 0 !important; }
+  }
+
+  /* ╚═══ end v0.7 ═══╝ */
+
+  /* ╔═══ v0.8 — unify sidebar nav icon bg (one color) ═══╗ */
+  .sidebar .nav-item .icon,
+  .sidebar .nav-item:nth-of-type(6n+1) .icon,
+  .sidebar .nav-item:nth-of-type(6n+2) .icon,
+  .sidebar .nav-item:nth-of-type(6n+3) .icon,
+  .sidebar .nav-item:nth-of-type(6n+4) .icon,
+  .sidebar .nav-item:nth-of-type(6n+5) .icon,
+  .sidebar .nav-item:nth-of-type(6n+6) .icon {
+    background: #ffeab0 !important;
+  }
+  /* Keep active item's icon distinct */
+  .sidebar .nav-item.active .icon {
+    background: #fff !important;
+  }
+  /* ╚═══ end v0.8 ═══╝ */
+/* === end R3 sidebar === */
+
+/* === Recovery R4 tier system (creator_dashboard) === */
+/* Mini polaroid: .metric-card */
+.metric-card {
+  background: var(--w-paper) !important;
+  color: var(--w-ink) !important;
+  border: none !important;
+  border-radius: var(--r-md) !important;
+  padding: 14px 16px 16px !important;
+  position: relative !important;
+  overflow: visible !important;
+  box-shadow: 0 8px 18px -6px rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.25) !important;
+  transition: transform 0.25s var(--ease) !important;
+}
+.metric-card:hover { transform: translateY(-2px) !important; }
+.metric-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -6px !important;
+  left: 30% !important;
+  transform: translateX(-50%) rotate(-3deg) !important;
+  width: 50px !important;
+  height: 12px !important;
+  background: var(--w-tape-y) !important;
+  z-index: 4 !important;
+}
+.metric-card [class*='label']:not([class*='value']) { color: var(--w-ink-2) !important; }
+.metric-card [class*='value']:not([class*='label']) {
+  font-family: var(--font-mono) !important;
+  font-weight: 700 !important;
+  color: var(--w-ink) !important;
+}
+
+/* Mini polaroid: .stat-card */
+.stat-card {
+  background: var(--w-paper) !important;
+  color: var(--w-ink) !important;
+  border: none !important;
+  border-radius: var(--r-md) !important;
+  padding: 14px 16px 16px !important;
+  position: relative !important;
+  overflow: visible !important;
+  box-shadow: 0 8px 18px -6px rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.25) !important;
+  transition: transform 0.25s var(--ease) !important;
+}
+.stat-card:hover { transform: translateY(-2px) !important; }
+.stat-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -6px !important;
+  left: 30% !important;
+  transform: translateX(-50%) rotate(-3deg) !important;
+  width: 50px !important;
+  height: 12px !important;
+  background: var(--w-tape-y) !important;
+  z-index: 4 !important;
+}
+.stat-card [class*='label']:not([class*='value']) { color: var(--w-ink-2) !important; }
+.stat-card [class*='value']:not([class*='label']) {
+  font-family: var(--font-mono) !important;
+  font-weight: 700 !important;
+  color: var(--w-ink) !important;
+}
+
+/* === end R4 (creator_dashboard) === */
+
+/* === Recovery R7 main-stretch === */
+
+/* R7: stretch .main to fill viewport on non-LA pages */
+.main { max-width: none !important; }
+
+/* === end R7 === */
+
+/* === R7 v2 main full-width === */
+
+/* R7 v2: cancel LA-reserved right margin on non-LA pages */
+.main {
+  margin-right: 0 !important;
+  max-width: none !important;
+}
+
+/* === end R7 v2 === */
+
+/* === R8 revert-stretch === */
+
+/* R8: restore symmetric indent (= LA width) for non-LA pages */
+.main {
+  margin-right: var(--la-w) !important;
+  max-width: none !important;
+}
+
+/* === end R8 (revert-stretch) === */
+
+/* === R10 universal === */
+
+/* R10: symmetric chrome (LA = sidebar = 240) */
+:root { --la-w: 240px !important; }
+/* R10: straighten all sticker badges (override JS inline rotation) */
+.sticker-badge {
+  transform: rotate(0deg) !important;
+}
+.sticker-badge:nth-of-type(even),
+.sticker-badge:nth-of-type(odd) {
+  transform: rotate(0deg) !important;
+}
+
+/* === end R10 (universal) === */
+
+
+/* === R13 LA-280 === */
+
+/* R13: LA back to 280 (avoid content wrap) */
+:root { --la-w: 280px !important; }
+
+/* === end R13 === */
+
+/* === R14 sticker-off + max-width-fix === */
+
+/* R14: remove sticker badges + fix .main max-width for true grid balance */
+.sticker-badge { display: none !important; }
+.main { max-width: none !important; }
+
+/* === end R14 === */
+
+/* === R17 unified padding === */
+
+/* R17: unify .main padding (14/14) across all pages → inner content matches token_list */
+.main { padding-left: 14px !important; padding-right: 14px !important; }
+
+/* === end R17 === */
+</style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Fraunces:ital,wght@1,700;1,800;1,900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<!-- Bazaar back-to-home nav -->
+<a class="bz-back-nav" href="token_list_v4.html">
+  <div class="bz-back-mascot">
+    <svg viewBox="0 0 24 24" fill="none">
+        <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
+        <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
+        <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
+        <rect x="11" y="12" width="2" height="6" fill="#3d7458"/>
+        <circle cx="10" cy="19" r="0.6" fill="#1a1208"/>
+        <circle cx="14" cy="19" r="0.6" fill="#1a1208"/>
+        <path d="M 10 20.5 Q 12 21.5 14 20.5" stroke="#1a1208" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+      </svg>
+  </div>
+  <span class="bz-back-arrow">←</span>
+  <span>Sprout</span>
+</a>
+
+    <div class="container">
+        <!-- LEVEL 1: CREATOR DASHBOARD -->
+        <div id="dashboard-view" class="view active">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Stall Manager</h1>
+                </div>
+            </div>
+            
+            <!-- Tabs Navigation -->
+            <div class="tabs">
+                <button class="tab active" onclick="showDashboardTab(0)">Created Tokens</button>
+                <button class="tab" onclick="showDashboardTab(1)">Creator Revenue</button>
+            </div>
+            
+            <!-- Tab 1: Created Tokens -->
+            <div class="tab-content active" id="dashboard-tab-0">
+                <div class="token-list">
+                    <div class="token-item">
+                        <div class="token-avatar"></div>
+                        <div class="token-info">
+                            <div class="token-name">Pepe Seed</div>
+                            <div class="token-symbol">PSEED • Created 3 days ago</div>
+                        </div>
+                        <div class="token-stats">
+                            <div class="badge active">Active</div>
+                            <div style="margin-top: 8px;">
+                                <button class="btn btn-primary" onclick="showTokenManagement('Pepe Seed', 'PSEED')">Manage Token</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="token-item">
+                        <div class="token-avatar" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                        <div class="token-info">
+                            <div class="token-name">Doge Killer</div>
+                            <div class="token-symbol">DOGEK • Created 1 week ago</div>
+                        </div>
+                        <div class="token-stats">
+                            <div class="badge graduated">Graduated</div>
+                            <div style="margin-top: 8px;">
+                                <button class="btn btn-primary" onclick="showTokenManagement('Doge Killer', 'DOGEK')">Manage Token</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="token-item">
+                        <div class="token-avatar" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                        <div class="token-info">
+                            <div class="token-name">Moon Token</div>
+                            <div class="token-symbol">MOON • Created 2 weeks ago</div>
+                        </div>
+                        <div class="token-stats">
+                            <div class="badge active">Active</div>
+                            <div style="margin-top: 8px;">
+                                <button class="btn btn-primary" onclick="showTokenManagement('Moon Token', 'MOON')">Manage Token</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 2: Creator Revenue -->
+            <div class="tab-content" id="dashboard-tab-1">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-value">12.5 SOL</div>
+                        <div class="stat-sub">≈ $2,450</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Unclaimed Revenue</div>
+                        <div class="stat-value green">3.2 SOL</div>
+                        <div class="stat-sub">≈ $627</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Claimed</div>
+                        <div class="stat-value">9.3 SOL</div>
+                        <div class="stat-sub">≈ $1,823</div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--card); padding: 24px; border-radius: 12px; border: 1px solid var(--card-boarder);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div>
+                            <h3 style="font-size: 18px; margin-bottom: 4px;">Claim Your Revenue</h3>
+                            <p style="font-size: 14px; color: var(--text-secondary);">Withdraw your unclaimed earnings to your wallet</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;">Claim 3.2 SOL</button>
+                </div>
+                
+                <!-- Revenue Breakdown -->
+                <div style="margin-top: 24px;">
+                    <h3 style="font-size: 18px; margin-bottom: 16px;">Revenue by Token</h3>
+                    <div class="token-list">
+                        <div class="token-item">
+                            <div class="token-avatar"></div>
+                            <div class="token-info">
+                                <div class="token-name">Pepe Seed</div>
+                                <div class="token-symbol">PSEED</div>
+                            </div>
+                            <div class="token-stats">
+                                <div style="font-size: 16px; font-weight: 600;">5.8 SOL</div>
+                                <div style="font-size: 14px; color: var(--text-secondary);">≈ $1,136</div>
+                            </div>
+                        </div>
+                        
+                        <div class="token-item">
+                            <div class="token-avatar" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                            <div class="token-info">
+                                <div class="token-name">Doge Killer</div>
+                                <div class="token-symbol">DOGEK</div>
+                            </div>
+                            <div class="token-stats">
+                                <div style="font-size: 16px; font-weight: 600;">4.2 SOL</div>
+                                <div style="font-size: 14px; color: var(--text-secondary);">≈ $823</div>
+                            </div>
+                        </div>
+                        
+                        <div class="token-item">
+                            <div class="token-avatar" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                            <div class="token-info">
+                                <div class="token-name">Moon Token</div>
+                                <div class="token-symbol">MOON</div>
+                            </div>
+                            <div class="token-stats">
+                                <div style="font-size: 16px; font-weight: 600;">2.5 SOL</div>
+                                <div style="font-size: 14px; color: var(--text-secondary);">≈ $491</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- LEVEL 2: TOKEN MANAGEMENT -->
+        <div id="token-management-view" class="view">
+            <div class="page-header">
+                <div>
+                    <div class="breadcrumb">
+                        <a onclick="showDashboard()">Stall Manager</a>
+                        <span>›</span>
+                        <span id="current-token-name">Token Management</span>
+                    </div>
+                    <h1 class="page-title">Manage Token</h1>
+                </div>
+                <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            </div>
+            
+            <!-- Token Detail Header -->
+            <div class="token-detail-header">
+                <div class="token-detail-avatar"></div>
+                <div class="token-detail-info">
+                    <div class="token-detail-name" id="token-manage-name">Pepe Seed</div>
+                    <div class="token-detail-symbol" id="token-manage-symbol">PSEED</div>
+                    <div class="token-detail-desc">The next generation meme token on Solana 🚀</div>
+                </div>
+                <div class="badge active">Active</div>
+            </div>
+            
+            <!-- Tabs Navigation -->
+            <div class="tabs">
+                <button class="tab active" onclick="showManagementTab(0)">Overview</button>
+                <button class="tab" onclick="showManagementTab(1)">Trusted Level</button>
+                <button class="tab" onclick="showManagementTab(2)">Community Management</button>
+            </div>
+            
+            <!-- Tab 1: Overview -->
+            <div class="tab-content active" id="management-tab-0">
+                <!-- Metrics -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Market Cap</div>
+                        <div class="metric-value">$45.2K</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Price</div>
+                        <div class="metric-value">$0.00123</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">24h Volume</div>
+                        <div class="metric-value">$12.8K</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Holders</div>
+                        <div class="metric-value">234</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Total Supply</div>
+                        <div class="metric-value">1B</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Liquidity (SOL)</div>
+                        <div class="metric-value">8.5 SOL</div>
+                    </div>
+                </div>
+                
+                <!-- Chart Placeholder -->
+                <div style="background: var(--card); padding: 40px; border-radius: 12px; border: 1px solid var(--card-boarder); text-align: center; margin-bottom: 24px;">
+                    <div style="color: var(--text-secondary);">📈 Price Chart</div>
+                    <div style="font-size: 14px; color: var(--text-tertiary); margin-top: 8px;">Chart visualization will be displayed here</div>
+                </div>
+                
+                <!-- Token Info -->
+                <div class="settings-section">
+                    <div class="settings-title">Token Information</div>
+                    <div style="display: grid; gap: 16px;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Token Name</div>
+                            <div style="font-size: 14px;">Pepe Seed</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Symbol</div>
+                            <div style="font-size: 14px;">PSEED</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Description</div>
+                            <div style="font-size: 14px;">The next generation meme token on Solana 🚀</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Status</div>
+                            <div style="font-size: 14px;">Active • Created 3 days ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 2: Trusted Level -->
+            <div class="tab-content" id="management-tab-1">
+                <div class="settings-section">
+                    <div class="settings-title">Security Settings</div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>LP Lock</h4>
+                            <p>Lock liquidity pool to prevent rug pulls</p>
+                        </div>
+                        <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Audit Token</h4>
+                            <p>Get your token audited by verified auditors</p>
+                        </div>
+                        <button class="btn btn-outline btn-sm">Request Audit</button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Freeze Authority</h4>
+                            <p>Disable freeze authority to increase trust</p>
+                        </div>
+                        <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--card2); padding: 16px; border-radius: 12px; border: 1px solid var(--card-boarder); margin-top: 16px;">
+                    <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">ℹ️ Trust Score Impact</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+                        Enabling these security features will increase your token's trust score and make it more attractive to traders.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab 3: Community Management -->
+            <div class="tab-content" id="management-tab-2">
+                <!-- Create Post Button -->
+                <div style="margin-bottom: 24px;">
+                    <button class="btn btn-primary">+ Create New Post</button>
+                </div>
+                
+                <!-- Posts List -->
+                <div>
+                    <div class="post-item">
+                        <div class="post-header">
+                            <div>
+                                <div class="post-title">🎉 Welcome to Pepe Seed!</div>
+                                <div class="post-meta">Posted 2 days ago • 📌 Pinned</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            Welcome to the official Pepe Seed community! We're excited to have you here. Join us on this journey to the moon! 🚀
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn btn-outline btn-sm">Unpin</button>
+                            <button class="btn btn-sm" style="background: var(--card); color: var(--text-secondary);">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </div>
+                    </div>
+                    
+                    <div class="post-item">
+                        <div class="post-header">
+                            <div>
+                                <div class="post-title">Price Update</div>
+                                <div class="post-meta">Posted 1 day ago</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            Great news! PSEED just hit a new all-time high! Thanks to all our amazing holders 💎🙌
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn btn-outline btn-sm">Pin</button>
+                            <button class="btn btn-sm" style="background: var(--card); color: var(--text-secondary);">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </div>
+                    </div>
+                    
+                    <div class="post-item">
+                        <div class="post-header">
+                            <div>
+                                <div class="post-title">Community Event</div>
+                                <div class="post-meta">Posted 3 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            Join us for a community AMA this Friday at 8PM UTC. Bring your questions!
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn btn-outline btn-sm">Pin</button>
+                            <button class="btn btn-sm" style="background: var(--card); color: var(--text-secondary);">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Dashboard tabs
+        function showDashboardTab(index) {
+            document.querySelectorAll('#dashboard-view .tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('#dashboard-view .tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelectorAll('#dashboard-view .tab')[index].classList.add('active');
+            document.getElementById('dashboard-tab-' + index).classList.add('active');
+        }
+        
+        // Management tabs
+        function showManagementTab(index) {
+            document.querySelectorAll('#token-management-view .tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('#token-management-view .tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelectorAll('#token-management-view .tab')[index].classList.add('active');
+            document.getElementById('management-tab-' + index).classList.add('active');
+        }
+        
+        // Navigation between views
+        function showDashboard() {
+            document.getElementById('dashboard-view').classList.add('active');
+            document.getElementById('token-management-view').classList.remove('active');
+        }
+        
+        function showTokenManagement(name, symbol) {
+            document.getElementById('dashboard-view').classList.remove('active');
+            document.getElementById('token-management-view').classList.add('active');
+            document.getElementById('current-token-name').textContent = name;
+            document.getElementById('token-manage-name').textContent = name;
+            document.getElementById('token-manage-symbol').textContent = symbol;
+        }
+    </script>
+</body>
+</html>

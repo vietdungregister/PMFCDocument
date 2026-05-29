@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sidebar — 4 style options</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Fraunces:ital,wght@1,700;1,900&family=Caveat:wght@500;700;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a1610; --s1: #131f18; --s2: #1a2a20; --s3: #243528; --b1: #1f2d24; --b2: #2d4234;
+    --peach: #e8a87c; --peach2: #f4cba0; --peach5: #d68a5b; --sun: #ffd35e; --teal: #7CC4A4;
+    --t1: #f5f7f4; --t2: #a3b0a7; --t3: #6f7d74; --crimson: #D65A54;
+    --ink: #2a1505; --ink2: #6b4a30; --paper: #fdf8ec; --cream: #f4ecdc;
+    --f-disp: 'Plus Jakarta Sans', sans-serif;
+    --f-mono: 'JetBrains Mono', monospace;
+    --f-it: 'Fraunces', serif;
+    --f-hand: 'Caveat', cursive;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    background-image: radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.05), transparent 60%);
+    color: var(--t1); font-family: 'Inter', sans-serif; min-height: 100vh; padding: 24px 16px;
+  }
+  h1 { font-family: var(--f-it); font-style: italic; font-weight: 900; font-size: 28px; color: var(--peach); margin-bottom: 4px; text-align: center; }
+  .sub { color: var(--t2); margin-bottom: 28px; font-size: 14px; text-align: center; }
+
+  .grid { display: grid; grid-template-columns: repeat(4, 240px); gap: 16px; justify-content: center; align-items: start; }
+
+  /* Each option column = title + mock sidebar + label slot below */
+  .col { display: flex; flex-direction: column; gap: 10px; }
+  .col h2 { font-family: var(--f-it); font-style: italic; font-weight: 900; font-size: 16px; color: var(--sun); padding-left: 4px; }
+  .col .tag { font-family: var(--f-hand); color: var(--t3); font-size: 13px; padding-left: 4px; margin-top: -4px; }
+
+  /* ============ Shared mock sidebar shell ============ */
+  .sb {
+    background: var(--s1);
+    border: 1px solid var(--b1);
+    border-radius: 10px;
+    padding: 14px 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 540px;
+  }
+  .sb-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; padding-left: 2px; }
+  .sb-mascot { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(180deg, var(--peach2), var(--peach)); display: grid; place-items: center; flex-shrink: 0; font-size: 13px; }
+  .sb-logo-name { font-family: var(--f-it); font-style: italic; font-weight: 900; font-size: 15px; color: var(--peach); }
+  .sb-logo-sub { font-family: var(--f-hand); font-size: 11px; color: var(--t3); display: block; line-height: 1; }
+  .sb-cta { font-family: var(--f-disp); font-weight: 700; font-size: 12px; height: 32px; padding: 0 12px; border-radius: 999px; cursor: pointer; border: none; }
+  .sb-cta.primary { background: linear-gradient(180deg, var(--peach), var(--peach5)); color: var(--ink); }
+  .sb-cta.secondary { background: transparent; color: var(--peach); border: 1px solid var(--peach); }
+  .sb-cta-row { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+
+  /* ============ OPTION A — Flat dark + sticker icons (recommended) ============ */
+  .a .a-banner { background: var(--sun); color: var(--ink); border: 1.5px solid var(--ink); border-radius: 8px; padding: 4px 10px; font-family: var(--f-it); font-style: italic; font-weight: 900; font-size: 11px; box-shadow: 2px 2px 0 var(--ink); text-align: center; }
+  .a .nav { display: flex; flex-direction: column; gap: 1px; }
+  .a-item { display: flex; align-items: center; gap: 9px; padding: 7px 10px 7px 6px; border-radius: 8px; color: var(--t2); font-family: var(--f-it); font-style: italic; font-weight: 700; font-size: 13px; cursor: pointer; position: relative; }
+  .a-item:hover { background: var(--s2); color: var(--t1); }
+  .a-item.active { background: rgba(232,168,124,0.12); color: var(--peach); }
+  .a-item.active::before { content:''; position: absolute; left:0; top: 8px; bottom: 8px; width: 3px; background: var(--peach); border-radius: 2px; }
+  .a-icon { width: 24px; height: 24px; border-radius: 50%; background: #ffeab0; border: 1.2px solid rgba(0,0,0,0.6); display: grid; place-items: center; font-size: 12px; flex-shrink: 0; }
+  .a-badge { margin-left: auto; background: var(--crimson); color: #fff; font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 999px; font-family: var(--f-disp); }
+  .a-user { display: flex; align-items: center; gap: 8px; padding: 8px 6px; margin-top: auto; border-top: 1px solid var(--b1); padding-top: 10px; }
+  .a-uavatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--sun), var(--peach)); border: 1.5px solid var(--ink); flex-shrink: 0; }
+  .a-uinfo { line-height: 1.15; }
+  .a-uname { font-family: var(--f-it); font-style: italic; font-weight: 800; font-size: 12px; color: var(--t1); }
+  .a-utier { font-size: 10.5px; color: var(--peach); font-family: var(--f-mono); font-weight: 600; }
+
+  /* ============ OPTION B — Pure minimal emoji ============ */
+  .b .nav { display: flex; flex-direction: column; gap: 0; }
+  .b-item { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 6px; color: var(--t2); font-family: var(--f-disp); font-weight: 500; font-size: 13.5px; cursor: pointer; position: relative; }
+  .b-item:hover { background: var(--s2); color: var(--t1); }
+  .b-item.active { color: var(--peach); font-weight: 700; }
+  .b-item.active::after { content:'•'; color: var(--peach); margin-left: auto; font-size: 18px; line-height: 0; }
+  .b-emoji { font-size: 15px; width: 18px; text-align: center; flex-shrink: 0; opacity: 0.9; }
+  .b-badge { margin-left: auto; background: var(--crimson); color: #fff; font-size: 9.5px; font-weight: 700; padding: 1px 5px; border-radius: 999px; font-family: var(--f-disp); }
+  .b .sb-cta.primary { background: transparent; color: var(--peach); border: 1px solid var(--peach); }
+  .b-user { display: flex; align-items: center; gap: 8px; padding: 8px 4px 0; margin-top: auto; }
+  .b-uavatar { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, var(--peach2), var(--peach)); flex-shrink: 0; }
+  .b-uname { font-family: var(--f-disp); font-weight: 600; font-size: 12px; color: var(--t1); }
+
+  /* ============ OPTION C — Cream pill toned down ============ */
+  .c .c-banner { background: rgba(255,211,94,0.7); color: var(--ink); border: 1.5px solid var(--ink); border-radius: 8px; padding: 3px 10px; font-family: var(--f-it); font-style: italic; font-weight: 900; font-size: 10px; box-shadow: 1.5px 1.5px 0 var(--ink); text-align: center; }
+  .c .nav { display: flex; flex-direction: column; gap: 3px; }
+  .c-item { display: flex; align-items: center; gap: 8px; padding: 5px 10px 5px 4px; border-radius: 999px; background: rgba(244,236,220,0.6); border: 1px solid rgba(0,0,0,0.4); color: var(--ink); font-family: var(--f-it); font-style: italic; font-weight: 700; font-size: 12.5px; cursor: pointer; box-shadow: 1.5px 1.5px 0 rgba(0,0,0,0.3); }
+  .c-item:hover { background: rgba(244,236,220,0.92); }
+  .c-item.active { background: linear-gradient(135deg, #ff8b5e, #ff6b8a); color: #fff; }
+  .c-icon { width: 22px; height: 22px; border-radius: 50%; background: #ffeab0; border: 1px solid rgba(0,0,0,0.6); display: grid; place-items: center; font-size: 11px; flex-shrink: 0; }
+  .c-item.active .c-icon { background: #fff; }
+  .c-badge { margin-left: auto; background: var(--ink); color: var(--sun); font-size: 10px; font-weight: 700; padding: 0 6px; border-radius: 999px; font-family: var(--f-it); font-style: italic; }
+  .c-user { display: flex; align-items: center; gap: 8px; padding: 8px; margin-top: auto; background: linear-gradient(135deg, var(--paper), var(--cream)); border: 1px solid var(--ink); border-radius: 10px; box-shadow: 2px 2px 0 var(--ink); }
+  .c-uavatar { width: 26px; height: 26px; border-radius: 50%; background: var(--sun); border: 1.5px solid var(--ink); flex-shrink: 0; }
+  .c-uname { font-family: var(--f-it); font-style: italic; font-weight: 800; font-size: 11.5px; color: var(--ink); line-height: 1.1; }
+  .c-utier { font-size: 10px; color: var(--peach5); font-weight: 700; }
+
+  /* ============ OPTION D — Notebook journal ============ */
+  .d .d-banner { font-family: var(--f-hand); font-size: 17px; color: var(--sun); padding: 0 4px 4px; font-weight: 700; border-bottom: 1.5px dashed rgba(255,211,94,0.4); }
+  .d .nav { display: flex; flex-direction: column; gap: 0; padding: 0 2px; }
+  .d-item { display: flex; align-items: center; gap: 8px; padding: 8px 4px; color: var(--t2); font-family: var(--f-it); font-style: italic; font-weight: 700; font-size: 13.5px; cursor: pointer; border-bottom: 1px dashed rgba(255,211,94,0.18); position: relative; }
+  .d-item:hover { color: var(--t1); }
+  .d-item.active { color: var(--peach); }
+  .d-item.active::before { content: '→'; position: absolute; left: -10px; color: var(--peach); font-family: var(--f-hand); font-weight: 700; font-size: 17px; line-height: 1; }
+  .d-emoji { font-size: 14px; opacity: 0.85; width: 18px; text-align: center; flex-shrink: 0; }
+  .d-badge { margin-left: auto; color: var(--crimson); font-family: var(--f-hand); font-weight: 700; font-size: 14px; }
+  .d .sb-cta.primary { transform: rotate(-1.5deg); }
+  .d-user { display: flex; flex-direction: column; gap: 2px; padding-top: 8px; margin-top: auto; border-top: 1px dashed rgba(255,211,94,0.3); }
+  .d-uname { font-family: var(--f-hand); font-weight: 700; font-size: 16px; color: var(--peach); }
+  .d-utier { font-family: var(--f-hand); font-size: 13px; color: var(--t3); }
+
+  /* ============ Pros/Cons table ============ */
+  .analysis { max-width: 1024px; margin: 32px auto 0; padding: 20px; background: var(--s2); border: 1px dashed rgba(255,211,94,0.25); border-radius: 12px; font-size: 13px; color: var(--t2); line-height: 1.55; }
+  .analysis h3 { font-family: var(--f-it); font-style: italic; font-weight: 900; font-size: 17px; color: var(--peach); margin-bottom: 10px; }
+  .analysis table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  .analysis th, .analysis td { padding: 8px 10px; text-align: left; border-bottom: 1px dashed rgba(255,211,94,0.15); vertical-align: top; }
+  .analysis th { color: var(--sun); font-family: var(--f-it); font-style: italic; font-weight: 900; font-size: 13px; }
+  .analysis td.opt { font-family: var(--f-it); font-style: italic; font-weight: 800; color: var(--peach); white-space: nowrap; }
+  .pro { color: #6cc28b; }
+  .con { color: #e8807a; }
+  .reco { background: rgba(232,168,124,0.08); border: 1px solid rgba(232,168,124,0.3); padding: 14px; border-radius: 8px; margin-top: 16px; color: var(--t1); }
+  .reco b { color: var(--peach); }
+</style>
+</head>
+<body>
+
+<h1>Sidebar — 4 style options</h1>
+<div class="sub">5 nav items, 2 CTAs, 1 user element. So sánh treatment, không phải nội dung.</div>
+
+<div class="grid">
+
+  <!-- ============ A ============ -->
+  <div class="col">
+    <h2>A · Flat dark + sticker icons</h2>
+    <div class="tag">đề xuất · chrome lùi về, charm giữ qua icon</div>
+    <div class="sb a">
+      <div class="sb-logo"><div class="sb-mascot">🌱</div><div><div class="sb-logo-name">Sprout</div><span class="sb-logo-sub">the meme garden</span></div></div>
+      <div class="a-banner">🌱 today's garden</div>
+      <div class="nav">
+        <div class="a-item active"><div class="a-icon">🌱</div>My Profile<span class="a-badge">3</span></div>
+        <div class="a-item"><div class="a-icon">🔥</div>Arena</div>
+        <div class="a-item"><div class="a-icon">🎉</div>Events</div>
+        <div class="a-item"><div class="a-icon">🏆</div>Leader Board</div>
+        <div class="a-item"><div class="a-icon">💎</div>Points</div>
+      </div>
+      <div class="sb-cta-row">
+        <button class="sb-cta primary">Create Token</button>
+        <button class="sb-cta secondary">Connect Wallet</button>
+      </div>
+      <div class="a-user"><div class="a-uavatar"></div><div class="a-uinfo"><div class="a-uname">NobleFlame</div><div class="a-utier">Sprout · 642</div></div></div>
+    </div>
+  </div>
+
+  <!-- ============ B ============ -->
+  <div class="col">
+    <h2>B · Pure minimal</h2>
+    <div class="tag">emoji thuần, không icon sticker, banner bỏ</div>
+    <div class="sb b">
+      <div class="sb-logo"><div class="sb-mascot">🌱</div><div><div class="sb-logo-name">Sprout</div><span class="sb-logo-sub">the meme garden</span></div></div>
+      <div class="nav">
+        <div class="b-item active"><span class="b-emoji">🌱</span>My Profile<span class="b-badge">3</span></div>
+        <div class="b-item"><span class="b-emoji">🔥</span>Arena</div>
+        <div class="b-item"><span class="b-emoji">🎉</span>Events</div>
+        <div class="b-item"><span class="b-emoji">🏆</span>Leader Board</div>
+        <div class="b-item"><span class="b-emoji">💎</span>Points</div>
+      </div>
+      <div class="sb-cta-row">
+        <button class="sb-cta primary">Create Token</button>
+        <button class="sb-cta secondary">Connect Wallet</button>
+      </div>
+      <div class="b-user"><div class="b-uavatar"></div><span class="b-uname">NobleFlame</span></div>
+    </div>
+  </div>
+
+  <!-- ============ C ============ -->
+  <div class="col">
+    <h2>C · Cream pill toned</h2>
+    <div class="tag">giữ style hiện tại, chỉ giảm prominence</div>
+    <div class="sb c">
+      <div class="sb-logo"><div class="sb-mascot">🌱</div><div><div class="sb-logo-name">Sprout</div><span class="sb-logo-sub">the meme garden</span></div></div>
+      <div class="c-banner">🌱 today's garden</div>
+      <div class="nav">
+        <div class="c-item active"><div class="c-icon">🌱</div>My Profile<span class="c-badge">3</span></div>
+        <div class="c-item"><div class="c-icon">🔥</div>Arena</div>
+        <div class="c-item"><div class="c-icon">🎉</div>Events</div>
+        <div class="c-item"><div class="c-icon">🏆</div>Leader Board</div>
+        <div class="c-item"><div class="c-icon">💎</div>Points</div>
+      </div>
+      <div class="sb-cta-row">
+        <button class="sb-cta primary">Create Token</button>
+        <button class="sb-cta secondary">Connect Wallet</button>
+      </div>
+      <div class="c-user"><div class="c-uavatar"></div><div><div class="c-uname">NobleFlame</div><div class="c-utier">Sprout · 642 pts</div></div></div>
+    </div>
+  </div>
+
+  <!-- ============ D ============ -->
+  <div class="col">
+    <h2>D · Notebook journal</h2>
+    <div class="tag">dashed list, handwritten cues, garden journal vibe</div>
+    <div class="sb d">
+      <div class="sb-logo"><div class="sb-mascot">🌱</div><div><div class="sb-logo-name">Sprout</div><span class="sb-logo-sub">the meme garden</span></div></div>
+      <div class="d-banner">today's garden</div>
+      <div class="nav">
+        <div class="d-item active"><span class="d-emoji">🌱</span>My Profile<span class="d-badge">3</span></div>
+        <div class="d-item"><span class="d-emoji">🔥</span>Arena</div>
+        <div class="d-item"><span class="d-emoji">🎉</span>Events</div>
+        <div class="d-item"><span class="d-emoji">🏆</span>Leader Board</div>
+        <div class="d-item"><span class="d-emoji">💎</span>Points</div>
+      </div>
+      <div class="sb-cta-row">
+        <button class="sb-cta primary">Create Token</button>
+        <button class="sb-cta secondary">Connect Wallet</button>
+      </div>
+      <div class="d-user"><div class="d-uname">— NobleFlame</div><div class="d-utier">Sprout tier · 642 pts</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ Pros / Cons analysis ============ -->
+<div class="analysis">
+  <h3>Pros / Cons từng option</h3>
+  <table>
+    <thead><tr><th>Option</th><th class="pro">Pros</th><th class="con">Cons</th><th>Hierarchy fix</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="opt">A · Flat dark<br>+ sticker icons</td>
+        <td class="pro">Chrome lùi hẳn, cards = hero rõ ràng. Vẫn giữ wild charm qua icon sticker tròn. CTAs cream nổi như duy nhất action element. Đồng bộ visual với live activity flat dark.</td>
+        <td class="con">Mất pill shape (1 phần handcrafted feel của wild). Active state ít "drama" hơn — chỉ vạch peach trái + bg soft thay vì gradient pill.</td>
+        <td>✓✓✓ Triệt để</td>
+      </tr>
+      <tr>
+        <td class="opt">B · Pure minimal</td>
+        <td class="pro">Cards có max attention. Modern, clean, tốc độ load (ít CSS). Maintainable.</td>
+        <td class="con">Mất sạch wild personality — sidebar thành sidebar generic của bất kỳ SaaS nào. Không còn nhận diện thương hiệu Sprout ở nav. CTA outlined ít prominence (user khó tìm Connect Wallet).</td>
+        <td>✓✓✓ Triệt để</td>
+      </tr>
+      <tr>
+        <td class="opt">C · Cream pill toned</td>
+        <td class="pro">Ít risk nhất — không phá vibe quen thuộc. Vẫn handcrafted feel. Đỡ refactor.</td>
+        <td class="con">Chưa giải triệt để vấn đề — vẫn cream-paper family với cards. Mắt user vẫn "đụng". Active gradient pill quá nổi (đụng CTA peach gradient).</td>
+        <td>✓ Một phần</td>
+      </tr>
+      <tr>
+        <td class="opt">D · Notebook journal</td>
+        <td class="pro">Visual hoàn toàn KHÁC cards (dashed list ≠ polaroid rectangle). Củng cố narrative "garden journal" — Sprout = vườn của bạn. Personality cao nhất trong 4 options.</td>
+        <td class="con">Hơi "whimsical" cho nav navigation. Active state mũi tên → nhỏ, có thể user không thấy ngay. Handwritten font nhiều = giảm legibility lâu dài.</td>
+        <td>✓✓✓ Triệt để (qua differentiation)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="reco">
+    <b>Mình vẫn nghiêng A.</b> Tóm tắt: hierarchy fix triệt để + giữ được wild charm qua sticker icons (charm "đặc trưng Sprout" lớn nhất hiện tại). B quá sạch mất chất, C nửa vời, D có ưu nhưng risk legibility/quirky cao.
+    <br><br>
+    Tuy nhiên nếu bạn ưu tiên <b>personality &gt; functional</b> thì D đáng cân nhắc — đặc biệt vì narrative "garden journal" cực fit với brand Sprout (meme garden).
+  </div>
+</div>
+
+</body>
+</html>

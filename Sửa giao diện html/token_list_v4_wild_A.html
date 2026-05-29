@@ -1,0 +1,3554 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Sprout — WILD edition · Sticker Garden v0.2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&family=Caveat:wght@500;700&family=Fraunces:ital,wght@1,700;1,900&display=swap" rel="stylesheet">
+<style>
+  /* ========================================================
+     STALLSPOT token list v4
+     - Structural backbone: home_full_layout.html (fixed header,
+       sidebar grouping, tab line indicator, card structure)
+     - MVP elements: marquee, featured chips
+     - Story Garden: peach/teal/amber palette, leaf trust,
+       mascot in sidebar, garden voice, signature moments
+     ======================================================== */
+  :root {
+    --bg:          #0a1610;
+    --surface-1:   #131f18;
+    --surface-2:   #1a2a20;
+    --surface-3:   #243528;
+    --border-1:    #1f2d24;
+    --border-2:    #2d4234;
+    --sp-peach-100: #f4cba0;
+    --sp-peach-200: #e8a87c;
+    --sp-peach-400: #e8a87c;
+    --sp-peach-500: #d68a5b;
+    --sp-peach-soft: rgba(232, 168, 124, 0.10);
+    --sp-forest-300: #5ba886;
+    --sp-forest-500: #3d7458;
+    --sp-forest-700: #3d7458;
+    --sp-cream:    #f4cba0;
+    --sp-teal-300: #9ED8B8;
+    --sp-teal-400: #7CC4A4;
+    --sp-teal-500: #5BA886;
+    --sp-crimson:  #D65A54;
+    --text-1: #f5f7f4;
+    --text-2: #a3b0a7;
+    --text-3: #6f7d74;
+    --text-mute: #4a5650;
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+    --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
+  --mascot-sm:   22px;
+  --mascot-md:   30px;
+  --mascot-lg:   40px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+/* === Mood B signature glow (locked 2026-05-05 — SPROUT_UI_SPEC.md §1.3a) === */
+/* Do NOT modify without updating spec section 1.3a first. */
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.06), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 30%, rgba(124,196,164,0.05), transparent 60%);
+  background-attachment: fixed;
+}
+.logo-mascot {
+  box-shadow: 0 0 24px rgba(232,168,124,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-primary {
+  box-shadow: 0 0 20px rgba(232,168,124,0.30);
+}
+.marquee-track .peach { color: var(--sp-peach-200); text-shadow: 0 0 12px rgba(232,168,124,0.4); }
+.marquee-track .teal  { color: var(--sp-teal-300);  text-shadow: 0 0 12px rgba(124,196,164,0.4); }
+.token-card.featured, .tk-card.featured, .card.featured {
+  border-color: rgba(232,168,124,0.55);
+  background: radial-gradient(ellipse 300px 200px at 100% 0%, rgba(232,168,124,0.10), transparent 70%), var(--surface-1);
+  box-shadow: 0 0 32px rgba(232,168,124,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.token-card:hover, .tk-card:hover {
+  box-shadow: 0 0 24px rgba(124,196,164,0.08);
+}
+.token-av, .tk-av { box-shadow: 0 0 16px rgba(124,196,164,0.15); }
+.bar-fill { box-shadow: 0 0 10px rgba(232,168,124,0.5); }
+/* === end Mood B glow === */
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.06), transparent 60%),
+      radial-gradient(ellipse 600px 400px at 90% 30%, rgba(124,196,164,0.05), transparent 60%);
+    background-attachment: fixed;
+    color: var(--text-1);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* ========================================================
+     HEADER (fixed top — pro structure)
+     ======================================================== */
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    background: var(--surface-1);
+    border-bottom: 1px solid var(--border-1);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+  .logo-mascot {
+    width: var(--mascot-lg);
+    height: var(--mascot-lg);
+    border-radius: var(--r-md);
+    background: linear-gradient(180deg, var(--sp-peach-100), var(--sp-peach-400));
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .logo-mascot svg { width: 30px; height: 30px; }
+  .logo-text {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--sp-peach-400);
+    letter-spacing: -0.01em;
+  }
+
+  .header-search {
+    position: relative;
+    flex: 1;
+    max-width: 480px;
+  }
+  .header-search input {
+    width: 100%;
+    height: 36px;
+    padding: 0 14px 0 38px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    color: var(--text-1);
+    font-family: inherit;
+    font-size: 13.5px;
+    transition: border-color 0.15s var(--ease);
+  }
+  .header-search input::placeholder { color: var(--text-3); }
+  .header-search input:focus {
+    outline: none;
+    border-color: var(--sp-peach-400);
+  }
+  .header-search > svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--text-3);
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+    align-items: center;
+  }
+  .btn-ghost {
+    height: 36px;
+    padding: 0 14px;
+    background: transparent;
+    border: 1px solid var(--border-2);
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+  }
+  .btn-ghost:hover {
+    border-color: var(--sp-peach-400);
+    color: var(--sp-peach-400);
+  }
+  .btn-primary {
+    height: 36px;
+    padding: 0 16px;
+    background: linear-gradient(180deg, #e8a87c, #e8a87c);
+    border: none;
+    border-radius: var(--r-md);
+    color: #2a1505;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(180deg, #ffd08a, #f0bc62);
+  }
+
+  /* ========================================================
+     MARQUEE (below header — MVP feel kept)
+     ======================================================== */
+  .marquee {
+    position: fixed;
+    top: var(--header-h);
+    left: 0; right: 0;
+    height: var(--marquee-h);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border-1);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    z-index: 99;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 36px;
+    white-space: nowrap;
+    animation: scroll 40s linear infinite;
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+  }
+  .marquee-track .peach { color: var(--sp-peach-400); }
+  .marquee-track .teal { color: var(--sp-teal-400); }
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ========================================================
+     SIDEBAR (grouping — pro structure)
+     ======================================================== */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: calc(var(--header-h) + var(--marquee-h));
+    bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--surface-1);
+    border-right: 1px solid var(--border-1);
+    padding: 20px 14px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .nav-group { display: flex; flex-direction: column; gap: 1px; }
+  .nav-label {
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+    padding: 0 12px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 12px;
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s var(--ease);
+    text-decoration: none;
+    position: relative;
+  }
+  .nav-item svg { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.85; }
+  .nav-item:hover { background: var(--surface-2); color: var(--text-1); }
+  .nav-item.active {
+    color: var(--sp-peach-400);
+    background: var(--sp-peach-soft);
+    font-weight: 600;
+  }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--sp-crimson);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: var(--r-pill);
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* User card at bottom — logged-in with mascot */
+  .user-card {
+    margin-top: auto;
+    background: var(--surface-2);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .user-mascot {
+    width: var(--mascot-lg);
+    height: var(--mascot-lg);
+    border-radius: var(--r-pill);
+    background: var(--surface-3);
+    display: grid;
+    place-items: center;
+    border: 1.5px solid var(--sp-peach-400);
+    flex-shrink: 0;
+  }
+  .user-mascot svg { width: 30px; height: 30px; }
+  .user-info { flex: 1; min-width: 0; }
+  .user-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+  .user-tier {
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    color: var(--sp-peach-400);
+    font-weight: 700;
+    margin-top: 1px;
+  }
+
+  /* ========================================================
+     MAIN CONTENT
+     ======================================================== */
+  .main {
+    margin-left: var(--sidebar-w);
+    margin-top: calc(var(--header-h) + var(--marquee-h));
+    padding: 28px 32px 40px;
+    max-width: 1320px;
+  }
+
+  .notice {
+    background: var(--sp-peach-soft);
+    border: 1px solid rgba(232, 168, 124, 0.25);
+    border-radius: var(--r-md);
+    padding: 10px 14px;
+    margin-bottom: 24px;
+    font-size: 12.5px;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .notice strong { color: var(--sp-peach-400); font-family: var(--font-display); }
+
+  /* Featured chip row (kept from MVP) */
+  .featured-row {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    margin-bottom: 28px;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+  .featured-row::-webkit-scrollbar { height: 4px; }
+  .featured-row::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
+
+  .featured-chip {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    transition: border-color 0.15s var(--ease);
+    min-width: 200px;
+  }
+  .featured-chip:hover { border-color: var(--sp-peach-400); }
+  .featured-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--r-sm);
+    flex-shrink: 0;
+  }
+  .featured-name {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--sp-peach-400);
+  }
+
+  /* Page header */
+  .page-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 24px;
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+  .page-subtitle {
+    font-size: 13.5px;
+    color: var(--text-2);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .page-subtitle svg { width: 14px; height: 14px; color: var(--sp-teal-400); }
+
+  /* Tabs (line indicator — pro) */
+  .tabs-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border-1);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .tab {
+    padding: 11px 18px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-2);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+    margin-bottom: -1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tab:hover { color: var(--text-1); }
+  .tab.active {
+    color: var(--sp-peach-400);
+    border-bottom-color: var(--sp-peach-400);
+  }
+  .tab-leaf { width: 12px; height: 12px; color: var(--sp-teal-400); }
+  .tab.active .tab-leaf { color: var(--sp-peach-400); }
+
+  .tabs-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 9px;
+    color: var(--text-2);
+    font-size: 12.5px;
+  }
+  .tab-toggle { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .tt-toggle {
+    width: 28px;
+    height: 16px;
+    background: var(--sp-teal-500);
+    border-radius: var(--r-pill);
+    position: relative;
+  }
+  .tt-toggle::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    right: 2px;
+  }
+  .tt-toggle.off { background: var(--border-2); }
+  .tt-toggle.off::after { right: auto; left: 2px; }
+
+  .action-btn {
+    padding: 7px 14px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .action-btn:hover { border-color: var(--sp-peach-400); color: var(--text-1); }
+
+  /* ========================================================
+     TOKEN GRID (pro structure + Garden palette)
+     ======================================================== */
+  .token-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+  }
+
+  .token-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.18s var(--ease);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .token-card:hover {
+    border-color: var(--border-2);
+    transform: translateY(-2px);
+  }
+  .token-card.is-hovered {
+    border-color: var(--sp-peach-400);
+    transform: translateY(-2px);
+  }
+  .token-card.almost-there {
+    background: linear-gradient(180deg, var(--sp-peach-soft) 0%, var(--surface-1) 30%);
+  }
+
+  .card-head {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .token-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--r-md);
+    flex-shrink: 0;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .token-avatar svg { width: 100%; height: 100%; }
+  .token-meta { flex: 1; min-width: 0; padding-right: 26px; }
+
+  .token-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+  }
+  .token-name {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--sp-peach-400);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .trust-leaf {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    cursor: help;
+  }
+  .trust-leaf svg { width: 14px; height: 14px; }
+  /* shield hidden at name-row, moved to Market cap label */
+  .token-name-row .trust-leaf { display: none; }
+  /* Trust shield 3-tier per FR-013 */
+  .trust-gold   { color: var(--sp-peach-400); }   /* 60-100 — Đáng tin cậy */
+  .trust-silver { color: var(--sp-teal-400); }    /* 30-59 — Có tín hiệu tích cực */
+  .trust-bronze { color: var(--sp-peach-400); }   /* 0-29 — Token mới */
+  .token-symbol {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text-3);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+  .token-desc {
+    font-size: 12.5px;
+    color: var(--text-3);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .favorite {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: var(--text-mute);
+    transition: color 0.15s var(--ease);
+  }
+  .favorite:hover, .favorite.active { color: var(--sp-peach-400); }
+  .favorite svg { width: 16px; height: 16px; }
+
+  /* Price + change */
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .price-value {
+    font-family: var(--font-mono);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-1);
+    letter-spacing: -0.02em;
+  }
+  .price-change {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .price-up { color: var(--sp-teal-400); }
+  .price-down { color: var(--sp-crimson); }
+
+  /* Stats row (Volume + MC, slim 2 cols) */
+  .stats-row {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 14px;
+  }
+  .stat-cell { display: flex; flex-direction: column; gap: 2px; }
+  .stat-label-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-1);
+  }
+
+  /* Footer with border-top separator (pro structure) */
+  .card-footer {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .creator-info {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11.5px;
+    color: var(--text-3);
+    min-width: 0;
+  }
+  .creator-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: var(--r-pill);
+    background: linear-gradient(135deg, #e8a87c, #d68a5b);
+    flex-shrink: 0;
+    border: 1px solid var(--border-2);
+  }
+  .creator-name {
+    color: var(--text-2);
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .btn-buy {
+    height: 32px;
+    padding: 0 16px;
+    background: var(--sp-teal-500);
+    border: none;
+    border-radius: var(--r-md);
+    color: #ecfeff;
+    font-family: var(--font-display);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s var(--ease);
+    flex-shrink: 0;
+  }
+  .btn-buy:hover { background: var(--sp-teal-400); }
+
+  /* Slim graduation bar at very bottom */
+  .graduation {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .graduation-label {
+    font-size: 10.5px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+  .graduation-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--border-1);
+    border-radius: var(--r-pill);
+    overflow: hidden;
+  }
+  .graduation-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sp-peach-400), var(--sp-teal-400));
+    border-radius: var(--r-pill);
+  }
+  .graduation-fill.amber {
+    background: linear-gradient(90deg, var(--sp-peach-400), var(--sp-peach-400));
+  }
+  .graduation-percent {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--sp-peach-400);
+    font-weight: 600;
+    min-width: 32px;
+    text-align: right;
+  }
+  .graduation-percent.amber { color: var(--sp-peach-400); }
+
+  /* "New" badge */
+  .badge-new {
+    position: absolute;
+    top: -1px;
+    left: 16px;
+    background: var(--sp-teal-500);
+    color: #ecfeff;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 4px 10px 4px 8px;
+    border-radius: 0 0 var(--r-sm) var(--r-sm);
+    letter-spacing: 0.03em;
+    font-family: var(--font-display);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .badge-new svg { width: 10px; height: 10px; }
+
+/* ===== CONNECTED WALLET ===== */
+.wallet-connected { position: relative; height: 36px; background: var(--surface-2); border: 1px solid var(--border-2); border-radius: var(--r-pill); padding: 3px 12px 3px 4px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.15s var(--ease); font-family: var(--font-body); }
+.wallet-connected:hover { border-color: var(--sp-peach-400); background: var(--sp-peach-soft); }
+.wallet-connected.open { border-color: var(--sp-peach-400); }
+.wc-avatar { width: var(--mascot-md); height: var(--mascot-md); border-radius: 50%; background: linear-gradient(180deg,#e8a87c,#e8a87c); display: grid; place-items: center; flex-shrink: 0; }
+.wc-avatar svg { width: 18px; height: 18px; }
+.wc-info { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
+.wc-balance { font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; color: var(--sp-peach-400); }
+.wc-addr { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-3); margin-top: 1px; }
+.wc-chevron { width: 12px; height: 12px; color: var(--text-3); flex-shrink: 0; transition: transform 0.15s var(--ease); }
+.wallet-connected.open .wc-chevron { transform: rotate(180deg); color: var(--sp-peach-400); }
+.wc-net-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sp-teal-400); flex-shrink: 0; box-shadow: 0 0 0 2px rgba(124,196,164,0.20); }
+.wc-net-dot.wrong { background: var(--sp-crimson); box-shadow: 0 0 0 2px rgba(214,90,84,0.20); }
+.wc-menu { position: absolute; top: calc(100% + 8px); right: 0; width: 220px; background: var(--surface-1); border: 1px solid var(--border-1); border-radius: var(--r-md); padding: 6px; display: none; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.wallet-connected.open .wc-menu { display: block; }
+.wc-menu-head { padding: 10px 10px 8px; border-bottom: 1px solid var(--border-1); margin-bottom: 4px; }
+.wc-menu-net { font-size: 10.5px; color: var(--text-3); font-family: var(--font-display); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+.wc-menu-bal { font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--text-1); margin-top: 2px; }
+.wc-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r-sm); color: var(--text-1); font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none; width: 100%; background: transparent; border: none; font-family: inherit; text-align: left; transition: background 0.12s var(--ease); }
+.wc-item:hover { background: var(--surface-2); }
+.wc-item svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
+.wc-item.danger { color: var(--sp-crimson); }
+.wc-item.danger:hover { background: rgba(214,90,84,0.10); }
+.wc-divider { height: 1px; background: var(--border-1); margin: 4px 0; }
+
+  /* === Patch 4a: Sidebar footer utility block === */
+  .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border-1); display: flex; flex-direction: column; gap: 10px; }
+  .sf-social { display: flex; gap: 12px; }
+  .sf-social a { color: var(--text-3); display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; transition: color 0.15s; text-decoration: none; }
+  .sf-social a:hover { color: var(--sp-peach-400); }
+  .sf-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sf-pill { font-size: 10.5px; font-weight: 600; color: var(--text-3); background: var(--surface-2); padding: 4px 10px; border-radius: 999px; text-decoration: none; transition: all 0.15s; }
+  .sf-pill:hover { color: var(--sp-peach-400); background: var(--sp-peach-soft); }
+  .sf-copyright { font-size: 10px; color: var(--text-mute); text-align: center; margin-top: 2px; }
+  /* === Patch 4b: Active item glow + group label refinement === */
+  .nav-item.active {
+    box-shadow: 0 0 16px rgba(232, 168, 124, 0.18);
+  }
+  .nav-label {
+    letter-spacing: 0.12em;
+    position: relative;
+    padding-left: 14px;
+  }
+  .nav-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--sp-peach-400);
+    opacity: 0.6;
+  }
+  /* === Patch 4c: User card anchor + tier-aware points color === */
+  .user-card {
+    box-shadow: 0 0 20px rgba(232, 168, 124, 0.10);
+    border-top: 1px solid rgba(232, 168, 124, 0.20);
+  }
+  .uc-pts.tier-seed,
+  .uc-pts.tier-sprout      { color: var(--text-1); }
+  .uc-pts.tier-sapling     { color: var(--sp-peach-400); }
+  .uc-pts.tier-tree        { color: var(--sp-teal-400); }
+  .uc-pts.tier-ancient     { color: var(--sp-peach-200); text-shadow: 0 0 8px rgba(232,168,124,0.4); }
+  /* === Patch 7: Hover lift micro-interaction === */
+  .nav-item {
+    transition: transform 0.15s var(--ease, ease), background 0.15s var(--ease, ease), color 0.12s var(--ease, ease), box-shadow 0.12s var(--ease, ease);
+  }
+  .nav-item:hover {
+    transform: translateY(-1px);
+    background: var(--sp-peach-soft);
+    color: var(--text-1);
+  }
+  .nav-item.active:hover {
+    transform: none;
+  }
+  /* === Patch 5: Peach stroke icons — color via currentColor only === */
+  .nav-item .icon {
+    color: var(--sp-peach-200);
+    opacity: 0.85;
+    transition: fill 0.15s, color 0.15s, opacity 0.15s;
+  }
+  .nav-item.active .icon {
+    color: var(--sp-peach-400);
+    opacity: 1;
+  }
+  .nav-item:hover:not(.active) .icon {
+    color: var(--sp-peach-100);
+    opacity: 1;
+  }
+
+  /* ╔════════════════════════════════════════════════════════╗
+     ║ "GARDEN COMES ALIVE" — fun layer added 2026-05-27       ║
+     ║ Extends Mood B WITHOUT modifying §1.3a locked block.    ║
+     ║ All token colors preserved. Only motion + reactions.    ║
+     ╚════════════════════════════════════════════════════════╝ */
+
+  /* --- 1. Mascot — breathe + blink + react --- */
+  @keyframes gardenBreathe {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.045); }
+  }
+  .logo-mascot, .user-mascot, .wc-avatar {
+    animation: gardenBreathe 4.2s ease-in-out infinite;
+    transform-origin: 50% 60%;
+  }
+  .logo:hover .logo-mascot { animation-duration: 1s; }
+  .user-card:hover .user-mascot { animation-duration: 1s; }
+
+  /* Floating eyelid trick — overlay 2 tiny lids on mascot SVG that close briefly */
+  .logo-mascot, .user-mascot { position: relative; }
+  .logo-mascot::before, .logo-mascot::after,
+  .user-mascot::before, .user-mascot::after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 1.5px;
+    background: currentColor;
+    color: #0a1610;
+    border-radius: 1px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+  }
+  .logo-mascot::before { top: 56%; left: 38%; }
+  .logo-mascot::after  { top: 56%; right: 36%; }
+  .user-mascot::before { top: 60%; left: 36%; }
+  .user-mascot::after  { top: 60%; right: 34%; }
+  @keyframes gardenBlink {
+    0%, 96%, 100% { opacity: 0; transform: scaleY(0); }
+    97%, 99%      { opacity: 1; transform: scaleY(1); }
+  }
+  .logo-mascot::before, .logo-mascot::after,
+  .user-mascot::before, .user-mascot::after {
+    animation: gardenBlink 5.5s linear infinite;
+  }
+
+  /* --- 2. Token card — wind tilt + corner leaf drop --- */
+  .token-card {
+    transition:
+      transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.25s ease,
+      border-color 0.2s ease;
+    will-change: transform;
+  }
+  .token-card:hover {
+    transform: translateY(-6px) rotate(-0.4deg) scale(1.012);
+    box-shadow: 0 12px 28px -10px rgba(0,0,0,0.5),
+                0 0 32px rgba(124,196,164,0.10);
+  }
+  .token-card::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: 12px;
+    width: 24px;
+    height: 28px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'><path d='M12 2 C 4 6, 4 18, 12 26 C 20 18, 20 6, 12 2 Z' fill='%237cc4a4' opacity='0.85'/><path d='M12 4 L 12 24' stroke='%233d7458' stroke-width='1' fill='none'/></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transform: rotate(-25deg) translateY(-8px);
+    transition: opacity 0.35s ease, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+  }
+  .token-card:hover::after {
+    opacity: 1;
+    transform: rotate(18deg) translateY(0);
+  }
+
+  /* --- 3. Featured card — slow glow pulse (extends locked block, doesn't replace) --- */
+  @keyframes featuredHeartbeat {
+    0%, 100% { box-shadow: 0 0 32px rgba(232,168,124,0.18), inset 0 1px 0 rgba(255,255,255,0.04); }
+    50%      { box-shadow: 0 0 56px rgba(232,168,124,0.36), inset 0 1px 0 rgba(255,255,255,0.06); }
+  }
+  .token-card.featured, .tk-card.featured, .card.featured {
+    animation: featuredHeartbeat 5.5s ease-in-out infinite;
+  }
+
+  /* --- 4. Almost-there card — sunlight shimmer sweep --- */
+  .token-card.almost-there {
+    position: relative;
+    overflow: hidden;
+  }
+  .token-card.almost-there::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      105deg,
+      transparent 0%,
+      rgba(232,168,124,0.00) 30%,
+      rgba(232,168,124,0.22) 50%,
+      rgba(232,168,124,0.00) 70%,
+      transparent 100%
+    );
+    animation: gardenShimmer 3.6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .token-card.almost-there > * { position: relative; z-index: 2; }
+  @keyframes gardenShimmer {
+    0%        { left: -60%; }
+    55%, 100% { left: 130%; }
+  }
+
+  /* --- 5. Graduation bar — growing vine pulse --- */
+  .graduation-fill {
+    position: relative;
+    overflow: hidden;
+  }
+  .graduation-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: translateX(-100%);
+    animation: vineGrow 2.4s ease-in-out infinite;
+  }
+  @keyframes vineGrow {
+    0%, 60%, 100% { transform: translateX(-100%); }
+    80%           { transform: translateX(200%); }
+  }
+
+  /* --- 6. Marquee — speeds up on hover --- */
+  .marquee:hover .marquee-track { animation-duration: 14s; }
+  .marquee-track { transition: filter 0.3s; }
+  .marquee:hover .marquee-track { filter: brightness(1.25); }
+
+  /* --- 7. Buttons — squish on press, lift on hover --- */
+  .btn-primary, .btn-buy, .btn-ghost {
+    transition:
+      transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+      background 0.2s,
+      box-shadow 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px) scale(1.03); }
+  .btn-primary:active { transform: scale(0.94); }
+  .btn-buy:hover { transform: translateY(-2px) scale(1.06); box-shadow: 0 6px 16px -4px rgba(91,168,134,0.5); }
+  .btn-buy:active { transform: scale(0.92); }
+
+  /* Plant icon that sprouts on hover of primary CTA */
+  .btn-primary { position: relative; }
+  .btn-primary::after {
+    content: '🌱';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%) scale(0) rotate(-30deg);
+    opacity: 0;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s;
+    font-size: 14px;
+    pointer-events: none;
+  }
+  .btn-primary:hover {
+    padding-right: 32px;
+  }
+  .btn-primary:hover::after {
+    transform: translateY(-50%) scale(1) rotate(0);
+    opacity: 1;
+  }
+
+  /* --- 8. "NEW" badge — playful idle wobble --- */
+  @keyframes badgeWobble {
+    0%, 80%, 100% { transform: rotate(0); }
+    84%           { transform: rotate(-8deg); }
+    88%           { transform: rotate(6deg); }
+    92%           { transform: rotate(-3deg); }
+    96%           { transform: rotate(2deg); }
+  }
+  .badge-new {
+    transform-origin: top left;
+    animation: badgeWobble 6s ease-in-out infinite;
+  }
+
+  /* --- 9. Favorite heart — bloom on click --- */
+  @keyframes heartBloom {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.7) rotate(15deg); }
+    70%  { transform: scale(0.88) rotate(-8deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+  .favorite.bloom { animation: heartBloom 0.55s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .favorite svg { transition: filter 0.25s; }
+  .favorite.active svg { filter: drop-shadow(0 0 6px rgba(232,168,124,0.6)); }
+
+  /* --- 10. Price tick — gentle glow on live update --- */
+  @keyframes priceTickUp {
+    0%   { color: var(--text-1); text-shadow: none; }
+    20%  { color: var(--sp-teal-300); text-shadow: 0 0 12px rgba(124,196,164,0.6); transform: translateY(-2px); }
+    100% { color: var(--text-1); text-shadow: none; transform: translateY(0); }
+  }
+  @keyframes priceTickDown {
+    0%   { color: var(--text-1); text-shadow: none; }
+    20%  { color: var(--sp-crimson); text-shadow: 0 0 12px rgba(214,90,84,0.5); transform: translateY(2px); }
+    100% { color: var(--text-1); text-shadow: none; transform: translateY(0); }
+  }
+  .price-value {
+    display: inline-block;
+    transition: color 0.2s;
+  }
+  .price-value.tick-up   { animation: priceTickUp 0.8s ease-out; }
+  .price-value.tick-down { animation: priceTickDown 0.8s ease-out; }
+
+  /* --- 11. Garden Helper (floating mascot bottom-right) --- */
+  .garden-helper {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 68px;
+    height: 68px;
+    z-index: 250;
+    cursor: pointer;
+    animation: helperBob 4.5s ease-in-out infinite;
+  }
+  @keyframes helperBob {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50%      { transform: translateY(-10px) rotate(3deg); }
+  }
+  .garden-helper-glow {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,168,124,0.30), transparent 65%);
+    animation: helperGlow 3.2s ease-in-out infinite;
+  }
+  @keyframes helperGlow {
+    0%, 100% { transform: scale(0.8); opacity: 0.55; }
+    50%      { transform: scale(1.18); opacity: 1; }
+  }
+  .garden-helper-body {
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, var(--sp-peach-100), var(--sp-peach-400));
+    display: grid;
+    place-items: center;
+    box-shadow: 0 6px 20px -4px rgba(232,168,124,0.55), inset 0 2px 0 rgba(255,255,255,0.3);
+  }
+  .garden-helper-body svg { width: 38px; height: 38px; }
+  .helper-bubble {
+    position: absolute;
+    bottom: 82px;
+    right: 0;
+    background: var(--surface-2);
+    border: 1px solid rgba(232,168,124,0.4);
+    border-radius: 14px;
+    padding: 10px 14px;
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    color: var(--text-1);
+    white-space: nowrap;
+    max-width: 220px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px) scale(0.92);
+    transition: opacity 0.3s, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 8px 24px -6px rgba(0,0,0,0.5), 0 0 20px rgba(232,168,124,0.15);
+  }
+  .helper-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -7px;
+    right: 26px;
+    width: 12px; height: 12px;
+    background: var(--surface-2);
+    border-right: 1px solid rgba(232,168,124,0.4);
+    border-bottom: 1px solid rgba(232,168,124,0.4);
+    transform: rotate(45deg);
+  }
+  .garden-helper:hover .helper-bubble,
+  .garden-helper.speak .helper-bubble {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .helper-bubble strong { color: var(--sp-peach-400); font-family: var(--font-display); }
+
+  /* --- 12. Confetti petals (JS-injected) --- */
+  .petal {
+    position: fixed;
+    pointer-events: none;
+    width: 10px;
+    height: 14px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: var(--sp-peach-200);
+    z-index: 300;
+    opacity: 0.95;
+    will-change: transform, opacity;
+  }
+  .petal.teal { background: var(--sp-teal-400); }
+  .petal.cream { background: var(--sp-peach-100); }
+
+  /* --- 13. Fun edition chip (bottom-left, low-key) --- */
+  .fun-edition {
+    position: fixed;
+    bottom: 28px;
+    left: 28px;
+    background: rgba(19, 31, 24, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(232,168,124,0.4);
+    color: var(--sp-peach-200);
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 999px;
+    z-index: 250;
+    box-shadow: 0 0 24px rgba(232,168,124,0.15);
+  }
+  .fun-edition::before {
+    content: '✨ ';
+    margin-right: 2px;
+  }
+
+  /* --- 14. Nav-item active gets a tiny sprout pulse --- */
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 16px;
+    background: linear-gradient(180deg, var(--sp-peach-200), var(--sp-teal-400));
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(232,168,124,0.6);
+  }
+
+  /* --- 15. Trust-leaf gold gets gentle sparkle --- */
+  @keyframes trustSparkle {
+    0%, 92%, 100% { filter: drop-shadow(0 0 0 transparent); transform: scale(1); }
+    96%           { filter: drop-shadow(0 0 4px rgba(232,168,124,0.8)); transform: scale(1.15); }
+  }
+  .trust-gold svg { animation: trustSparkle 7s ease-in-out infinite; }
+
+  /* --- 16. Respect reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .helper-bubble { display: none; }
+  }
+  /* ╚═══ end "Garden Comes Alive" layer ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ "STICKER GARDEN" — WILD v0.2 — added 2026-05-27           ║
+     ║ Heavy visual override. Spec lock §1.3a is intentionally   ║
+     ║ superseded per user direction (full creative freedom).    ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  :root {
+    /* Extended palette — sticker accents */
+    --w-cream:      #f4ecdc;
+    --w-cream-2:    #ead9b8;
+    --w-paper:      #fdf8ec;
+    --w-ink:        #2a1505;
+    --w-ink-2:      #6b4a30;
+    --w-pink:       #ff6b8a;
+    --w-coral:      #ff8b5e;
+    --w-sunshine:   #ffd35e;
+    --w-lime:       #b8e25c;
+    --w-mint:       #7CC4A4;
+    --w-sky:        #5ee2ff;
+    --w-grape:      #a878ff;
+    --w-tape:       rgba(255, 216, 130, 0.6);
+    --font-hand:    'Caveat', cursive;
+    --font-disp-it: 'Fraunces', 'Plus Jakarta Sans', serif;
+  }
+
+  /* ---- Body: dark forest → warm "cork board" with gradient mesh ---- */
+  body {
+    background-color: #1a2a20;
+    background-image:
+      radial-gradient(ellipse 900px 600px at 15% 10%,  rgba(255,139,94,0.35), transparent 55%),
+      radial-gradient(ellipse 800px 500px at 90% 25%,  rgba(184,226,92,0.18), transparent 55%),
+      radial-gradient(ellipse 700px 500px at 80% 90%,  rgba(255,107,138,0.22), transparent 55%),
+      radial-gradient(ellipse 600px 400px at 20% 85%,  rgba(94,226,255,0.14), transparent 55%),
+      radial-gradient(ellipse 900px 600px at 50% 50%,  rgba(232,168,124,0.18), transparent 60%);
+    background-attachment: fixed;
+  }
+  /* Paper grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.85  0 0 0 0 0.65  0 0 0 0.18 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: overlay;
+  }
+
+  /* ---- Header: still slim but warmer ---- */
+  .header {
+    background: rgba(26, 42, 32, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 2px solid var(--w-coral);
+    box-shadow: 0 4px 20px -8px rgba(255,139,94,0.4);
+    z-index: 100;
+  }
+  .logo-text {
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 22px;
+    background: linear-gradient(135deg, var(--w-sunshine), var(--w-coral), var(--w-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--w-coral);
+    display: inline-block;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink));
+    color: #fff;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 14px;
+    height: 40px;
+    padding: 0 20px;
+    border-radius: 999px;
+    box-shadow: 0 6px 20px -4px rgba(255,107,138,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+    letter-spacing: 0;
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, var(--w-pink), var(--w-coral));
+    transform: translateY(-2px) scale(1.05) !important;
+  }
+
+  /* ---- Marquee: multicolor staggered ---- */
+  .marquee {
+    background: linear-gradient(90deg, #0f1a13, #1a2a20, #0f1a13);
+    border-bottom: 1px solid rgba(255,216,130,0.3);
+  }
+  .marquee-track {
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+  .marquee-track .peach { color: var(--w-coral); text-shadow: 0 0 14px rgba(255,139,94,0.5); }
+  .marquee-track .teal  { color: var(--w-lime);  text-shadow: 0 0 14px rgba(184,226,92,0.5); }
+  .marquee-track span:not(.peach):not(.teal):nth-of-type(3n)  { color: var(--w-sunshine); }
+  .marquee-track span:not(.peach):not(.teal):nth-of-type(3n+1){ color: var(--w-pink); }
+  .marquee-track span:not(.peach):not(.teal):nth-of-type(3n+2){ color: var(--w-sky); }
+
+  /* ---- Sidebar: full sticker-book treatment ---- */
+  .sidebar {
+    background:
+      radial-gradient(circle at 100% 0%, rgba(255,211,94,0.10), transparent 50%),
+      rgba(20, 32, 24, 0.78);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-right: 2px dashed rgba(255,216,130,0.35);
+    padding-top: 18px !important;
+  }
+  /* Sticky-note banner pinned to top of sidebar */
+  .sidebar::before {
+    content: "🌱 today's garden";
+    display: block;
+    align-self: center;
+    background: var(--w-sunshine);
+    color: var(--w-ink);
+    border: 2px solid var(--w-ink);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 13px;
+    box-shadow: 3px 3px 0 var(--w-ink);
+    margin: 0 auto 14px;
+    position: relative;
+    width: max-content;
+    max-width: 90%;
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
+  }
+  /* Mini washi tape on the banner */
+  .sidebar::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 36px;
+    height: 12px;
+    background: rgba(255,107,138,0.55);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+    z-index: 5;
+    pointer-events: none;
+  }
+  .nav-label {
+    font-family: var(--font-hand);
+    font-size: 17px !important;
+    font-weight: 700;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    color: var(--w-sunshine) !important;
+    padding: 4px 0 4px 14px !important;
+    position: relative;
+  }
+  .nav-label::before {
+    /* doodle dot in front of label */
+    content: '✿';
+    position: absolute !important;
+    left: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: auto !important;
+    height: auto !important;
+    background: none !important;
+    color: var(--w-pink) !important;
+    font-size: 11px;
+    opacity: 1 !important;
+  }
+  .nav-item {
+    border-radius: 999px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    padding: 10px 14px !important;
+    margin: 1px 0;
+    color: var(--w-cream) !important;
+    transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  }
+  .nav-item:hover {
+    background: rgba(255,211,94,0.18) !important;
+    color: var(--w-sunshine) !important;
+    transform: translateX(3px);
+  }
+  .nav-item .icon {
+    color: var(--w-sunshine) !important;
+    opacity: 0.95 !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+  .nav-item:hover .icon {
+    color: var(--w-coral) !important;
+    transform: scale(1.15);
+  }
+  .nav-item.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 0 var(--w-ink), 0 0 24px rgba(255,107,138,0.4) !important;
+    transform: scale(1.02);
+  }
+  .nav-item.active .icon { color: #fff !important; opacity: 1 !important; }
+  .nav-item.active::before { display: none !important; }
+  .nav-badge {
+    background: var(--w-ink) !important;
+    color: var(--w-sunshine) !important;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+  }
+
+  /* Sidebar footer punch up */
+  .sidebar-footer {
+    border-top: 2px dashed rgba(255,216,130,0.35) !important;
+  }
+  .sf-pill {
+    background: rgba(255,211,94,0.15) !important;
+    color: var(--w-sunshine) !important;
+    border: 1.5px solid rgba(255,211,94,0.4);
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 700;
+  }
+  .sf-pill:hover {
+    background: var(--w-sunshine) !important;
+    color: var(--w-ink) !important;
+  }
+  .sf-social a:hover { color: var(--w-pink) !important; }
+  .sf-copyright {
+    color: var(--w-cream) !important;
+    opacity: 0.5;
+    font-family: var(--font-hand);
+    font-size: 12px !important;
+  }
+  .user-card {
+    background: linear-gradient(135deg, var(--w-paper), var(--w-cream));
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 10px 24px -8px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.05);
+    position: relative;
+  }
+  .user-card::before {
+    /* washi tape on top */
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-4deg);
+    width: 70px;
+    height: 18px;
+    background: var(--w-tape);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+    z-index: 4;
+  }
+  .user-name { color: var(--w-ink) !important; font-family: var(--font-disp-it); font-style: italic; font-weight: 700; font-size: 14px; }
+  .user-tier { color: var(--w-ink-2) !important; }
+  .uc-pts.tier-sprout { color: var(--w-coral) !important; }
+  .user-mascot {
+    background: var(--w-sunshine) !important;
+    border: 2.5px solid var(--w-ink) !important;
+    box-shadow: 0 4px 0 var(--w-ink);
+  }
+
+  /* ---- Page hero: GIGANTIC, italic, gradient, scribble ---- */
+  .main { padding-top: 36px; }
+  .page-head { align-items: flex-start; }
+  .page-title {
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 64px !important;
+    line-height: 0.95 !important;
+    letter-spacing: -0.035em !important;
+    background: linear-gradient(110deg, var(--w-sunshine) 0%, var(--w-coral) 35%, var(--w-pink) 65%, var(--w-grape) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    position: relative;
+    margin-bottom: 14px !important;
+    padding-right: 30px;
+  }
+  .page-title::after {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    left: -6px;
+    right: 20px;
+    height: 18px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 18' preserveAspectRatio='none'><path d='M2 12 Q 50 2, 100 10 T 200 8 T 300 12 T 398 6' stroke='%23ff6b8a' stroke-width='4' fill='none' stroke-linecap='round'/></svg>");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    opacity: 0.9;
+  }
+  .page-subtitle {
+    font-family: var(--font-hand);
+    font-size: 22px !important;
+    color: var(--w-cream) !important;
+    margin-top: 8px;
+  }
+  .page-subtitle svg { color: var(--w-lime) !important; }
+
+  /* ---- Tabs: sticker pill chips ---- */
+  .tabs-wrap { border-bottom: none !important; padding-bottom: 6px; }
+  .tabs { gap: 8px !important; flex-wrap: wrap; }
+  .tab {
+    background: rgba(244, 236, 220, 0.92);
+    color: var(--w-ink) !important;
+    border-radius: 999px !important;
+    border: 2px solid var(--w-ink) !important;
+    padding: 8px 18px !important;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 700;
+    margin-bottom: 0 !important;
+    box-shadow: 0 3px 0 var(--w-ink);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  }
+  .tab:hover {
+    background: var(--w-sunshine) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 6px 0 var(--w-ink);
+  }
+  .tab.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+    color: #fff !important;
+    border-bottom: 2px solid var(--w-ink) !important;
+    transform: scale(1.06) !important;
+    box-shadow: 0 4px 0 var(--w-ink), 0 0 24px rgba(255,107,138,0.4);
+  }
+  .tab.active .tab-leaf { color: #fff !important; }
+
+  .tabs-actions { gap: 14px !important; }
+  .action-btn {
+    background: var(--w-paper) !important;
+    color: var(--w-ink) !important;
+    border: 2px solid var(--w-ink) !important;
+    border-radius: 999px !important;
+    box-shadow: 0 3px 0 var(--w-ink);
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 700;
+  }
+  .action-btn:hover {
+    background: var(--w-sunshine) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 var(--w-ink);
+  }
+
+  /* ---- TOKEN CARDS → POLAROID STICKERS ---- */
+  .token-grid {
+    gap: 32px 24px !important;
+    padding-top: 12px;
+  }
+  .token-card {
+    background: var(--w-paper) !important;
+    color: var(--w-ink) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 18px 18px 24px !important;
+    box-shadow:
+      0 14px 28px -8px rgba(0,0,0,0.55),
+      0 4px 8px rgba(0,0,0,0.3),
+      inset 0 0 0 1px rgba(0,0,0,0.04) !important;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s, z-index 0s !important;
+    will-change: transform;
+    overflow: visible !important;
+    z-index: 1;
+  }
+
+  .token-card:hover {
+    transform: translateY(-10px) scale(1.025) !important;
+    z-index: 50 !important;
+    box-shadow:
+      0 25px 50px -10px rgba(0,0,0,0.65),
+      0 8px 16px rgba(0,0,0,0.35) !important;
+  }
+
+  /* Washi tape on top */
+  .token-card > .card-head::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 40%;
+    transform: translateX(-50%) rotate(-4deg);
+    width: 80px;
+    height: 20px;
+    background: var(--w-tape);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
+    z-index: 4;
+  }
+  .token-card:nth-of-type(even) > .card-head::before {
+    left: 60%;
+    transform: translateX(-50%) rotate(5deg);
+    background: rgba(255, 107, 138, 0.45);
+  }
+  .token-card:nth-of-type(3n) > .card-head::before {
+    background: rgba(184, 226, 92, 0.55);
+  }
+  .card-head { position: relative; }
+
+  /* Hide the existing teal leaf (from fun layer) on polaroid — we use sticker badges instead */
+  .token-card::after { display: none !important; }
+
+  /* All text inside polaroid → dark ink */
+  .token-card .token-name {
+    color: var(--w-ink) !important;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 22px !important;
+    letter-spacing: -0.02em;
+  }
+  .token-card .token-symbol {
+    color: var(--w-ink-2) !important;
+    font-weight: 700;
+    background: rgba(0,0,0,0.06);
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .token-card .token-desc { color: var(--w-ink-2) !important; }
+  .token-card .price-value {
+    color: var(--w-ink) !important;
+    font-size: 26px !important;
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+  .token-card .price-change.price-up   { color: #2e8b57 !important; background: rgba(184,226,92,0.35); padding: 2px 8px; border-radius: 999px; }
+  .token-card .price-change.price-down { color: #c44a45 !important; background: rgba(255,107,138,0.25); padding: 2px 8px; border-radius: 999px; }
+  .token-card .stat-label { color: var(--w-ink-2) !important; }
+  .token-card .stat-value { color: var(--w-ink) !important; font-weight: 700; }
+  .token-card .card-footer { border-top: 1px dashed rgba(0,0,0,0.18) !important; }
+  .token-card .creator-name { color: var(--w-ink-2) !important; }
+  .token-card .graduation-label { color: var(--w-ink-2) !important; }
+  .token-card .graduation-bar { background: rgba(0,0,0,0.12) !important; }
+  .token-card .graduation-percent { color: var(--w-ink) !important; }
+  .token-card .favorite { color: var(--w-pink) !important; }
+
+  /* Featured card extra "star" sticker */
+  .token-card.featured {
+    box-shadow:
+      0 14px 28px -8px rgba(255,139,94,0.5),
+      0 0 0 3px var(--w-coral),
+      inset 0 0 0 1px rgba(0,0,0,0.04) !important;
+  }
+
+  /* Buy → "PLANT" sticker button */
+  .token-card .btn-buy {
+    background: var(--w-ink) !important;
+    color: var(--w-sunshine) !important;
+    border-radius: 999px !important;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 13px !important;
+    padding: 0 18px !important;
+    height: 36px !important;
+    box-shadow: 0 4px 0 var(--w-coral);
+  }
+  .token-card .btn-buy:hover {
+    background: var(--w-coral) !important;
+    color: #fff !important;
+    transform: translateY(-3px) scale(1.06) !important;
+    box-shadow: 0 6px 0 var(--w-ink) !important;
+  }
+
+  /* Token avatar gets a chunky black border + offset shadow */
+  .token-card .token-avatar {
+    border: 3px solid var(--w-ink);
+    box-shadow: 4px 4px 0 var(--w-ink);
+    border-radius: 14px !important;
+  }
+
+  /* Sticker badges (JS-injected) */
+  .sticker-badge {
+    position: absolute;
+    top: -14px;
+    right: -10px;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--w-ink);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 2px solid var(--w-ink);
+    box-shadow: 3px 3px 0 var(--w-ink);
+    transform: rotate(8deg);
+    z-index: 5;
+    white-space: nowrap;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+  .sticker-badge.s-hot     { background: var(--w-coral); }
+  .sticker-badge.s-fresh   { background: var(--w-lime); }
+  .sticker-badge.s-gem     { background: var(--w-sky); }
+  .sticker-badge.s-rising  { background: var(--w-sunshine); }
+  .sticker-badge.s-rare    { background: var(--w-grape); color: #fff; }
+  .sticker-badge.s-yum     { background: var(--w-pink); color: #fff; }
+
+  /* ---- Notice banner: paper note style ---- */
+  .notice {
+    background: var(--w-sunshine) !important;
+    color: var(--w-ink) !important;
+    border: 2px solid var(--w-ink) !important;
+    border-radius: 14px !important;
+    box-shadow: 4px 4px 0 var(--w-ink);
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 14px !important;
+    padding: 12px 16px !important;
+  }
+  .notice strong { color: var(--w-ink) !important; }
+
+  /* ---- Featured chip row: lifted polaroid chips ---- */
+  .featured-chip {
+    background: var(--w-paper) !important;
+    border: 2px solid var(--w-ink) !important;
+    border-radius: 12px !important;
+    box-shadow: 3px 3px 0 var(--w-ink);
+    color: var(--w-ink) !important;
+  }
+  .featured-chip:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 5px 5px 0 var(--w-ink);
+  }
+  .featured-name { color: var(--w-ink) !important; font-family: var(--font-disp-it); font-style: italic; }
+
+  /* ---- Wallet area + headers ---- */
+  .wallet-connected {
+    background: var(--w-paper) !important;
+    border: 2px solid var(--w-ink) !important;
+    color: var(--w-ink) !important;
+    box-shadow: 3px 3px 0 var(--w-ink);
+  }
+  .wallet-connected:hover { background: var(--w-sunshine) !important; }
+  .wc-balance { color: var(--w-ink) !important; font-weight: 800 !important; }
+  .wc-addr { color: var(--w-ink-2) !important; }
+  .wc-chevron { color: var(--w-ink) !important; }
+  .btn-ghost {
+    background: var(--w-paper) !important;
+    color: var(--w-ink) !important;
+    border: 2px solid var(--w-ink) !important;
+    border-radius: 999px !important;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 700;
+    box-shadow: 3px 3px 0 var(--w-ink);
+  }
+  .btn-ghost:hover {
+    background: var(--w-sunshine) !important;
+    color: var(--w-ink) !important;
+    border-color: var(--w-ink) !important;
+  }
+  .header-search input {
+    background: rgba(244, 236, 220, 0.95) !important;
+    border: 2px solid var(--w-ink) !important;
+    color: var(--w-ink) !important;
+    border-radius: 999px !important;
+    height: 40px !important;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-size: 14px !important;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.5);
+  }
+  .header-search input::placeholder { color: var(--w-ink-2) !important; }
+  .header-search > svg { color: var(--w-ink-2) !important; }
+
+  /* ---- Big mascot character — pinned bottom-right, LARGE ---- */
+  .mascot-character {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    width: 200px;
+    z-index: 240;
+    pointer-events: none;
+  }
+  .mc-label {
+    position: absolute;
+    bottom: -6px;
+    right: 4px;
+    background: var(--w-sunshine);
+    color: var(--w-ink);
+    border: 2px solid var(--w-ink);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 11px;
+    box-shadow: 2px 2px 0 var(--w-ink);
+    z-index: 5;
+    white-space: nowrap;
+    pointer-events: none;
+    text-transform: lowercase;
+    letter-spacing: 0.03em;
+  }
+  .mc-label::before { content: '🌱 '; }
+  .mascot-character .mc-body {
+    width: 140px;
+    height: 140px;
+    margin-left: auto;
+    background: linear-gradient(180deg, var(--w-sunshine), var(--w-coral));
+    border-radius: 50%;
+    border: 3.5px solid var(--w-ink);
+    box-shadow: 0 8px 0 var(--w-ink), 0 16px 32px -8px rgba(0,0,0,0.5);
+    display: grid;
+    place-items: center;
+    position: relative;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: mascotIdle 4s ease-in-out infinite;
+  }
+  .mascot-character .mc-body:hover {
+    transform: rotate(-6deg) scale(1.06);
+  }
+  @keyframes mascotIdle {
+    0%, 100% { transform: rotate(-3deg) translateY(0); }
+    50%      { transform: rotate(3deg) translateY(-8px); }
+  }
+  .mascot-character svg { width: 92px; height: 92px; }
+  .mascot-character .mc-bubble {
+    position: absolute;
+    right: 160px;
+    bottom: 80px;
+    width: 200px;
+    background: var(--w-paper);
+    color: var(--w-ink);
+    border: 3px solid var(--w-ink);
+    border-radius: 16px;
+    padding: 12px 14px;
+    font-family: var(--font-hand);
+    font-size: 18px;
+    line-height: 1.25;
+    font-weight: 600;
+    box-shadow: 5px 5px 0 var(--w-ink);
+    pointer-events: auto;
+  }
+  .mascot-character .mc-bubble::after {
+    content: '';
+    position: absolute;
+    right: -16px;
+    bottom: 28px;
+    width: 24px;
+    height: 24px;
+    background: var(--w-paper);
+    border-right: 3px solid var(--w-ink);
+    border-bottom: 3px solid var(--w-ink);
+    transform: rotate(-45deg);
+  }
+  .mascot-character .mc-bubble strong {
+    color: var(--w-pink);
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+  }
+
+  /* Hide the old fun-edition chip and old garden-helper (overridden by mascot-character) */
+  .fun-edition { display: none !important; }
+  .garden-helper { display: none !important; }
+
+  /* ---- Fireflies (JS-injected) ---- */
+  .firefly {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--w-sunshine);
+    box-shadow: 0 0 12px var(--w-sunshine), 0 0 24px rgba(255,211,94,0.5);
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.8;
+  }
+  .firefly.f-pink { background: var(--w-pink); box-shadow: 0 0 12px var(--w-pink), 0 0 24px rgba(255,107,138,0.5); }
+  .firefly.f-mint { background: var(--w-lime); box-shadow: 0 0 12px var(--w-lime), 0 0 24px rgba(184,226,92,0.5); }
+  .firefly.f-sky  { background: var(--w-sky);  box-shadow: 0 0 12px var(--w-sky),  0 0 24px rgba(94,226,255,0.5); }
+
+  /* ---- WILD edition chip (replaces fun-edition, top-left header strip) ---- */
+  .wild-edition {
+    position: fixed;
+    top: 18px;
+    right: 220px;
+    background: var(--w-pink);
+    color: #fff;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 11px;
+    padding: 5px 12px;
+    border: 2px solid var(--w-ink);
+    border-radius: 999px;
+    z-index: 110;
+    box-shadow: 3px 3px 0 var(--w-ink);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+  .wild-edition::before { content: '🌶️ '; }
+
+  /* ---- Groove mode (easter egg) ---- */
+  body.groove .token-card,
+  body.groove .tab,
+  body.groove .featured-chip,
+  body.groove .sticker-badge,
+  body.groove .nav-item.active {
+    animation: grooveWiggle 0.7s ease-in-out infinite;
+  }
+  @keyframes grooveWiggle {
+    0%, 100% { transform: rotate(var(--orig-rot, -1deg)); }
+    25%      { transform: rotate(calc(var(--orig-rot, -1deg) + 3deg)) translateY(-2px); }
+    75%      { transform: rotate(calc(var(--orig-rot, -1deg) - 3deg)) translateY(2px); }
+  }
+
+  /* ╚═══ end "STICKER GARDEN" WILD layer ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ "STICKER DOCK" — sidebar redesign v0.3 (2026-05-27)        ║
+     ║ Sidebar: 240px wall-text → 100px circular sticker dock     ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  :root { --sidebar-w: 104px; }
+
+  /* Override main offset for the narrower dock */
+  .sidebar {
+    width: 104px !important;
+    padding: 16px 8px 14px !important;
+    align-items: center;
+    gap: 14px !important;
+    background:
+      radial-gradient(circle at 50% 12%, rgba(255,211,94,0.18), transparent 45%),
+      radial-gradient(circle at 50% 85%, rgba(255,107,138,0.14), transparent 45%),
+      rgba(20, 32, 24, 0.85);
+  }
+  .main { margin-left: var(--sidebar-w) !important; }
+
+  /* Hide top sidebar banner (the sticker-note style was too cluttered for narrow dock) */
+  .sidebar::before, .sidebar::after { display: none !important; }
+
+  /* Hide group labels in narrow dock */
+  .nav-label { display: none !important; }
+
+  /* Each nav group becomes a vertical stack with dotted divider */
+  .nav-group {
+    width: 100%;
+    align-items: center;
+    gap: 8px !important;
+    padding-bottom: 10px;
+    border-bottom: 1.5px dashed rgba(255,216,130,0.25);
+  }
+  .nav-group:last-of-type { border-bottom: none; padding-bottom: 0; }
+
+  /* The sticker pill itself */
+  .nav-item {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    place-items: center !important;
+    background: var(--w-paper) !important;
+    border: 2.5px solid var(--w-ink) !important;
+    box-shadow: 0 4px 0 var(--w-ink) !important;
+    color: var(--w-ink) !important;
+    font-size: 0 !important;       /* hide text node */
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s, background 0.2s !important;
+    flex-shrink: 0;
+  }
+  .nav-item:hover {
+    transform: translateY(-4px) scale(1.08) !important;
+    box-shadow: 0 8px 0 var(--w-ink) !important;
+    background: var(--w-sunshine) !important;
+  }
+  .nav-item .icon {
+    width: 28px !important;
+    height: 28px !important;
+    color: var(--w-ink) !important;
+    opacity: 1 !important;
+    stroke-width: 2 !important;
+    transition: transform 0.2s, color 0.2s !important;
+  }
+  .nav-item:hover .icon { color: var(--w-ink) !important; transform: scale(1.1); }
+
+  /* Color-cycle: each sticker has its own ring color (gradient inset) */
+  .nav-item:nth-of-type(6n+1) { background: linear-gradient(135deg, #fef6dd, #ffeab0) !important; }
+  .nav-item:nth-of-type(6n+2) { background: linear-gradient(135deg, #ffe1d4, #ffcfb8) !important; }
+  .nav-item:nth-of-type(6n+3) { background: linear-gradient(135deg, #e8e0fc, #d6c8fa) !important; }
+  .nav-item:nth-of-type(6n+4) { background: linear-gradient(135deg, #d8f5ff, #b8e6fc) !important; }
+  .nav-item:nth-of-type(6n+5) { background: linear-gradient(135deg, #e7f8d2, #ccecaa) !important; }
+  .nav-item:nth-of-type(6n+6) { background: linear-gradient(135deg, #ffd9e3, #ffc0cf) !important; }
+
+  /* Active: bigger ring, full coral→pink, white glow halo */
+  .nav-item.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+    transform: scale(1.12) !important;
+    box-shadow:
+      0 6px 0 var(--w-ink),
+      0 0 0 4px rgba(255,255,255,0.15),
+      0 0 28px rgba(255,107,138,0.55) !important;
+  }
+  .nav-item.active .icon { color: #fff !important; }
+  .nav-item.active::before { display: none !important; }
+
+  /* Tooltip label pops out to the right on hover */
+  .nav-item::after {
+    content: attr(data-label);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-6px);
+    background: var(--w-ink);
+    color: var(--w-sunshine);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 300;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+  }
+  .nav-item::before {
+    content: '';
+    position: absolute;
+    left: calc(100% + 4px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border: 6px solid transparent;
+    border-right-color: var(--w-ink);
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 300;
+  }
+  .nav-item:hover::after,
+  .nav-item:hover::before {
+    opacity: 1;
+  }
+  .nav-item:hover::after { transform: translateY(-50%) translateX(0); }
+
+  /* Active item: persistent tiny "you are here" tag below */
+  .nav-item.active + .nav-here,
+  .nav-item.active::marker { display: none; }
+
+  /* Nav badge (e.g. "3" on My Profile) — small pill at top-right of circle */
+  .nav-badge {
+    position: absolute !important;
+    top: -4px !important;
+    right: -4px !important;
+    margin: 0 !important;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 999px !important;
+    background: var(--w-pink) !important;
+    color: #fff !important;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    box-shadow: 2px 2px 0 var(--w-ink), 0 0 0 2px var(--w-paper);
+    display: grid;
+    place-items: center;
+    padding: 0 6px !important;
+  }
+
+  /* Compress user card → avatar-only circle at bottom */
+  .user-card {
+    margin-top: auto !important;
+    width: 64px !important;
+    height: 64px !important;
+    padding: 0 !important;
+    background: linear-gradient(135deg, var(--w-sunshine), var(--w-coral)) !important;
+    border-radius: 50% !important;
+    border: 2.5px solid var(--w-ink) !important;
+    box-shadow: 0 4px 0 var(--w-ink) !important;
+    overflow: hidden;
+    display: grid !important;
+    place-items: center !important;
+    gap: 0 !important;
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  }
+  .user-card::before, .user-card::after { display: none !important; }
+  .user-card:hover { transform: scale(1.08) translateY(-2px) !important; }
+  .user-card .user-mascot {
+    width: 56px !important;
+    height: 56px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+  .user-card .user-mascot svg { width: 44px; height: 44px; }
+  .user-card .user-info { display: none !important; }
+  /* Tooltip on user-card */
+  .user-card::after {
+    content: 'NobleFlame · Sprout · 642 pts';
+    display: block !important;
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-6px);
+    background: var(--w-ink);
+    color: var(--w-sunshine);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 13px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 300;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+  }
+  .user-card:hover::after { opacity: 1; transform: translateY(-50%) translateX(0); }
+
+  /* Sidebar footer — collapsed to just social icons */
+  .sidebar-footer {
+    padding: 8px 0 !important;
+    border-top: 1.5px dashed rgba(255,216,130,0.25) !important;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px !important;
+  }
+  .sidebar-footer .sf-pills { display: none !important; }
+  .sidebar-footer .sf-copyright { display: none !important; }
+  .sidebar-footer .sf-social { gap: 8px !important; }
+  .sidebar-footer .sf-social a {
+    width: 28px !important;
+    height: 28px !important;
+    background: rgba(255,211,94,0.15);
+    border: 1.5px solid rgba(255,211,94,0.4);
+    color: var(--w-sunshine) !important;
+    border-radius: 50% !important;
+  }
+  .sidebar-footer .sf-social a:hover {
+    background: var(--w-pink) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 0 var(--w-ink);
+  }
+
+  /* Floating doodle leaf above first nav item (decoration) */
+  .sidebar > .nav-group:first-of-type::before {
+    content: '';
+    position: relative;
+    display: block;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 4px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><filter id='s'><feDropShadow dx='2' dy='3' stdDeviation='0' flood-color='%231a1208'/></filter></defs><g filter='url(%23s)'><ellipse cx='32' cy='44' rx='14' ry='10' fill='%23ffd35e' stroke='%231a1208' stroke-width='2.5'/><ellipse cx='24' cy='28' rx='6' ry='12' transform='rotate(-25 24 28)' fill='%237cc4a4' stroke='%231a1208' stroke-width='2'/><ellipse cx='40' cy='28' rx='6' ry='12' transform='rotate(25 40 28)' fill='%235ba886' stroke='%231a1208' stroke-width='2'/><rect x='29' y='30' width='6' height='14' fill='%233d7458' stroke='%231a1208' stroke-width='2'/><circle cx='27' cy='46' r='2.5' fill='%231a1208'/><circle cx='37' cy='46' r='2.5' fill='%231a1208'/><circle cx='27.5' cy='45.5' r='0.8' fill='%23fff'/><circle cx='37.5' cy='45.5' r='0.8' fill='%23fff'/><path d='M 26 50 Q 32 53 38 50' stroke='%231a1208' stroke-width='1.5' fill='none' stroke-linecap='round'/></g></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* Responsive: on narrow viewport collapse to icons stay, no change needed */
+  /* ╚═══ end "STICKER DOCK" sidebar redesign ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ "STICKER + TEXT" — sidebar v0.4 (2026-05-27)              ║
+     ║ Combo: small sticker icon LEFT + italic label RIGHT.       ║
+     ║ Overrides v0.3 dock-only-icon styles.                      ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  :root { --sidebar-w: 204px; }
+
+  .sidebar {
+    width: 204px !important;
+    padding: 16px 12px 14px !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+  .main { margin-left: 204px !important; }
+
+  /* Show "today's garden" banner again */
+  .sidebar::before {
+    display: block !important;
+    content: "🌱 today's garden" !important;
+    background: var(--w-sunshine) !important;
+    color: var(--w-ink) !important;
+    border: 2px solid var(--w-ink) !important;
+    border-radius: 10px !important;
+    padding: 6px 12px !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 900 !important;
+    font-size: 12px !important;
+    box-shadow: 3px 3px 0 var(--w-ink) !important;
+    margin: 0 0 4px !important;
+    text-align: center !important;
+    width: 100% !important;
+    max-width: none !important;
+    text-transform: lowercase !important;
+    letter-spacing: 0.02em !important;
+    position: relative !important;
+  }
+  .sidebar::after { display: none !important; }
+
+  /* Hide the v0.3 decorative big mascot at top of first nav group */
+  .sidebar > .nav-group:first-of-type::before { display: none !important; }
+
+  /* Group: stacked items, dashed divider, tiny handwritten label */
+  .nav-group {
+    width: 100% !important;
+    align-items: stretch !important;
+    gap: 3px !important;
+    border-bottom: 1.5px dashed rgba(255,216,130,0.25) !important;
+    padding-bottom: 10px !important;
+  }
+  .nav-group:last-of-type { border-bottom: none !important; padding-bottom: 0 !important; }
+
+  /* Restore group labels — small handwritten note */
+  .nav-label {
+    display: block !important;
+    font-family: var(--font-hand) !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    text-transform: lowercase !important;
+    letter-spacing: 0 !important;
+    color: var(--w-sunshine) !important;
+    padding: 0 4px 4px !important;
+    position: relative;
+  }
+  .nav-label::before {
+    content: '✿' !important;
+    position: absolute !important;
+    left: -4px !important;
+    top: 1px !important;
+    transform: none !important;
+    color: var(--w-pink) !important;
+    background: none !important;
+    width: auto !important;
+    height: auto !important;
+    font-size: 9px !important;
+    opacity: 0.9 !important;
+  }
+  /* push the actual label to clear the dot */
+  .nav-label { padding-left: 12px !important; }
+
+  /* ===== Nav item: pill with sticker icon on LEFT, italic text on RIGHT ===== */
+  .nav-item {
+    width: 100% !important;
+    height: 46px !important;
+    border-radius: 999px !important;
+    padding: 4px 14px 4px 4px !important;
+    margin: 0 !important;
+    display: flex !important;
+    place-items: center !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    background: rgba(244, 236, 220, 0.92) !important;
+    border: 2px solid var(--w-ink) !important;
+    box-shadow: 0 3px 0 var(--w-ink) !important;
+    color: var(--w-ink) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    position: relative;
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s, background 0.18s !important;
+  }
+  .nav-item .ni-text {
+    flex: 1;
+    color: inherit;
+    font-family: inherit;
+    font-style: italic;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-item:hover {
+    transform: translateX(3px) !important;
+    background: var(--w-sunshine) !important;
+    box-shadow: 0 5px 0 var(--w-ink) !important;
+  }
+
+  /* Sticker icon circle (the SVG wrapper) on the LEFT */
+  .nav-item .icon {
+    width: 36px !important;
+    height: 36px !important;
+    padding: 7px !important;
+    border-radius: 50% !important;
+    border: 2px solid var(--w-ink) !important;
+    flex-shrink: 0 !important;
+    color: var(--w-ink) !important;
+    opacity: 1 !important;
+    stroke-width: 2 !important;
+    box-sizing: border-box !important;
+    box-shadow: 1px 1px 0 var(--w-ink);
+  }
+  /* Color cycle for stickers */
+  .nav-item:nth-of-type(6n+1) .icon { background: #ffeab0 !important; }
+  .nav-item:nth-of-type(6n+2) .icon { background: #ffcfb8 !important; }
+  .nav-item:nth-of-type(6n+3) .icon { background: #d6c8fa !important; }
+  .nav-item:nth-of-type(6n+4) .icon { background: #b8e6fc !important; }
+  .nav-item:nth-of-type(6n+5) .icon { background: #ccecaa !important; }
+  .nav-item:nth-of-type(6n+6) .icon { background: #ffc0cf !important; }
+  .nav-item:hover .icon { transform: rotate(-6deg) scale(1.08); }
+
+  /* Active state */
+  .nav-item.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+    color: #fff !important;
+    transform: none !important;
+    box-shadow: 0 4px 0 var(--w-ink), 0 0 22px rgba(255,107,138,0.4) !important;
+  }
+  .nav-item.active .ni-text { color: #fff !important; }
+  .nav-item.active .icon {
+    background: #fff !important;
+    color: var(--w-ink) !important;
+  }
+
+  /* Hide v0.3 tooltip pop-out and arrow (text is visible now) */
+  .nav-item::after, .nav-item::before { display: none !important; }
+
+  /* Badge moves back to inline-right of pill */
+  .nav-badge {
+    position: static !important;
+    margin-left: auto !important;
+    min-width: 22px;
+    height: 20px;
+    padding: 0 8px !important;
+    border-radius: 999px !important;
+    background: var(--w-ink) !important;
+    color: var(--w-sunshine) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    display: grid !important;
+    place-items: center !important;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.4) !important;
+    flex-shrink: 0;
+  }
+  .nav-item.active .nav-badge {
+    background: #fff !important;
+    color: var(--w-coral) !important;
+  }
+
+  /* ===== User card: expanded back ===== */
+  .user-card {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: auto !important;
+    background: linear-gradient(135deg, var(--w-paper), var(--w-cream)) !important;
+    border-radius: 14px !important;
+    border: 2px solid var(--w-ink) !important;
+    box-shadow: 0 4px 0 var(--w-ink), inset 0 0 0 1px rgba(0,0,0,0.04) !important;
+    padding: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    place-items: stretch !important;
+    overflow: visible !important;
+    position: relative;
+  }
+  .user-card:hover { transform: translateY(-2px) !important; }
+  .user-card .user-mascot {
+    display: grid !important;
+    width: 40px !important;
+    height: 40px !important;
+    background: var(--w-sunshine) !important;
+    border: 2px solid var(--w-ink) !important;
+    border-radius: 50% !important;
+    box-shadow: 1px 1px 0 var(--w-ink) !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+  }
+  .user-card .user-mascot svg { width: 28px !important; height: 28px !important; }
+  .user-card .user-info {
+    display: block !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  .user-card .user-name {
+    color: var(--w-ink) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 800 !important;
+    font-size: 13px !important;
+    line-height: 1.15 !important;
+  }
+  .user-card .user-tier {
+    color: var(--w-ink-2) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-size: 11px !important;
+    margin-top: 1px !important;
+  }
+  .user-card .uc-pts.tier-sprout { color: var(--w-coral) !important; }
+  .user-card::before, .user-card::after { display: none !important; }
+
+  /* ===== Sidebar footer: restore pills + copyright ===== */
+  .sidebar-footer {
+    padding: 10px 4px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    border-top: 1.5px dashed rgba(255,216,130,0.25) !important;
+  }
+  .sidebar-footer .sf-social {
+    display: flex !important;
+    gap: 6px !important;
+    justify-content: center !important;
+  }
+  .sidebar-footer .sf-social a {
+    width: 26px !important;
+    height: 26px !important;
+    background: rgba(255,211,94,0.15) !important;
+    border: 1.5px solid rgba(255,211,94,0.4) !important;
+    color: var(--w-sunshine) !important;
+    border-radius: 50% !important;
+  }
+  .sidebar-footer .sf-social a:hover {
+    background: var(--w-pink) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 0 var(--w-ink);
+  }
+  .sidebar-footer .sf-pills {
+    display: flex !important;
+    gap: 4px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+  .sidebar-footer .sf-pill {
+    background: rgba(255,211,94,0.12) !important;
+    color: var(--w-sunshine) !important;
+    border: 1px solid rgba(255,211,94,0.35) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 700 !important;
+    font-size: 10px !important;
+    padding: 3px 8px !important;
+  }
+  .sidebar-footer .sf-pill:hover {
+    background: var(--w-sunshine) !important;
+    color: var(--w-ink) !important;
+  }
+  .sidebar-footer .sf-copyright {
+    display: block !important;
+    color: var(--w-cream) !important;
+    opacity: 0.5 !important;
+    font-family: var(--font-hand) !important;
+    font-size: 11px !important;
+    text-align: center !important;
+  }
+
+  /* ╚═══ end "STICKER + TEXT" sidebar v0.4 ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ v0.5 SIMPLIFY (2026-05-28) — user feedback                ║
+     ║   (1) hide "Discover what's blooming" hero banner         ║
+     ║   (2) flat sidebar list — no group labels/dividers        ║
+     ║   (3) hide "Wild · v0.2" edition chip                     ║
+     ║   (4) one unified background for all nav sticker icons    ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  /* (1) Hide hero banner */
+  .page-head { display: none !important; }
+
+  /* (2) Flat nav list — no group labels, no group dividers */
+  .nav-label { display: none !important; }
+  .nav-group {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+    gap: 4px !important;
+  }
+  .sidebar { gap: 6px !important; }
+  .sidebar > .nav-group + .nav-group { margin-top: 0 !important; }
+
+  /* (3) Hide edition chip */
+  .wild-edition { display: none !important; }
+
+  /* (4) v0.6 FIX — unify nav-item PILL background (not the sticker icon).
+       Sticker icons keep their color cycle (cream/peach/grape/sky/lime/pink).
+       Override v0.3 dock's per-item gradient pill backgrounds. */
+  .sidebar .nav-item,
+  .sidebar .nav-item:nth-of-type(6n+1),
+  .sidebar .nav-item:nth-of-type(6n+2),
+  .sidebar .nav-item:nth-of-type(6n+3),
+  .sidebar .nav-item:nth-of-type(6n+4),
+  .sidebar .nav-item:nth-of-type(6n+5),
+  .sidebar .nav-item:nth-of-type(6n+6) {
+    background: rgba(244, 236, 220, 0.92) !important;
+  }
+  /* But keep active state's coral→pink gradient */
+  .sidebar .nav-item.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+  }
+
+  /* (5) Grid auto-fit — stretch cards to fill empty right-side space */
+  .token-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+  }
+
+  /* ╚═══ end v0.5 SIMPLIFY ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ v0.7 — sticker unify + hide bubble + live activity panel  ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  /* (1) Unify all card sticker badges to brand peach */
+  .sticker-badge.s-hot,
+  .sticker-badge.s-fresh,
+  .sticker-badge.s-gem,
+  .sticker-badge.s-rising,
+  .sticker-badge.s-rare,
+  .sticker-badge.s-yum {
+    background: var(--sp-peach-400) !important;
+    color: var(--w-ink) !important;
+  }
+
+  /* (2) Hide Sprout mascot speech bubble — keep body + label */
+  .mascot-character .mc-bubble,
+  .mascot-character .helper-bubble { display: none !important; }
+
+  /* (3) Live Activity right panel — fills empty right space */
+  :root { --la-w: 280px; }
+
+  .main { margin-right: var(--la-w) !important; }
+
+  .live-activity {
+    position: fixed;
+    top: calc(var(--header-h) + var(--marquee-h));
+    right: 0;
+    bottom: 0;
+    width: var(--la-w);
+    background: var(--surface-1);
+    border-left: 1.5px dashed rgba(255,216,130,0.30);
+    padding: 16px 12px 14px;
+    display: flex;
+    flex-direction: column;
+    z-index: 80;
+    overflow: hidden;
+  }
+
+  .la-header {
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 17px;
+    color: var(--w-sunshine);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .la-subhead {
+    font-family: var(--font-hand);
+    font-size: 13px;
+    color: var(--text-3);
+    margin-bottom: 12px;
+  }
+  .la-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2e8b57;
+    box-shadow: 0 0 0 3px rgba(46,139,87,0.3);
+    animation: laPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes laPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(46,139,87,0.6); }
+    50%      { box-shadow: 0 0 0 6px rgba(46,139,87,0); }
+  }
+
+  .la-feed {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 4px;
+    scrollbar-width: thin;
+  }
+  .la-feed::-webkit-scrollbar { width: 5px; }
+  .la-feed::-webkit-scrollbar-thumb { background: rgba(255,211,94,0.25); border-radius: 3px; }
+
+  .la-item {
+    background: var(--w-paper);
+    border: 1.5px solid var(--w-ink);
+    border-radius: 10px;
+    padding: 9px 11px 10px;
+    color: var(--w-ink);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: 2px 2px 0 var(--w-ink);
+    transition: transform 0.18s var(--ease);
+    position: relative;
+  }
+  .la-item:hover {
+    transform: translateY(-2px) translateX(-2px);
+    box-shadow: 4px 4px 0 var(--w-ink);
+  }
+  .la-item.fresh {
+    animation: laFresh 1.5s ease-out;
+  }
+  @keyframes laFresh {
+    0%   { background: var(--w-sunshine); transform: translateX(8px); }
+    100% { background: var(--w-paper); transform: translateX(0); }
+  }
+
+  .la-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .la-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--w-ink);
+    flex-shrink: 0;
+  }
+  .la-name {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 11.5px;
+    color: var(--w-ink);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .la-time {
+    font-size: 10px;
+    color: var(--w-ink-2);
+    font-family: var(--font-body);
+    opacity: 0.7;
+  }
+
+  .la-body {
+    font-size: 11.5px;
+    color: var(--w-ink-2);
+    line-height: 1.35;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .la-verb {
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 800;
+    color: var(--w-ink);
+  }
+  .la-verb.buy  { color: #2e8b57; }
+  .la-verb.sell { color: #b94842; }
+  .la-verb.mint { color: var(--sp-peach-500); }
+  .la-verb.grad { color: var(--w-grape); }
+
+  .la-token {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--w-ink);
+    background: rgba(0,0,0,0.07);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10.5px;
+  }
+  .la-amount {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 11px;
+  }
+  .la-amount.up   { color: #2e8b57; }
+  .la-amount.down { color: #b94842; }
+
+  /* Hide live activity on narrow screens */
+  @media (max-width: 1100px) {
+    .live-activity { display: none; }
+    .main { margin-right: 0 !important; }
+  }
+
+  /* ╚═══ end v0.7 ═══╝ */
+
+  /* ╔═══ v0.8 — unify sidebar nav icon bg (one color) ═══╗ */
+  .sidebar .nav-item .icon,
+  .sidebar .nav-item:nth-of-type(6n+1) .icon,
+  .sidebar .nav-item:nth-of-type(6n+2) .icon,
+  .sidebar .nav-item:nth-of-type(6n+3) .icon,
+  .sidebar .nav-item:nth-of-type(6n+4) .icon,
+  .sidebar .nav-item:nth-of-type(6n+5) .icon,
+  .sidebar .nav-item:nth-of-type(6n+6) .icon {
+    background: #ffeab0 !important;
+  }
+  /* Keep active item's icon distinct */
+  .sidebar .nav-item.active .icon {
+    background: #fff !important;
+  }
+  /* ╚═══ end v0.8 ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ v0.9 — Live Activity → FLAT DARK feed (Option A)          ║
+     ║   strip polaroid cards, use flat rows + colored left bar  ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  .live-activity { padding: 14px 10px 12px !important; }
+  .la-feed { gap: 1px !important; }
+
+  .la-item {
+    background: transparent !important;
+    border: none !important;
+    border-left: 3px solid var(--sp-teal-500) !important;
+    border-radius: 0 !important;
+    padding: 7px 8px 7px 10px !important;
+    box-shadow: none !important;
+    color: var(--text-2) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    font-family: var(--font-body) !important;
+    font-size: 12px !important;
+    transition: background 0.15s ease !important;
+  }
+  .la-item:hover {
+    background: rgba(255,255,255,0.04) !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Flatten nested wrappers into single flex row */
+  .la-row, .la-body { display: contents !important; }
+
+  /* Color border-left by action type via :has() */
+  .la-item:has(.la-verb.buy)  { border-left-color: #2e8b57 !important; }
+  .la-item:has(.la-verb.sell) { border-left-color: var(--sp-crimson) !important; }
+  .la-item:has(.la-verb.mint) { border-left-color: var(--sp-peach-400) !important; }
+  .la-item:has(.la-verb.grad) { border-left-color: var(--w-grape) !important; }
+
+  .la-avatar {
+    width: 18px !important;
+    height: 18px !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    order: 1;
+  }
+  .la-name {
+    order: 2;
+    color: var(--text-1) !important;
+    font-family: var(--font-mono) !important;
+    font-weight: 700 !important;
+    font-size: 11.5px !important;
+  }
+  .la-verb {
+    order: 3;
+    color: var(--text-2) !important;
+    font-family: var(--font-body) !important;
+    font-style: normal !important;
+    font-weight: 600 !important;
+    font-size: 11.5px !important;
+    background: none !important;
+  }
+  .la-token {
+    order: 4;
+    background: rgba(255,255,255,0.07) !important;
+    color: var(--text-1) !important;
+    border: none !important;
+    font-family: var(--font-mono) !important;
+    font-size: 10.5px !important;
+    padding: 1px 6px !important;
+    border-radius: 4px !important;
+    font-weight: 700 !important;
+  }
+  .la-amount {
+    order: 5;
+    font-family: var(--font-mono) !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+  }
+  .la-amount.up   { color: #6cc28b !important; }
+  .la-amount.down { color: #e8807a !important; }
+  .la-time {
+    order: 6;
+    margin-left: auto !important;
+    font-size: 10px !important;
+    color: var(--text-3) !important;
+    font-family: var(--font-body) !important;
+    opacity: 0.7;
+  }
+
+  /* Override JS-injected "fresh" animation */
+  .la-item.fresh { animation: laFlatFresh 1.4s ease-out !important; }
+  @keyframes laFlatFresh {
+    0%   { background: rgba(255,211,94,0.18); transform: translateX(6px); }
+    100% { background: transparent; transform: translateX(0); }
+  }
+
+  /* Tighten panel header for flat feed */
+  .la-header { color: var(--sun) !important; font-size: 14px !important; margin-bottom: 2px !important; }
+  .la-subhead { font-size: 12px !important; margin-bottom: 10px !important; }
+
+  /* ╚═══ end v0.9 ═══╝ */
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER (fixed top, pro structure) ============ -->
+<header class="header">
+  <div class="logo" onclick="location.href='token_list_v4.html'" style="cursor:pointer" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
+  <div class="logo-mascot" style="width:var(--mascot-lg);height:var(--mascot-lg);border-radius:10px;background:linear-gradient(180deg,#e8a87c,#e8a87c);display:grid;place-items:center;flex-shrink:0">
+    <svg viewBox="0 0 64 64" fill="none">
+        <ellipse cx="32" cy="46" rx="16" ry="11" fill="#8B4513"/>
+        <ellipse cx="24" cy="28" rx="6" ry="11" transform="rotate(-25 24 28)" fill="#7cc4a4"/>
+        <ellipse cx="40" cy="28" rx="6" ry="11" transform="rotate(25 40 28)" fill="#5ba886"/>
+        <rect x="30" y="30" width="4" height="14" fill="#3d7458"/>
+        <circle cx="27" cy="48" r="1.5" fill="#1a1208"/>
+        <circle cx="37" cy="48" r="1.5" fill="#1a1208"/>
+        <path d="M 27 51 Q 32 53.5 37 51" stroke="#1a1208" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      </svg>
+  </div>
+  <div>
+    <span class="logo-text" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:17px;font-weight:800;color:#e8a87c;letter-spacing:-0.01em">Sprout</span>
+    <span style="display:block;font-size:9px;font-weight:600;color:#6f7d74;letter-spacing:0.06em;text-transform:lowercase">the meme garden</span>
+  </div>
+</div>
+
+  <div class="header-search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" placeholder="Search the garden — tokens, creators, addresses…">
+  </div>
+
+  <div class="header-actions">
+    <div class="wallet-connected" onclick="toggleWalletMenu(event)">
+  <div class="wc-avatar">
+    <svg viewBox="0 0 24 24" fill="none">
+        <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
+        <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
+        <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
+        <rect x="11" y="12" width="2" height="6" fill="#3d7458"/>
+        <circle cx="10" cy="19" r="0.6" fill="#1a1208"/>
+        <circle cx="14" cy="19" r="0.6" fill="#1a1208"/>
+        <path d="M 10 20.5 Q 12 21.5 14 20.5" stroke="#1a1208" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+      </svg>
+  </div>
+  <div class="wc-info">
+    <div class="wc-balance">12.45 SOL</div>
+    <div class="wc-addr">7xK9…mP3q</div>
+  </div>
+  <span class="wc-net-dot" title="Solana mainnet"></span>
+  <svg class="wc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+
+  <div class="wc-menu">
+    <div class="wc-menu-head">
+      <div class="wc-menu-net"><span class="wc-net-dot"></span> Solana mainnet</div>
+      <div class="wc-menu-bal">12.45 SOL</div>
+    </div>
+    <a class="wc-item" href="my_profile.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My profile
+    </a>
+    <button class="wc-item" onclick="event.stopPropagation(); navigator.clipboard&&navigator.clipboard.writeText('7xK9...mP3q')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy address
+    </button>
+    <a class="wc-item" href="edit_profile_privacy.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+    <div class="wc-divider"></div>
+    <button class="wc-item danger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Disconnect
+    </button>
+  </div>
+</div>
+    <button onclick="location.href='create_token.html'" class="btn-primary">Plant a seed</button>
+  </div>
+</header>
+
+<!-- ============ MARQUEE (kept from MVP) ============ -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="peach">PLANT YOUR SEED</span><span>·</span>
+    <span>WATCH WHAT'S BLOOMING</span><span>·</span>
+    <span class="peach">MAKE MONEY ON THE MEMECONOMY</span><span>·</span>
+    <span>NO BOT DRAMA</span><span>·</span>
+    <span class="teal">TALLEST TREE WINS</span><span>·</span>
+    <span class="peach">SEEDS PLANTED HERE</span><span>·</span>
+    <span class="peach">PLANT YOUR SEED</span><span>·</span>
+    <span>WATCH WHAT'S BLOOMING</span><span>·</span>
+    <span class="peach">MAKE MONEY ON THE MEMECONOMY</span><span>·</span>
+    <span>NO BOT DRAMA</span><span>·</span>
+    <span class="teal">TALLEST TREE WINS</span><span>·</span>
+    <span class="peach">SEEDS PLANTED HERE</span>
+  </div>
+</div>
+
+<!-- ============ SIDEBAR (grouping, pro structure) ============ -->
+<aside class="sidebar">
+
+  <div class="nav-group">
+    <div class="nav-label">Discover</div>
+    <a class="nav-item active" href="token_list_v4.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg>
+      Discover
+    </a>
+    <a class="nav-item" href="FR-012_TokenWar.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+      Arena
+    </a>
+    <a class="nav-item" href="clubs.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 17.5 4.5 15"/><path d="m17 9-3 6"/><path d="M11 4 7 10"/><path d="M21 9c-2 4-3.5 6.5-7.5 8.5L8 16"/><path d="M14 4c2 4 3.5 6.5 7.5 8.5"/></svg>
+      Clubs
+    </a>
+    <a class="nav-item" href="events.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Events
+    </a>
+    <a class="nav-item" href="leaderboard.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+      Leader Board
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Personal</div>
+    <a class="nav-item" href="my_profile.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My Profile
+      <span class="nav-badge">3</span>
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Earn</div>
+    <a class="nav-item" href="rewards.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+      Points
+    </a>
+    <a class="nav-item" href="points.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      Rewards
+    </a>
+    <a class="nav-item" href="referrals.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Referrals
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Stake
+    </a>
+  </div>
+
+  <!-- User card (signature moment: mascot Tier) -->
+  <div class="user-card" onclick="location.href='my_profile.html'" style="cursor:pointer">
+    <div class="user-mascot">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+  <path d="M3 9L12 5L21 9" fill="#3d7458"/>
+  <rect x="5" y="9" width="14" height="11" rx="1" fill="#3d7458"/>
+  <path d="M9 9L10 7L11 9Z" fill="#e8a87c"/>
+  <path d="M13 9L14 7L15 9Z" fill="#e8a87c"/>
+  <circle cx="12" cy="14" r="4" fill="#e8a87c"/>
+  <ellipse cx="10.5" cy="13" rx="0.7" ry="0.9" fill="#3d7458"/>
+  <ellipse cx="13.5" cy="13" rx="0.7" ry="0.9" fill="#3d7458"/>
+  <path d="M10.5 15.5 Q12 16.5 13.5 15.5" stroke="#3d7458" stroke-width="0.6" fill="none" stroke-linecap="round"/>
+</svg>
+    </div>
+    <div class="user-info">
+      <div class="user-name">NobleFlame</div>
+      <div class="user-tier">Sprout · <span class="uc-pts tier-sprout">642 pts</span></div>
+    </div>
+  </div>
+
+  <!-- Sidebar footer: social + doc pills + copyright -->
+  <div class="sidebar-footer">
+    <div class="sf-social">
+      <a href="#" aria-label="Telegram">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.167 13.958l-2.946-.924c-.64-.203-.658-.64.135-.954l11.566-4.463c.537-.194 1.006.131.972.604z"/></svg>
+      </a>
+      <a href="#" aria-label="X">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.745l7.73-8.835L1.254 2.25H8.08l4.261 5.632 5.903-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+    <div class="sf-pills">
+      <a class="sf-pill" href="#">Doc</a>
+      <a class="sf-pill" href="#">FAQ</a>
+      <a class="sf-pill" href="#">How it works</a>
+    </div>
+    <div class="sf-copyright">© 2026 Sprout</div>
+  </div>
+</aside>
+
+<!-- ============ MAIN CONTENT ============ -->
+<main class="main">
+
+
+  <!-- Page header -->
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Discover what's blooming</h1>
+      <!-- FUN edition — tagline more playful -->
+      <p class="page-subtitle">Plant your seed in the memeconomy — the garden is alive today.</p>
+    </div>
+  </div>
+
+  <!-- Tabs (line indicator — pro) -->
+  <div class="tabs-wrap">
+    <div class="tabs" id="main-tabs">
+      <button class="tab active" onclick="switchMainTab(this,'trending')">Trending</button>
+      <button class="tab" onclick="switchMainTab(this,'arena'); location.href='FR-012_TokenWar.html'">
+        <svg class="tab-leaf" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8 5 5 9 5 14c0 4 3 8 7 8s7-4 7-8c0-5-3-9-7-12z"/></svg>
+        Trending Arena
+      </button>
+      <button class="tab" onclick="switchMainTab(this,'marketcap')">Market Cap</button>
+      <button class="tab" onclick="switchMainTab(this,'new')">New</button>
+      <button class="tab" onclick="switchMainTab(this,'finalized')">Finalized</button>
+    </div>
+    <div class="tabs-actions">
+      <span class="tab-toggle" onclick="toggleSwitch(this)" id="nsfw-toggle">NSFW <div class="tt-toggle off"></div></span>
+      <span class="tab-toggle" onclick="toggleSwitch(this)" id="live-toggle">Live <div class="tt-toggle off"></div></span>
+      <button class="action-btn" id="sort-btn" onclick="toggleDropdown('sort-dropdown','filter-dropdown')">Sort ▼</button>
+      <button class="action-btn" id="filter-btn" onclick="toggleDropdown('filter-dropdown','sort-dropdown')">Filter ▼</button>
+    </div>
+  </div>
+
+  <!-- Sort dropdown -->
+  <div id="sort-dropdown" style="display:none;position:relative;margin-bottom:12px">
+    <div style="position:absolute;top:0;right:0;background:var(--surface-2);border:1px solid var(--border-2);border-radius:var(--r-md);padding:6px;min-width:180px;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,0.4)">
+      <div class="sort-option active" onclick="selectSort(this,'trending')">🔥 Trending</div>
+      <div class="sort-option" onclick="selectSort(this,'volume')">📊 Volume 24h</div>
+      <div class="sort-option" onclick="selectSort(this,'marketcap')">💰 Market Cap</div>
+      <div class="sort-option" onclick="selectSort(this,'new')">🆕 Newest first</div>
+    </div>
+  </div>
+
+  <!-- Filter dropdown -->
+  <div id="filter-dropdown" style="display:none;position:relative;margin-bottom:12px">
+    <div style="position:absolute;top:0;right:0;background:var(--surface-2);border:1px solid var(--border-2);border-radius:var(--r-md);padding:16px;min-width:260px;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,0.4)">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);margin-bottom:10px">Trust Level</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <label class="filter-chip active"><input type="checkbox" checked style="display:none"> 🥇 Gold</label>
+        <label class="filter-chip active"><input type="checkbox" checked style="display:none"> 🥈 Silver</label>
+        <label class="filter-chip active"><input type="checkbox" checked style="display:none"> 🥉 Bronze</label>
+      </div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);margin-bottom:10px">Progress to DEX</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <label class="filter-chip"><input type="checkbox" style="display:none"> Almost there</label>
+        <label class="filter-chip"><input type="checkbox" style="display:none"> &gt; 50%</label>
+        <label class="filter-chip"><input type="checkbox" style="display:none"> New</label>
+      </div>
+      <div style="display:flex;justify-content:space-between;gap:8px;margin-top:6px">
+        <button onclick="document.getElementById('filter-dropdown').style.display='none'" style="flex:1;padding:8px;background:var(--surface-3);border:1px solid var(--border-1);border-radius:var(--r-md);color:var(--text-2);font-family:inherit;font-size:12px;cursor:pointer">Reset</button>
+        <button onclick="document.getElementById('filter-dropdown').style.display='none'" style="flex:1;padding:8px;background:linear-gradient(180deg,#e8a87c,#e8a87c);border:none;border-radius:var(--r-md);color:#2a1505;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Token grid -->
+  <div class="token-grid">
+
+    <!-- Card 1: Moon Token -->
+    <div class="token-card" onclick="location.href='token_detail.html'">
+      <span class="favorite active"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+      <div class="card-head">
+        <div class="token-avatar" style="background:linear-gradient(135deg,#1a3a4a,#2a9d8f)">
+          <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="20" fill="#0d1f2d"/><path d="M22 22 A 12 12 0 0 0 22 38 A 8 8 0 0 1 22 22" fill="#7cc4a4"/></svg>
+        </div>
+        <div class="token-meta">
+          <div class="token-name-row">
+            <span class="token-name">Moon Token</span>
+            <span class="trust-leaf trust-gold" title="Gold · 64/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span>
+          </div>
+          <div class="token-symbol">MOON</div>
+          <div class="token-desc">A community-driven meme reaching escape velocity 🌙</div>
+        </div>
+      </div>
+      <div class="price-row">
+        <span class="price-value">$0.0234</span>
+        <span class="price-change price-up">↑ 38.5%</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-cell"><span class="stat-label">Volume 24h</span><span class="stat-value">$1.95M</span></div>
+        <div class="stat-cell"><span class="stat-label-row"><span class="stat-label">Market cap</span><span class="trust-leaf trust-gold" title="Gold · 64/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span></span><span class="stat-value">$242.2K</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="creator-info">
+          <div class="creator-avatar" style="background:linear-gradient(135deg,#7cc4a4,#5ba886)"></div>
+          <span class="creator-name">by alice · Sapling tier · 12d ago</span>
+        </div>
+      </div>
+      <div class="graduation">
+        <span class="graduation-label">To DEX</span>
+        <div class="graduation-bar"><div class="graduation-fill" style="width:22%"></div></div>
+        <span class="graduation-percent">22%</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Pump Token — ALMOST THERE -->
+    <div class="token-card almost-there" onclick="location.href='token_detail.html'">
+      <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+      <div class="card-head">
+        <div class="token-avatar" style="background:linear-gradient(135deg,#7cc4a4,#1f7050)">
+          <svg viewBox="0 0 60 60"><ellipse cx="30" cy="30" rx="18" ry="12" fill="#5ba886"/><ellipse cx="30" cy="30" rx="18" ry="12" stroke="#0d1f15" stroke-width="2" fill="none"/><line x1="20" y1="30" x2="40" y2="30" stroke="#0d1f15" stroke-width="2"/></svg>
+        </div>
+        <div class="token-meta">
+          <div class="token-name-row">
+            <span class="token-name">Pump Token</span>
+            <span class="trust-leaf trust-gold" title="Gold · 92/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span>
+          </div>
+          <div class="token-symbol">PUMP</div>
+          <div class="token-desc">Almost graduated — seconds away from the DEX canopy.</div>
+        </div>
+      </div>
+      <div class="price-row">
+        <span class="price-value">$0.6450</span>
+        <span class="price-change price-up">↑ 122.3%</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-cell"><span class="stat-label">Volume 24h</span><span class="stat-value">$981.5K</span></div>
+        <div class="stat-cell"><span class="stat-label-row"><span class="stat-label">Market cap</span><span class="trust-leaf trust-gold" title="Gold · 92/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span></span><span class="stat-value">$677.9K</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="creator-info">
+          <div class="creator-avatar" style="background:linear-gradient(135deg,#e8a87c,#d68a5b)"></div>
+          <span class="creator-name">by bob · Sprout tier · 3d ago</span>
+        </div>
+      </div>
+      <div class="graduation">
+        <span class="graduation-label" style="color:var(--sp-peach-400)">Almost graduated</span>
+        <div class="graduation-bar"><div class="graduation-fill amber" style="width:93%"></div></div>
+        <span class="graduation-percent amber">93%</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Rock Token — wilting -->
+    <div class="token-card" onclick="location.href='token_detail.html'">
+      <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+      <div class="card-head">
+        <div class="token-avatar" style="background:linear-gradient(135deg,#a89683,#5a4836)">
+          <svg viewBox="0 0 60 60"><ellipse cx="30" cy="38" rx="22" ry="14" fill="#7d6a48"/><ellipse cx="22" cy="34" rx="3" ry="4" fill="#fff"/><ellipse cx="38" cy="34" rx="3" ry="4" fill="#fff"/><circle cx="22" cy="34" r="1.5" fill="#000"/><circle cx="38" cy="34" r="1.5" fill="#000"/></svg>
+        </div>
+        <div class="token-meta">
+          <div class="token-name-row">
+            <span class="token-name">Rock Token</span>
+            <span class="trust-leaf trust-silver" title="Silver · 38/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span>
+          </div>
+          <div class="token-symbol">ROCK</div>
+          <div class="token-desc">Solid as a rock. Currently in correction — patient gardeners welcome.</div>
+        </div>
+      </div>
+      <div class="price-row">
+        <span class="price-value">$0.1245</span>
+        <span class="price-change price-down">↓ 12.8%</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-cell"><span class="stat-label">Volume 24h</span><span class="stat-value">$67.0K</span></div>
+        <div class="stat-cell"><span class="stat-label-row"><span class="stat-label">Market cap</span><span class="trust-leaf trust-silver" title="Silver · 38/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg></span></span><span class="stat-value">$68.6K</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="creator-info">
+          <div class="creator-avatar" style="background:linear-gradient(135deg,#d65a54,#b94842)"></div>
+          <span class="creator-name">by charlie · Seed tier · 1d ago</span>
+        </div>
+      </div>
+      <div class="graduation">
+        <span class="graduation-label">To DEX</span>
+        <div class="graduation-bar"><div class="graduation-fill" style="width:35%"></div></div>
+        <span class="graduation-percent">35%</span>
+      </div>
+    </div>
+
+    <!-- Card 4: Crystal STAR023 — NEW -->
+    <div class="token-card" onclick="location.href='token_detail.html'">
+      <span class="badge-new">
+        <svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="8" cy="10" rx="3" ry="5" transform="rotate(-25 8 10)"/><ellipse cx="16" cy="10" rx="3" ry="5" transform="rotate(25 16 10)"/><rect x="11" y="9" width="2" height="11"/></svg>
+        New
+      </span>
+      <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+      <div class="card-head" style="margin-top:8px">
+        <div class="token-avatar" style="background:linear-gradient(135deg,#e8a87c,#a05030)">
+          <svg viewBox="0 0 60 60"><polygon points="30,10 38,26 30,42 22,26" fill="#e8a87c"/><polygon points="30,10 38,26 30,26" fill="#e8a87c"/></svg>
+        </div>
+        <div class="token-meta">
+          <div class="token-name-row">
+            <span class="token-name">Crystal STAR023</span>
+            <span class="trust-leaf trust-bronze" title="Bronze · 12/100"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></span>
+          </div>
+          <div class="token-symbol">STAR023</div>
+          <div class="token-desc">Fresh launch — seven minutes old. Be the first to tend it.</div>
+        </div>
+      </div>
+      <div class="price-row">
+        <span class="price-value">$0.000087</span>
+        <span class="price-change price-up">↑ 0.0%</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-cell"><span class="stat-label">Volume 24h</span><span class="stat-value">$0</span></div>
+        <div class="stat-cell"><span class="stat-label-row"><span class="stat-label">Market cap</span></span><span class="stat-value">$87</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="creator-info">
+          <div class="creator-avatar" style="background:linear-gradient(135deg,#9ed8b8,#5ba886)"></div>
+          <span class="creator-name">by diana · Seed tier · 7m ago</span>
+        </div>
+      </div>
+      <div class="graduation">
+        <span class="graduation-label">To DEX</span>
+        <div class="graduation-bar"><div class="graduation-fill" style="width:1%"></div></div>
+        <span class="graduation-percent">2%</span>
+      </div>
+    </div>
+
+    <!-- Card 5: Cosmos FIRE094 -->
+    <div class="token-card is-hovered" onclick="location.href='token_detail.html'">
+      <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+      <div class="card-head">
+        <div class="token-avatar" style="background:linear-gradient(135deg,#d4a256,#8a5e1e)">
+          <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="18" fill="none" stroke="#e8a87c" stroke-width="2"/><circle cx="30" cy="30" r="12" fill="none" stroke="#e8a87c" stroke-width="1.5"/><circle cx="30" cy="30" r="5" fill="#e8a87c"/></svg>
+        </div>
+        <div class="token-meta">
+          <div class="token-name-row">
+            <span class="token-name">Cosmos FIRE094</span>
+            <span class="trust-leaf trust-silver"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></span>
+          </div>
+          <div class="token-symbol">FIRE094</div>
+          <div class="token-desc">Cosmic energy meets meme culture. A seasoned grower just joined.</div>
+        </div>
+      </div>
+      <div class="price-row">
+        <span class="price-value">$0.0079</span>
+        <span class="price-change price-up">↑ 14.2%</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-cell"><span class="stat-label">Volume 24h</span><span class="stat-value">$15.5K</span></div>
+        <div class="stat-cell"><span class="stat-label-row"><span class="stat-label">Market cap</span></span><span class="stat-value">$3.16M</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="creator-info">
+          <div class="creator-avatar" style="background:linear-gradient(135deg,#d4a256,#b88840)"></div>
+          <span class="creator-name">by eve · Sprout tier · 2d ago</span>
+        </div>
+      </div>
+      <div class="graduation">
+        <span class="graduation-label">To DEX</span>
+        <div class="graduation-bar"><div class="graduation-fill" style="width:31%"></div></div>
+        <span class="graduation-percent">31%</span>
+      </div>
+    </div>
+
+    <!-- Card 6: Silver SILVER037 -->
+    <div class="token-card" onclick="location.href='token_detail.html'">
+      <span class="favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+      <div class="card-head">
+        <div class="token-avatar" style="background:linear-gradient(135deg,#9ed8b8,#5ba886)">
+          <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="20" fill="#9ed8b8"/><circle cx="35" cy="25" r="14" fill="#0a1610"/></svg>
+        </div>
+        <div class="token-meta">
+          <div class="token-name-row">
+            <span class="token-name">Silver SILVER037</span>
+            <span class="trust-leaf trust-bronze"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></span>
+          </div>
+          <div class="token-symbol">SILVER037</div>
+          <div class="token-desc">A silver lining for the SOL ecosystem. Slow and steady.</div>
+        </div>
+      </div>
+      <div class="price-row">
+        <span class="price-value">$0.0356</span>
+        <span class="price-change price-up">↑ 4.7%</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-cell"><span class="stat-label">Volume 24h</span><span class="stat-value">$15.4K</span></div>
+        <div class="stat-cell"><span class="stat-label-row"><span class="stat-label">Market cap</span></span><span class="stat-value">$3.0M</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="creator-info">
+          <div class="creator-avatar" style="background:linear-gradient(135deg,#7cc4a4,#3d7458)"></div>
+          <span class="creator-name">by frank · Sapling tier · 5d ago</span>
+        </div>
+      </div>
+      <div class="graduation">
+        <span class="graduation-label">To DEX</span>
+        <div class="graduation-bar"><div class="graduation-fill" style="width:42%"></div></div>
+        <span class="graduation-percent">42%</span>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+
+<style>
+.sort-option { padding: 9px 12px; font-size: 13px; color: var(--text-2); border-radius: var(--r-sm); cursor: pointer; transition: background 0.12s; }
+.sort-option:hover { background: var(--surface-3); color: var(--text-1); }
+.sort-option.active { color: var(--sp-peach-400); font-weight: 600; }
+.filter-chip { padding: 6px 12px; background: var(--surface-3); border: 1px solid var(--border-1); border-radius: var(--r-pill); font-size: 12px; color: var(--text-2); cursor: pointer; user-select: none; transition: all 0.12s; }
+.filter-chip.active { background: var(--sp-peach-soft); border-color: var(--sp-peach-400); color: var(--sp-peach-400); font-weight: 600; }
+</style>
+
+<script>
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#sort-btn') && !e.target.closest('#sort-dropdown')) document.getElementById('sort-dropdown') && (document.getElementById('sort-dropdown').style.display = 'none');
+  if (!e.target.closest('#filter-btn') && !e.target.closest('#filter-dropdown')) document.getElementById('filter-dropdown') && (document.getElementById('filter-dropdown').style.display = 'none');
+});
+function switchMainTab(btn, name) { document.querySelectorAll('#main-tabs .tab').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+function toggleSwitch(el) { el.querySelector('.tt-toggle').classList.toggle('off'); }
+function toggleDropdown(showId, hideId) { const s = document.getElementById(showId); const h = document.getElementById(hideId); if (h) h.style.display = 'none'; if (s) s.style.display = s.style.display === 'none' ? 'block' : 'none'; }
+function selectSort(el, key) { document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active')); el.classList.add('active'); document.getElementById('sort-dropdown').style.display = 'none'; }
+document.querySelectorAll('.filter-chip').forEach(chip => chip.addEventListener('click', () => chip.classList.toggle('active')));
+document.querySelectorAll('.favorite').forEach(fav => { fav.addEventListener('click', function(e) { e.stopPropagation(); this.classList.toggle('active'); this.querySelector('svg').setAttribute('fill', this.classList.contains('active') ? 'currentColor' : 'none'); }); });
+function toggleWalletMenu(e) { e.stopPropagation(); document.querySelectorAll('.wallet-connected').forEach(w => w.classList.toggle('open')); }
+document.addEventListener('click', e => { if (!e.target.closest('.wallet-connected')) document.querySelectorAll('.wallet-connected').forEach(w => w.classList.remove('open')); });
+</script>
+
+<div class="mascot-character" id="mascotChar">
+  <div class="mc-bubble" id="mcBubble"><strong>Hey!</strong> 6 seedlings growin' 🌸</div>
+  <div class="mc-body">
+    <svg viewBox="0 0 64 64" fill="none">
+      <ellipse cx="32" cy="50" rx="20" ry="12" fill="#3d7458"/>
+      <ellipse cx="22" cy="26" rx="7" ry="13" transform="rotate(-28 22 26)" fill="#7cc4a4"/>
+      <ellipse cx="42" cy="26" rx="7" ry="13" transform="rotate(28 42 26)" fill="#5ba886"/>
+      <ellipse cx="32" cy="20" rx="5" ry="10" fill="#9ED8B8"/>
+      <rect x="29.5" y="28" width="5" height="18" fill="#3d7458"/>
+      <circle cx="26" cy="51" r="3" fill="#1a1208"/>
+      <circle cx="38" cy="51" r="3" fill="#1a1208"/>
+      <circle cx="27" cy="50" r="1.1" fill="#fff"/>
+      <circle cx="39" cy="50" r="1.1" fill="#fff"/>
+      <path d="M 26 56 Q 32 60 38 56" stroke="#1a1208" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <ellipse cx="20" cy="55" rx="3" ry="2" fill="#ff6b8a" opacity="0.7"/>
+      <ellipse cx="44" cy="55" rx="3" ry="2" fill="#ff6b8a" opacity="0.7"/>
+    </svg>
+    <span class="mc-label">Sprout · tap for tips</span>
+  </div>
+</div>
+<div class="wild-edition">Wild · v0.2</div>
+
+<script>
+(function(){
+  const stickers = [{cls:'s-hot',text:'🔥 Blazing'},{cls:'s-fresh',text:'🌱 Fresh'},{cls:'s-gem',text:'💎 Gem'},{cls:'s-rising',text:'🚀 Rising'},{cls:'s-rare',text:'✨ Rare drop'},{cls:'s-yum',text:'🍑 Juicy'}];
+  document.querySelectorAll('.token-card').forEach((card,i)=>{ const s=stickers[i%stickers.length]; const b=document.createElement('div'); b.className='sticker-badge '+s.cls; b.textContent=s.text; const rot=(Math.random()*6-3).toFixed(1); if(i%2===1){b.style.right='auto';b.style.left='-12px';b.style.transform='rotate('+(-rot)+'deg)';}else{b.style.transform='rotate('+rot+'deg)';} card.appendChild(b); });
+  const firstCard=document.querySelector('.token-card'); if(firstCard) firstCard.classList.add('featured');
+  document.querySelectorAll('.nav-item').forEach(item=>{ const clone=item.cloneNode(true); clone.querySelectorAll('svg, .nav-badge').forEach(n=>n.remove()); const label=clone.textContent.replace(/\s+/g,' ').trim(); if(label) item.setAttribute('data-label',label); const textNodes=Array.from(item.childNodes).filter(n=>n.nodeType===3&&n.textContent.trim()); if(textNodes.length && !item.querySelector('.ni-text')){ const wrap=document.createElement('span'); wrap.className='ni-text'; wrap.textContent=textNodes[0].textContent.trim(); textNodes.forEach(n=>item.removeChild(n)); const badge=item.querySelector('.nav-badge'); if(badge) item.insertBefore(wrap,badge); else item.appendChild(wrap); } });
+})();
+</script>
+
+<!-- v0.7 LIVE ACTIVITY (Option A flat dark via v0.9 overrides) -->
+<aside class="live-activity" id="liveActivity">
+  <div class="la-header"><span class="la-pulse"></span>Live in the garden</div>
+  <div class="la-subhead">what's happening right now</div>
+  <div class="la-feed" id="laFeed">
+    <div class="la-item"><div class="la-row"><div class="la-avatar" style="background:linear-gradient(135deg,#7cc4a4,#3d7458)"></div><span class="la-name">@whale_72</span><span class="la-time">8s</span></div><div class="la-body"><span class="la-verb buy">bought</span><span class="la-token">MOON</span><span class="la-amount up">+2.4 SOL</span></div></div>
+    <div class="la-item"><div class="la-row"><div class="la-avatar" style="background:linear-gradient(135deg,#e8a87c,#d68a5b)"></div><span class="la-name">@alice</span><span class="la-time">23s</span></div><div class="la-body"><span class="la-verb mint">minted</span><span class="la-token">STAR023</span></div></div>
+    <div class="la-item"><div class="la-row"><div class="la-avatar" style="background:linear-gradient(135deg,#d65a54,#b94842)"></div><span class="la-name">@trader_x</span><span class="la-time">41s</span></div><div class="la-body"><span class="la-verb sell">sold</span><span class="la-token">ROCK</span><span class="la-amount down">-0.8 SOL</span></div></div>
+    <div class="la-item"><div class="la-row"><div class="la-avatar" style="background:linear-gradient(135deg,#9ed8b8,#5ba886)"></div><span class="la-name">@diana</span><span class="la-time">1m</span></div><div class="la-body"><span class="la-verb buy">bought</span><span class="la-token">PUMP</span><span class="la-amount up">+5.0 SOL</span></div></div>
+    <div class="la-item"><div class="la-row"><div class="la-avatar" style="background:linear-gradient(135deg,#d4a256,#8a5e1e)"></div><span class="la-name">@whale_zen</span><span class="la-time">2m</span></div><div class="la-body"><span class="la-verb buy">bought</span><span class="la-token">MOON</span><span class="la-amount up">+12 SOL</span> 🐋</div></div>
+    <div class="la-item"><div class="la-row"><div class="la-avatar" style="background:linear-gradient(135deg,#a878ff,#7c5edd)"></div><span class="la-name">@gemHunter</span><span class="la-time">2m</span></div><div class="la-body"><span class="la-verb buy">bought</span><span class="la-token">FIRE094</span><span class="la-amount up">+1.2 SOL</span></div></div>
+    <div class="la-item"><div class="la-row"><div class="la-avatar" style="background:linear-gradient(135deg,#f4cba0,#e8a87c)"></div><span class="la-name">PUMP Token</span><span class="la-time">3m</span></div><div class="la-body"><span class="la-verb grad">graduated</span> to DEX 🌳</div></div>
+    <div class="la-item"><div class="la-row"><div class="la-avatar" style="background:linear-gradient(135deg,#5ee2ff,#3aaad4)"></div><span class="la-name">@bob</span><span class="la-time">3m</span></div><div class="la-body"><span class="la-verb sell">sold</span><span class="la-token">SILVER037</span><span class="la-amount down">-2.5 SOL</span></div></div>
+    <div class="la-item"><div class="la-row"><div class="la-avatar" style="background:linear-gradient(135deg,#ff6b8a,#ff8b5e)"></div><span class="la-name">@frank</span><span class="la-time">4m</span></div><div class="la-body"><span class="la-verb mint">minted</span><span class="la-token">GREEN042</span></div></div>
+  </div>
+</aside>
+<script>
+(function(){
+  const feed=document.getElementById('laFeed'); if(!feed) return;
+  const pool=[{n:'@whale_max',v:'buy',vt:'bought',tk:'MOON',a:'+8.4 SOL',ac:'up',c:'#7cc4a4,#3d7458'},{n:'@charlie',v:'sell',vt:'sold',tk:'FIRE094',a:'-1.1 SOL',ac:'down',c:'#d65a54,#b94842'},{n:'@whale_zen',v:'buy',vt:'bought',tk:'PUMP',a:'+25 SOL 🐋',ac:'up',c:'#d4a256,#8a5e1e'},{n:'STAR023',v:'grad',vt:'graduated',tk:'',a:'to DEX 🌳',ac:'',c:'#f4cba0,#e8a87c'}];
+  let i=0;
+  setInterval(()=>{ if(document.hidden) return; const x=pool[i%pool.length]; i++; const it=document.createElement('div'); it.className='la-item fresh'; it.innerHTML='<div class="la-row"><div class="la-avatar" style="background:linear-gradient(135deg,'+x.c+')"></div><span class="la-name">'+x.n+'</span><span class="la-time">now</span></div><div class="la-body"><span class="la-verb '+x.v+'">'+x.vt+'</span>'+(x.tk?'<span class="la-token">'+x.tk+'</span>':'')+(x.a?'<span class="la-amount '+x.ac+'">'+x.a+'</span>':'')+'</div>'; feed.insertBefore(it, feed.firstChild); const items=feed.querySelectorAll('.la-item'); items.forEach((el,idx)=>{ const t=el.querySelector('.la-time'); if(!t||idx===0) return; const labels=['10s','30s','1m','1m','2m','3m','4m','5m','8m']; t.textContent=labels[Math.min(idx-1,labels.length-1)]; }); while(feed.children.length>14) feed.removeChild(feed.lastChild); }, 8000);
+})();
+</script>
+
+<style>
+/* ╔═══ Sidebar Option A — flat dark nav (Version A only) ═══╗ */
+
+/* Hide today's garden sticky banner sized down */
+.sidebar::before {
+  font-size: 11px !important;
+  padding: 4px 10px !important;
+  box-shadow: 2px 2px 0 var(--w-ink) !important;
+}
+
+/* Nav-item: strip pill bg, black border, drop shadow */
+.sidebar .nav-item,
+.sidebar .nav-item:nth-of-type(6n+1),
+.sidebar .nav-item:nth-of-type(6n+2),
+.sidebar .nav-item:nth-of-type(6n+3),
+.sidebar .nav-item:nth-of-type(6n+4),
+.sidebar .nav-item:nth-of-type(6n+5),
+.sidebar .nav-item:nth-of-type(6n+6) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 6px 10px 6px 12px !important;
+  border-radius: 8px !important;
+  color: var(--text-2) !important;
+  position: relative !important;
+}
+.sidebar .nav-item:hover {
+  background: var(--surface-2) !important;
+  border-color: transparent !important;
+  transform: translateX(2px) !important;
+  box-shadow: none !important;
+  color: var(--text-1) !important;
+}
+.sidebar .nav-item .ni-text { color: inherit !important; }
+
+/* Active: peach soft bg + 3px peach vertical bar */
+.sidebar .nav-item.active {
+  background: rgba(232,168,124,0.14) !important;
+  color: var(--sp-peach-400) !important;
+  border: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.sidebar .nav-item.active::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 7px !important;
+  bottom: 7px !important;
+  width: 3px !important;
+  height: auto !important;
+  background: var(--sp-peach-400) !important;
+  border-radius: 2px !important;
+  display: block !important;
+}
+
+/* Sticker icon: smaller, cream-sunshine kept */
+.sidebar .nav-item .icon {
+  width: 26px !important;
+  height: 26px !important;
+  padding: 5px !important;
+  box-shadow: none !important;
+  border: 1.2px solid rgba(0,0,0,0.6) !important;
+  background: #ffeab0 !important;
+}
+.sidebar .nav-item.active .icon {
+  background: var(--sp-peach-400) !important;
+}
+.sidebar .nav-item:hover .icon { transform: rotate(-4deg) scale(1.06); }
+
+/* Nav badge: simpler */
+.nav-badge {
+  background: var(--sp-crimson) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* User card → flat row */
+.user-card {
+  background: transparent !important;
+  border: none !important;
+  border-top: 1px solid var(--border-1) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 14px 6px 8px !important;
+  transform: none !important;
+}
+.user-card::before, .user-card::after { display: none !important; }
+.user-card .user-mascot {
+  width: 32px !important;
+  height: 32px !important;
+  background: linear-gradient(135deg, var(--w-sunshine), var(--sp-peach-400)) !important;
+  border: 1.5px solid var(--w-ink) !important;
+  box-shadow: none !important;
+}
+.user-card .user-mascot svg { width: 22px !important; height: 22px !important; }
+.user-card .user-name {
+  color: var(--text-1) !important;
+  font-family: var(--font-disp-it) !important;
+  font-style: italic !important;
+  font-weight: 800 !important;
+  font-size: 12.5px !important;
+}
+.user-card .user-tier {
+  color: var(--sp-peach-400) !important;
+  font-size: 10.5px !important;
+  font-family: var(--font-mono) !important;
+  font-weight: 600 !important;
+}
+
+/* Sidebar footer pills: subtler */
+.sidebar-footer .sf-pill {
+  background: transparent !important;
+  border: 1px solid var(--border-2) !important;
+  color: var(--text-3) !important;
+}
+.sidebar-footer .sf-pill:hover {
+  background: var(--sp-peach-soft) !important;
+  color: var(--sp-peach-400) !important;
+  border-color: var(--sp-peach-400) !important;
+}
+/* ╚═══ end Sidebar Option A ═══╝ */
+</style>
+
+</body>
+</html>

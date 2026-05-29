@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Sprout UI Audit — Tổng hợp để chuyển session</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #1f2328;
+    background: #ffffff;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 28px 32px 60px; }
+  header.top {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+  }
+  header.top h1 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  header.top .sub {
+    color: #57606a;
+    font-size: 13px;
+  }
+  header.top .meta {
+    margin-top: 10px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: #57606a;
+  }
+  header.top .meta span code {
+    background: #f6f8fa;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  h2 {
+    margin: 32px 0 10px;
+    font-size: 17px;
+    font-weight: 700;
+    border-bottom: 1px solid #eaecef;
+    padding-bottom: 6px;
+  }
+  h3 {
+    margin: 22px 0 8px;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #24292f;
+  }
+  p { margin: 8px 0; }
+  ul, ol { margin: 8px 0 12px; padding-left: 22px; }
+  li { margin: 4px 0; }
+  code, kbd {
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    background: #f6f8fa;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12.5px;
+  }
+  pre {
+    background: #f6f8fa;
+    border: 1px solid #eaecef;
+    border-radius: 6px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+  pre code { background: transparent; padding: 0; font-size: inherit; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0 16px;
+    font-size: 13px;
+  }
+  th, td {
+    border: 1px solid #d0d7de;
+    padding: 7px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #f6f8fa;
+    font-weight: 600;
+  }
+  tr:nth-child(even) td { background: #fbfcfd; }
+  .badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.6;
+    border: 1px solid;
+  }
+  .badge.crit { background: #ffebe9; color: #b62324; border-color: #ffcecb; }
+  .badge.high { background: #fff3d4; color: #9a6700; border-color: #ffe7a0; }
+  .badge.med  { background: #ddf4ff; color: #0969da; border-color: #b6e3ff; }
+  .badge.low  { background: #dafbe1; color: #1a7f37; border-color: #aceebb; }
+  .badge.info { background: #f3f0ff; color: #6e40c9; border-color: #d8d0fc; }
+  .callout {
+    background: #f6f8fa;
+    border-left: 3px solid #0969da;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin: 12px 0;
+    font-size: 13px;
+  }
+  .callout.warn {
+    background: #fff8c5;
+    border-left-color: #bf8700;
+  }
+  .callout.copy {
+    background: #f6f8fa;
+    border-left-color: #1a7f37;
+  }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+  .file-tag {
+    display: inline-block;
+    background: #f6f8fa;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    margin: 2px 4px 2px 0;
+  }
+  details {
+    background: #f6f8fa;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    padding: 8px 14px;
+    margin: 10px 0;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  details[open] { background: #ffffff; }
+  .toc {
+    background: #f6f8fa;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    padding: 12px 18px;
+    margin: 0 0 24px;
+    font-size: 13px;
+  }
+  .toc ol { margin: 6px 0 0; padding-left: 20px; }
+  .toc a { color: #0969da; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>Sprout UI Audit — Tổng hợp briefing để chuyển session</h1>
+  <div class="sub">Rà soát toàn bộ folder <code>mockups-sprout</code> (18 file HTML, ~14.400 dòng). Dùng tài liệu này làm context khi mở chat session mới.</div>
+  <div class="meta">
+    <span>Folder: <code>C:\Users\duongvietdung\Documents\PMFCDocument\mockups-sprout</code></span>
+    <span>Ngày rà soát: <code>2026-05-27</code></span>
+    <span>Trạng thái: <code>chưa sửa, mới audit</code></span>
+  </div>
+</header>
+
+<div class="toc">
+  <strong>Mục lục</strong>
+  <ol>
+    <li><a href="#stack">Tech stack &amp; cấu trúc dự án</a></li>
+    <li><a href="#files">Inventory 18 file HTML</a></li>
+    <li><a href="#tokens">Design tokens (chuẩn của dự án)</a></li>
+    <li><a href="#bugs">Bug &amp; vấn đề phát hiện được</a></li>
+    <li><a href="#map">Token migration map (legacy → mới)</a></li>
+    <li><a href="#priority">Thứ tự ưu tiên sửa</a></li>
+    <li><a href="#prompt">Prompt mẫu để mở session mới</a></li>
+  </ol>
+</div>
+
+<h2 id="stack">1. Tech stack &amp; cấu trúc dự án</h2>
+
+<ul>
+  <li><strong>Stack:</strong> HTML thuần + CSS-in-<code>&lt;style&gt;</code> nội tuyến. <em>Không</em> dùng Tailwind, Bootstrap, hay framework JS nào. Mỗi file là mockup độc lập, tự chứa toàn bộ CSS.</li>
+  <li><strong>Font (Google Fonts):</strong> <code>Inter</code> 400–700 (body), <code>Plus Jakarta Sans</code> 500–800 (display/heading), <code>JetBrains Mono</code> 500–600 (mono — số liệu giá token).</li>
+  <li><strong>Layout chuẩn:</strong> sidebar <code>240px</code> cố định, header <code>60px</code>, marquee <code>30px</code>. Đồng bộ ở 15/18 file.</li>
+  <li><strong>Entry point thật:</strong> <code>home_full_layout.html</code> chỉ là redirect 0s (<code>meta refresh</code>) sang <code>token_list_v4.html</code> — đây mới là trang chủ thực.</li>
+  <li><strong>Mood (theme):</strong> Mood B "Living Garden" là theme chính thức (đã khoá theo spec).</li>
+  <li><strong>Folder <code>_mood_demos/</code>:</strong> chứa 3 demo phối màu (Mood A Calm / Mood B Living / Mood C Wild). Chỉ dùng để tham khảo — không phải trang sản phẩm.</li>
+</ul>
+
+<div class="callout warn">
+  <strong>Lưu ý quan trọng — Mood B spec lock:</strong> Hầu hết file có block CSS bắt đầu bằng
+  <code>/* === Mood B signature glow (locked 2026-05-05 — SPROUT_UI_SPEC.md §1.3a) === */</code>.
+  Comment ghi rõ <em>"Do NOT modify without updating spec section 1.3a first."</em> — khi sửa cần tôn trọng quy ước này, hoặc gom chúng thành 1 file <code>tokens.css</code> chung trước.
+</div>
+
+<h2 id="files">2. Inventory 18 file HTML</h2>
+
+<table>
+  <thead>
+    <tr><th>File</th><th>Dòng</th><th>Vai trò</th><th>Tình trạng</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>home_full_layout.html</code></td><td>10</td><td>Redirect → token_list_v4</td><td><span class="badge info">stub</span></td></tr>
+    <tr><td><code>token_list_v4.html</code></td><td>1455</td><td>Trang chủ thật (danh sách token)</td><td><span class="badge low">OK</span></td></tr>
+    <tr><td><code>token_detail.html</code></td><td>1655</td><td>Chi tiết 1 token</td><td><span class="badge med">thiếu 2 token soft</span></td></tr>
+    <tr><td><code>trading_panel.html</code></td><td>1097</td><td>Bảng trading</td><td><span class="badge crit">10 token legacy chưa khai báo</span></td></tr>
+    <tr><td><code>creator_dashboard.html</code></td><td>1006</td><td>Dashboard creator</td><td><span class="badge crit">10 token legacy chưa khai báo</span></td></tr>
+    <tr><td><code>create_token.html</code></td><td>1047</td><td>Form tạo token</td><td><span class="badge low">OK</span></td></tr>
+    <tr><td><code>leaderboard.html</code></td><td>933</td><td>BXH</td><td><span class="badge low">OK</span></td></tr>
+    <tr><td><code>rewards.html</code></td><td>861</td><td>Phần thưởng</td><td><span class="badge low">OK</span></td></tr>
+    <tr><td><code>points.html</code></td><td>831</td><td>Điểm</td><td><span class="badge low">OK</span></td></tr>
+    <tr><td><code>public_profile.html</code></td><td>815</td><td>Profile công khai</td><td><span class="badge low">OK</span></td></tr>
+    <tr><td><code>FR-012b_TokenWar_PredictionMarket.html</code></td><td>796</td><td>Prediction market</td><td><span class="badge crit">thiếu --bg + 4 token</span></td></tr>
+    <tr><td><code>edit_profile_privacy.html</code></td><td>760</td><td>Sửa privacy</td><td><span class="badge low">OK</span></td></tr>
+    <tr><td><code>my_profile.html</code></td><td>700</td><td>Profile của tôi</td><td><span class="badge low">OK</span></td></tr>
+    <tr><td><code>referrals.html</code></td><td>632</td><td>Giới thiệu</td><td><span class="badge low">OK</span></td></tr>
+    <tr><td><code>clubs.html</code></td><td>495</td><td>Clubs</td><td><span class="badge low">OK</span></td></tr>
+    <tr><td><code>FR-012_TokenWar.html</code></td><td>468</td><td>Token War</td><td><span class="badge low">OK</span></td></tr>
+    <tr><td><code>events.html</code></td><td>447</td><td>Sự kiện</td><td><span class="badge low">OK</span></td></tr>
+    <tr><td><code>sidebar_navigation.html</code></td><td>391</td><td>Component sidebar (single source)</td><td><span class="badge crit">9 token legacy chưa khai báo</span></td></tr>
+    <tr><td><code>_mood_demos/mood_a_calm.html</code></td><td>-</td><td>Demo phối màu A</td><td><span class="badge info">ref-only</span></td></tr>
+    <tr><td><code>_mood_demos/mood_b_living.html</code></td><td>-</td><td>Demo phối màu B (chính thức)</td><td><span class="badge info">ref-only</span></td></tr>
+    <tr><td><code>_mood_demos/mood_c_wild.html</code></td><td>-</td><td>Demo phối màu C</td><td><span class="badge info">ref-only</span></td></tr>
+  </tbody>
+</table>
+
+<h2 id="tokens">3. Design tokens chuẩn (Mood B)</h2>
+
+<p>Bộ token chuẩn xuất hiện ở các file mới như <code>token_list_v4.html</code>, <code>FR-012_TokenWar.html</code>, <code>create_token.html</code>:</p>
+
+<pre><code>:root {
+  /* Surfaces */
+  --bg:          #0a1610;
+  --surface-1:   #131f18;
+  --surface-2:   #1a2a20;
+  --surface-3:   #243528;
+  --border-1:    #1f2d24;
+  --border-2:    #2d4234;
+
+  /* Brand — peach (primary accent) */
+  --sp-peach-100: #f4cba0;
+  --sp-peach-200: #e8a87c;
+  --sp-peach-400: #e8a87c;
+  --sp-peach-500: #d68a5b;
+  --sp-peach-soft: rgba(232, 168, 124, 0.10);
+
+  /* Forest / teal */
+  --sp-forest-300: #5ba886;
+  --sp-forest-500: #3d7458;
+  --sp-forest-700: #3d7458;
+  --sp-cream:    #f4cba0;
+  --sp-teal-300: #9ED8B8;
+  --sp-teal-400: #7CC4A4;
+  --sp-teal-500: #5BA886;
+
+  /* Status */
+  --sp-crimson:  #D65A54;
+
+  /* Text */
+  --text-1: #f5f7f4;
+  --text-2: #a3b0a7;
+  --text-3: #6f7d74;
+  --text-mute: #4a5650;
+
+  /* Type */
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+
+  /* Radius */
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+
+  /* Layout */
+  --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
+
+  /* Mascot */
+  --mascot-sm: 22px; --mascot-md: 30px; --mascot-lg: 40px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}</code></pre>
+
+<h2 id="bugs">4. Bug &amp; vấn đề phát hiện được</h2>
+
+<h3>4.1 <span class="badge crit">Critical</span> CSS variable không khai báo nhưng vẫn được dùng</h3>
+
+<p>5 file đang dùng tokens legacy chưa được migrate sang naming mới — gây mất nền, sai màu, mất border:</p>
+
+<table>
+  <thead><tr><th>File</th><th>Token bị thiếu</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>sidebar_navigation.html</code></td>
+      <td><code>--card</code>, <code>--card2</code>, <code>--card-boarder</code> (sic: typo "boarder"), <code>--card-hover</code>, <code>--primary</code>, <code>--accent</code>, <code>--text-primary</code>, <code>--text-secondary</code>, <code>--text-tertiary</code></td>
+    </tr>
+    <tr>
+      <td><code>creator_dashboard.html</code></td>
+      <td>9 token legacy như trên + <code>--danger</code></td>
+    </tr>
+    <tr>
+      <td><code>trading_panel.html</code></td>
+      <td>8 token legacy + <code>--danger</code>, <code>--danger-hover</code>, <code>--primary-hover</code></td>
+    </tr>
+    <tr>
+      <td><code>FR-012b_TokenWar_PredictionMarket.html</code></td>
+      <td><code>--bg</code>, <code>--sp-peach-100</code>, <code>--sp-peach-200</code>, <code>--sp-teal-300</code>, <code>--text-mute</code> (thiếu chính <code>--bg</code> → nền body trắng/không render dark mode!)</td>
+    </tr>
+    <tr>
+      <td><code>token_detail.html</code></td>
+      <td><code>--crimson-soft</code>, <code>--teal-soft</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>4.2 <span class="badge high">High</span> Thiếu <code>&lt;meta name="viewport"&gt;</code></h3>
+
+<p>14/18 file thiếu viewport meta → mobile bị zoom mặc định, layout vỡ. Chỉ 4 file <em>có</em> viewport:</p>
+<p>
+  <span class="file-tag">FR-012b_TokenWar_PredictionMarket.html</span>
+  <span class="file-tag">creator_dashboard.html</span>
+  <span class="file-tag">sidebar_navigation.html</span>
+  <span class="file-tag">trading_panel.html</span>
+</p>
+<p>Patch cần thêm vào <code>&lt;head&gt;</code> các file còn lại:</p>
+<pre><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code></pre>
+
+<h3>4.3 <span class="badge med">Medium</span> Trộn ngôn ngữ <code>&lt;html lang&gt;</code></h3>
+<ul>
+  <li><strong>lang="vi"</strong> (8 file): <code>FR-012_TokenWar</code>, <code>clubs</code>, <code>events</code>, <code>leaderboard</code>, <code>my_profile</code> (thực ra là "en", xem lại), <code>referrals</code> (xem lại), <code>token_detail</code>, <code>token_list_v4</code>.</li>
+  <li><strong>lang="en"</strong> (9 file): các file còn lại.</li>
+  <li>Cần quyết định 1 chuẩn → đồng bộ toàn bộ.</li>
+</ul>
+
+<h3>4.4 <span class="badge med">Medium</span> Link điều hướng còn placeholder</h3>
+<p>Mỗi trang còn 6–7 link <code>href="#"</code> chưa nối (sidebar item, footer, breadcrumb…). Top file có nhiều placeholder nhất: <code>sidebar_navigation.html</code> (7), <code>public_profile.html</code> (7), <code>token_list_v4.html</code> (6), <code>token_detail.html</code> (6).</p>
+
+<h3>4.5 <span class="badge low">Low</span> Duplicate <code>style</code> trên 1 element</h3>
+<p>Trong <code>sidebar_navigation.html</code> dòng 304, thẻ <code>.logo</code> có <strong>2</strong> attribute <code>style=""</code> liền kề — trình duyệt sẽ chỉ áp dụng cái đầu, cái sau bị bỏ qua. Cần gộp lại.</p>
+
+<h2 id="map">5. Token migration map (legacy → mới)</h2>
+
+<p>Khi sửa 4 file legacy (<code>sidebar_navigation</code>, <code>creator_dashboard</code>, <code>trading_panel</code>, và mảng legacy trong <code>FR-012b</code>), dùng map này. <strong>Có 2 cách:</strong> (a) replace toàn bộ tham chiếu <code>var(--legacy)</code> bằng <code>var(--new)</code>; hoặc (b) bổ sung alias vào <code>:root</code> để cả hai tên cùng tồn tại (an toàn hơn, ít rủi ro vỡ).</p>
+
+<table>
+  <thead><tr><th>Token legacy</th><th>Map sang token chuẩn</th><th>Ý nghĩa</th></tr></thead>
+  <tbody>
+    <tr><td><code>--card</code></td><td><code>--surface-1</code> hoặc <code>--surface-2</code></td><td>Nền card</td></tr>
+    <tr><td><code>--card2</code></td><td><code>--surface-2</code></td><td>Nền card alt (sidebar)</td></tr>
+    <tr><td><code>--card-boarder</code> <em>(typo!)</em></td><td><code>--border-1</code></td><td>Border card</td></tr>
+    <tr><td><code>--card-hover</code></td><td><code>--surface-3</code> hoặc <code>--sp-peach-soft</code></td><td>Trạng thái hover</td></tr>
+    <tr><td><code>--primary</code></td><td><code>--sp-peach-400</code></td><td>Màu nhấn chính</td></tr>
+    <tr><td><code>--primary-hover</code></td><td><code>--sp-peach-500</code></td><td>Hover của primary</td></tr>
+    <tr><td><code>--accent</code></td><td><code>--sp-teal-400</code></td><td>Accent phụ</td></tr>
+    <tr><td><code>--danger</code></td><td><code>--sp-crimson</code></td><td>Lỗi/giảm giá</td></tr>
+    <tr><td><code>--danger-hover</code></td><td>Tự thêm <code>#c14844</code> (peach-500 của crimson)</td><td>Hover danger</td></tr>
+    <tr><td><code>--text-primary</code></td><td><code>--text-1</code></td><td>Text chính</td></tr>
+    <tr><td><code>--text-secondary</code></td><td><code>--text-2</code></td><td>Text phụ</td></tr>
+    <tr><td><code>--text-tertiary</code></td><td><code>--text-3</code></td><td>Text mờ</td></tr>
+    <tr><td><code>--crimson-soft</code></td><td><code>rgba(214, 90, 84, 0.10)</code></td><td>Nền chip danger</td></tr>
+    <tr><td><code>--teal-soft</code></td><td><code>rgba(124, 196, 164, 0.10)</code></td><td>Nền chip teal</td></tr>
+  </tbody>
+</table>
+
+<details>
+  <summary>Patch alias gợi ý (cách an toàn — thêm vào cuối <code>:root</code> của 4 file legacy)</summary>
+<pre><code>/* Legacy token aliases — for compatibility while migrating */
+--card:           var(--surface-1);
+--card2:          var(--surface-2);
+--card-boarder:   var(--border-1);   /* typo kept for compat */
+--card-hover:     var(--surface-3);
+--primary:        var(--sp-peach-400);
+--primary-hover:  var(--sp-peach-500);
+--accent:         var(--sp-teal-400);
+--danger:         var(--sp-crimson);
+--danger-hover:   #c14844;
+--text-primary:   var(--text-1);
+--text-secondary: var(--text-2);
+--text-tertiary:  var(--text-3);
+--crimson-soft:   rgba(214, 90, 84, 0.10);
+--teal-soft:      rgba(124, 196, 164, 0.10);</code></pre>
+</details>
+
+<h2 id="priority">6. Thứ tự ưu tiên sửa (đề xuất)</h2>
+
+<ol>
+  <li><strong><code>sidebar_navigation.html</code></strong> — bug token nặng + là component dùng đi dùng lại ở nhiều trang, fix trước để chuẩn hoá.</li>
+  <li><strong><code>creator_dashboard.html</code> + <code>trading_panel.html</code></strong> — cùng kiểu legacy token, có thể fix theo cùng patch alias ở mục 5.</li>
+  <li><strong><code>FR-012b_TokenWar_PredictionMarket.html</code></strong> — bổ sung <code>--bg</code> và các token core còn thiếu (kéo nguyên block <code>:root</code> chuẩn ở mục 3 sang).</li>
+  <li><strong><code>token_detail.html</code></strong> — thêm 2 token <code>--crimson-soft</code> và <code>--teal-soft</code>.</li>
+  <li><strong>Quick win:</strong> thêm <code>&lt;meta viewport&gt;</code> cho 14 file thiếu (1 patch lặp).</li>
+  <li><strong>Thống nhất <code>html lang</code></strong> (vi hay en — bạn quyết).</li>
+  <li><strong>Nối các <code>href="#"</code></strong> trong sidebar/footer của tất cả trang.</li>
+  <li><strong>(Tuỳ chọn) Refactor:</strong> tách block <code>:root</code> + "Mood B glow" thành <code>tokens.css</code> chung, các file HTML chỉ <code>&lt;link&gt;</code> vào — giảm trùng lặp ~200 dòng/file.</li>
+</ol>
+
+<h2 id="prompt">7. Prompt mẫu để mở session mới</h2>
+
+<div class="callout copy">
+  Copy đoạn dưới (cộng với việc kéo file artifact này vào chat mới) là đủ để Claude session mới hiểu ngay context.
+</div>
+
+<pre><code>Mình đang sửa giao diện HTML cho dự án Sprout (meme token platform trên Solana).
+Folder mockup: C:\Users\duongvietdung\Documents\PMFCDocument\mockups-sprout
+Stack: HTML thuần + CSS-in-style nội tuyến, không framework. Font: Inter / Plus Jakarta Sans / JetBrains Mono.
+Theme chính thức: Mood B "Living Garden" — dark forest --bg: #0a1610, accent peach #e8a87c, teal #7CC4A4.
+
+Mình đã có 1 audit đầy đủ trong file artifact đính kèm (sprout-ui-audit.html).
+Hãy đọc artifact đó để nắm:
+- Tech stack & design tokens chuẩn
+- Inventory 18 file + tình trạng
+- 5 file có bug critical về CSS variable chưa khai báo
+- Token migration map legacy → mới
+- Thứ tự ưu tiên sửa đề xuất
+
+Mình muốn bắt đầu sửa từ: [ĐIỀN VÀO ĐÂY — ví dụ: "sidebar_navigation.html theo cách alias"
+hoặc "thêm viewport meta cho toàn bộ" hoặc "tách tokens.css chung"]</code></pre>
+
+<h2>Tóm tắt 1 câu</h2>
+<p><em>Dự án có design system khá chỉn chu (Mood B locked spec), nhưng 4–5 file kẹt ở naming legacy chưa migrate khiến CSS variable không khai báo bị broken trong runtime; quick-win là patch alias 14 token và thêm viewport meta cho 14 file thiếu.</em></p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Activity — 3 Style Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Fraunces:ital,wght@1,700;1,900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a1610; --s1: #131f18; --s2: #1a2a20; --b1: #1f2d24;
+    --peach: #e8a87c; --sun: #ffd35e; --t1: #f5f7f4; --t2: #a3b0a7; --t3: #6f7d74;
+    --ink: #2a1505; --ink2: #6b4a30; --paper: #fdf8ec; --cream: #f4ecdc;
+    --buy: #2e8b57; --sell: #b94842; --mint: #d68a5b; --grad: #a878ff;
+    --f-mono: 'JetBrains Mono', monospace;
+    --f-it: 'Fraunces', serif;
+    --f-hand: 'Caveat', cursive;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    background-image: radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.05), transparent 60%);
+    color: var(--t1); font-family: 'Inter', sans-serif; min-height: 100vh; padding: 24px;
+  }
+  h1 { font-family: var(--f-it); font-style: italic; font-weight: 900; font-size: 28px; color: var(--peach); margin-bottom: 4px; }
+  .sub { color: var(--t2); margin-bottom: 28px; font-size: 14px; }
+
+  .row { display: grid; grid-template-columns: repeat(3, 320px); gap: 24px; justify-content: center; }
+
+  .col { background: var(--s1); border: 1px solid var(--b1); border-radius: 14px; padding: 16px; }
+  .col h2 { font-family: var(--f-it); font-style: italic; font-weight: 900; font-size: 17px; color: var(--sun); margin-bottom: 4px; }
+  .col .desc { font-family: var(--f-hand); color: var(--t3); margin-bottom: 16px; font-size: 13px; }
+  .feed { display: flex; flex-direction: column; gap: 6px; }
+
+  /* ============ OPTION A — flat dark feed ============ */
+  .a-item { display: flex; align-items: center; gap: 8px; padding: 8px 6px 8px 0; border-left: 4px solid var(--buy); padding-left: 9px; font-size: 12.5px; transition: background 0.15s; }
+  .a-item:hover { background: rgba(255,255,255,0.025); }
+  .a-item.buy  { border-left-color: var(--buy); }
+  .a-item.sell { border-left-color: var(--sell); }
+  .a-item.mint { border-left-color: var(--mint); }
+  .a-item.grad { border-left-color: var(--grad); }
+  .a-avatar { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; }
+  .a-body { flex: 1; color: var(--t2); line-height: 1.35; }
+  .a-name { font-family: var(--f-mono); font-weight: 700; color: var(--t1); font-size: 12px; }
+  .a-token { font-family: var(--f-mono); font-weight: 700; color: var(--t1); font-size: 11px; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 3px; }
+  .a-up   { color: var(--buy); font-family: var(--f-mono); font-weight: 700; }
+  .a-down { color: var(--sell); font-family: var(--f-mono); font-weight: 700; }
+  .a-time { font-size: 10.5px; color: var(--t3); flex-shrink: 0; }
+
+  /* ============ OPTION B — sticky notes ============ */
+  .b-feed { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+  .b-item { position: relative; background: #fff3a8; color: var(--ink); padding: 10px 12px 12px; border-radius: 2px; font-family: var(--f-it); font-style: italic; font-size: 12px; font-weight: 700; box-shadow: 2px 4px 8px -2px rgba(0,0,0,0.5); transform: rotate(-1deg); transition: transform 0.2s; }
+  .b-item:hover { transform: rotate(0) translateY(-2px); z-index: 5; }
+  .b-item:nth-child(even) { background: #ffe89a; transform: rotate(1.5deg); }
+  .b-item:nth-child(3n)   { background: #ffd9b8; transform: rotate(-0.8deg); }
+  .b-item::before { content: ''; position: absolute; top: -3px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: #d65a54; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+  .b-head { display: flex; align-items: baseline; gap: 6px; font-size: 11px; }
+  .b-name { font-weight: 900; font-family: var(--f-mono); font-style: normal; color: var(--ink); }
+  .b-time { color: var(--ink2); font-family: var(--f-hand); font-style: normal; font-size: 13px; margin-left: auto; }
+  .b-body { margin-top: 3px; font-family: var(--f-hand); font-style: normal; font-weight: 600; font-size: 15px; line-height: 1.2; }
+  .b-token { font-family: var(--f-mono); font-weight: 700; background: rgba(0,0,0,0.08); padding: 0 4px; border-radius: 3px; font-size: 11px; }
+  .b-up   { color: var(--buy); font-family: var(--f-mono); font-weight: 700; font-style: normal; font-size: 12px; }
+  .b-down { color: var(--sell); font-family: var(--f-mono); font-weight: 700; font-style: normal; font-size: 12px; }
+
+  /* ============ OPTION C — speech bubbles ============ */
+  .c-feed { display: flex; flex-direction: column; gap: 10px; }
+  .c-item { display: flex; align-items: flex-start; gap: 6px; }
+  .c-item .bubble { background: rgba(244, 236, 220, 0.92); color: var(--ink); padding: 7px 11px 8px; border-radius: 12px; border-bottom-left-radius: 4px; font-size: 12px; line-height: 1.4; box-shadow: 0 2px 8px rgba(0,0,0,0.3); position: relative; flex: 1; }
+  .c-item .bubble::before { content: ''; position: absolute; left: -6px; top: 10px; width: 0; height: 0; border-top: 6px solid transparent; border-right: 8px solid rgba(244, 236, 220, 0.92); border-bottom: 6px solid transparent; }
+  .c-avatar { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--ink); flex-shrink: 0; margin-top: 4px; }
+  .c-name { font-weight: 700; font-family: var(--f-mono); color: var(--ink); font-size: 11px; }
+  .c-body { color: var(--ink2); }
+  .c-token { font-family: var(--f-mono); font-weight: 700; color: var(--ink); background: rgba(0,0,0,0.07); padding: 0 4px; border-radius: 3px; font-size: 10.5px; }
+  .c-up   { color: var(--buy); font-family: var(--f-mono); font-weight: 700; }
+  .c-down { color: var(--sell); font-family: var(--f-mono); font-weight: 700; }
+  .c-time { color: var(--ink2); opacity: 0.7; font-size: 10px; margin-left: 4px; }
+  .c-mascot { display: flex; gap: 8px; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--b1); }
+  .c-mascot .face { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(180deg, var(--sun), var(--peach)); border: 2px solid var(--ink); display: grid; place-items: center; font-size: 16px; }
+  .c-mascot .say { font-family: var(--f-hand); font-size: 14px; color: var(--t2); }
+
+  .notes { max-width: 1056px; margin: 20px auto 0; padding: 18px; background: var(--s2); border: 1px dashed rgba(255,211,94,0.25); border-radius: 12px; font-size: 13.5px; color: var(--t2); line-height: 1.6; }
+  .notes b { color: var(--peach); font-weight: 700; }
+  .pros, .cons { display: flex; gap: 14px; margin-top: 14px; }
+  .pros span, .cons span { font-size: 12px; padding: 4px 10px; border-radius: 999px; }
+  .pros span { background: rgba(46,139,87,0.18); color: #6cc28b; }
+  .cons span { background: rgba(214,90,84,0.18); color: #e8807a; }
+</style>
+</head>
+<body>
+
+<h1>Live Activity — 3 style options</h1>
+<div class="sub">Cùng 5 entries, 3 visual treatments. So sánh nhanh để chốt 1 hướng cho panel bên phải.</div>
+
+<div class="row">
+
+  <!-- ============== OPTION A ============== -->
+  <div class="col">
+    <h2>A · Flat dark feed</h2>
+    <div class="desc">Trading-platform style. Vạch màu trái = action type.</div>
+    <div class="feed">
+      <div class="a-item buy">
+        <div class="a-avatar" style="background:linear-gradient(135deg,#7cc4a4,#3d7458)"></div>
+        <div class="a-body"><span class="a-name">@whale_72</span> bought <span class="a-token">MOON</span> <span class="a-up">+2.4 SOL</span></div>
+        <span class="a-time">8s</span>
+      </div>
+      <div class="a-item mint">
+        <div class="a-avatar" style="background:linear-gradient(135deg,#e8a87c,#d68a5b)"></div>
+        <div class="a-body"><span class="a-name">@alice</span> minted <span class="a-token">STAR023</span> 🌱</div>
+        <span class="a-time">23s</span>
+      </div>
+      <div class="a-item sell">
+        <div class="a-avatar" style="background:linear-gradient(135deg,#d65a54,#b94842)"></div>
+        <div class="a-body"><span class="a-name">@trader_x</span> sold <span class="a-token">ROCK</span> <span class="a-down">-0.8 SOL</span></div>
+        <span class="a-time">41s</span>
+      </div>
+      <div class="a-item buy">
+        <div class="a-avatar" style="background:linear-gradient(135deg,#d4a256,#8a5e1e)"></div>
+        <div class="a-body"><span class="a-name">@whale_zen</span> bought <span class="a-token">PUMP</span> <span class="a-up">+12 SOL</span> 🐋</div>
+        <span class="a-time">2m</span>
+      </div>
+      <div class="a-item grad">
+        <div class="a-avatar" style="background:linear-gradient(135deg,#f4cba0,#e8a87c)"></div>
+        <div class="a-body"><span class="a-name">PUMP</span> graduated to DEX 🌳</div>
+        <span class="a-time">3m</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== OPTION B ============== -->
+  <div class="col">
+    <h2>B · Sticky notes</h2>
+    <div class="desc">Post-it dán cork board. Xoay nhẹ, pin đỏ ở giữa.</div>
+    <div class="b-feed">
+      <div class="b-item">
+        <div class="b-head"><span class="b-name">@whale_72</span><span class="b-time">8s</span></div>
+        <div class="b-body">bought <span class="b-token">MOON</span> <span class="b-up">+2.4 SOL</span></div>
+      </div>
+      <div class="b-item">
+        <div class="b-head"><span class="b-name">@alice</span><span class="b-time">23s</span></div>
+        <div class="b-body">minted <span class="b-token">STAR023</span> 🌱</div>
+      </div>
+      <div class="b-item">
+        <div class="b-head"><span class="b-name">@trader_x</span><span class="b-time">41s</span></div>
+        <div class="b-body">sold <span class="b-token">ROCK</span> <span class="b-down">-0.8 SOL</span></div>
+      </div>
+      <div class="b-item">
+        <div class="b-head"><span class="b-name">@whale_zen</span><span class="b-time">2m</span></div>
+        <div class="b-body">bought <span class="b-token">PUMP</span> <span class="b-up">+12 SOL</span> 🐋</div>
+      </div>
+      <div class="b-item">
+        <div class="b-head"><span class="b-name">PUMP Token</span><span class="b-time">3m</span></div>
+        <div class="b-body">graduated to DEX 🌳</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== OPTION C ============== -->
+  <div class="col">
+    <h2>C · Speech bubbles</h2>
+    <div class="desc">Sprout đang kể bạn nghe ai vừa làm gì.</div>
+    <div class="c-feed">
+      <div class="c-item">
+        <div class="c-avatar" style="background:linear-gradient(135deg,#7cc4a4,#3d7458)"></div>
+        <div class="bubble"><span class="c-name">@whale_72</span> <span class="c-body">bought <span class="c-token">MOON</span> <span class="c-up">+2.4 SOL</span></span><span class="c-time">· 8s</span></div>
+      </div>
+      <div class="c-item">
+        <div class="c-avatar" style="background:linear-gradient(135deg,#e8a87c,#d68a5b)"></div>
+        <div class="bubble"><span class="c-name">@alice</span> <span class="c-body">minted <span class="c-token">STAR023</span> 🌱</span><span class="c-time">· 23s</span></div>
+      </div>
+      <div class="c-item">
+        <div class="c-avatar" style="background:linear-gradient(135deg,#d65a54,#b94842)"></div>
+        <div class="bubble"><span class="c-name">@trader_x</span> <span class="c-body">sold <span class="c-token">ROCK</span> <span class="c-down">-0.8 SOL</span></span><span class="c-time">· 41s</span></div>
+      </div>
+      <div class="c-item">
+        <div class="c-avatar" style="background:linear-gradient(135deg,#d4a256,#8a5e1e)"></div>
+        <div class="bubble"><span class="c-name">@whale_zen</span> <span class="c-body">bought <span class="c-token">PUMP</span> <span class="c-up">+12 SOL</span> 🐋</span><span class="c-time">· 2m</span></div>
+      </div>
+      <div class="c-item">
+        <div class="c-avatar" style="background:linear-gradient(135deg,#f4cba0,#e8a87c)"></div>
+        <div class="bubble"><span class="c-name">PUMP</span> <span class="c-body">graduated to DEX 🌳</span><span class="c-time">· 3m</span></div>
+      </div>
+      <div class="c-mascot">
+        <div class="face">🌱</div>
+        <span class="say">Sprout sees all the garden moves</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="notes">
+  <b>So sánh nhanh</b>
+  <div class="pros">
+    <span>A · density cao, scannable, không đụng polaroid</span>
+    <span>B · vẫn wild family, casual journal vibe</span>
+    <span>C · narrative, integrate với mascot</span>
+  </div>
+  <div class="cons">
+    <span>A · ít "characterful", giống mọi exchange</span>
+    <span>B · vẫn cream paper → đụng cards hơn A</span>
+    <span>C · density thấp nhất, panel phình to</span>
+  </div>
+</div>
+
+</body>
+</html>

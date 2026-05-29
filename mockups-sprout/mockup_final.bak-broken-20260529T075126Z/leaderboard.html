@@ -1,0 +1,2354 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard  - Sprout</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&family=Fraunces:ital,wght@1,700;1,800;1,900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&family=Fraunces:ital,wght@1,700;1,800;1,900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg:          #0a1610;
+    --surface-1:   #131f18;
+    --surface-2:   #1a2a20;
+    --surface-3:   #243528;
+    --border-1:    #1f2d24;
+    --border-2:    #2d4234;
+    --sp-peach-100: #f4cba0;
+    --sp-peach-200: #e8a87c;
+    --sp-peach-400: #e8a87c;
+    --sp-peach-500: #d68a5b;
+    --sp-peach-soft: rgba(232, 168, 124, 0.10);
+    --sp-forest-300: #5ba886;
+    --sp-forest-500: #3d7458;
+    --sp-forest-700: #3d7458;
+    --sp-cream:    #f4cba0;
+    --sp-teal-300: #9ED8B8;
+    --sp-teal-400: #7CC4A4;
+    --sp-teal-500: #5BA886;
+    --sp-crimson:  #D65A54;
+    --text-1: #f5f7f4;
+    --text-2: #a3b0a7;
+    --text-3: #6f7d74;
+    --text-mute: #4a5650;
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+    --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
+  --mascot-sm:   22px;
+  --mascot-md:   30px;
+  --mascot-lg:   40px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+/* === Mood B signature glow (locked 2026-05-05  - SPROUT_UI_SPEC.md §1.3a) === */
+/* Do NOT modify without updating spec section 1.3a first. */
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.06), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 30%, rgba(124,196,164,0.05), transparent 60%);
+  background-attachment: fixed;
+}
+.logo-mascot {
+  box-shadow: 0 0 24px rgba(232,168,124,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-primary {
+  box-shadow: 0 0 20px rgba(232,168,124,0.30);
+}
+.marquee-track .peach { color: var(--sp-peach-200); text-shadow: 0 0 12px rgba(232,168,124,0.4); }
+.marquee-track .teal  { color: var(--sp-teal-300);  text-shadow: 0 0 12px rgba(124,196,164,0.4); }
+.token-card.featured, .tk-card.featured, .card.featured {
+  border-color: rgba(232,168,124,0.55);
+  background: radial-gradient(ellipse 300px 200px at 100% 0%, rgba(232,168,124,0.10), transparent 70%), var(--surface-1);
+  box-shadow: 0 0 32px rgba(232,168,124,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.token-card:hover, .tk-card:hover {
+  box-shadow: 0 0 24px rgba(124,196,164,0.08);
+}
+.token-av, .tk-av { box-shadow: 0 0 16px rgba(124,196,164,0.15); }
+.bar-fill { box-shadow: 0 0 10px rgba(232,168,124,0.5); }
+/* === end Mood B glow === */
+
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--text-1); font-family:var(--font-body); font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+.header { position:fixed; top:0; left:0; right:0; height:var(--header-h); background:var(--surface-1); border-bottom:1px solid var(--border-1); z-index:100; display:flex; align-items:center; padding:0 24px; gap:24px; }
+.logo { display:flex; align-items:center; gap:10px; flex-shrink:0; text-decoration:none; cursor:pointer; }
+.logo-mascot { width: var(--mascot-lg); height: var(--mascot-lg); border-radius:10px; background:linear-gradient(180deg,#e8a87c,#e8a87c); display:grid; place-items:center; flex-shrink:0; }
+.logo-text { font-family:var(--font-display); font-size:17px; font-weight:800; color:var(--sp-peach-400); }
+.logo-sub { display:block; font-size:9px; font-weight:600; color:var(--text-3); letter-spacing:0.06em; text-transform:lowercase; }
+.header-search { position:relative; flex:1; max-width:480px; }
+.header-search input { width:100%; height:36px; padding:0 14px 0 38px; background:var(--surface-2); border:1px solid var(--border-1); border-radius:var(--r-md); color:var(--text-1); font-size:13.5px; font-family:inherit; }
+.header-search input:focus { outline:none; border-color:var(--sp-peach-400); }
+.header-search svg { position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--text-3); }
+.header-actions { display:flex; gap:8px; margin-left:auto; align-items:center; }
+.btn-ghost { height:36px; padding:0 14px; background:transparent; border:1px solid var(--border-2); border-radius:var(--r-md); color:var(--text-2); font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
+.btn-primary { height:36px; padding:0 16px; background:linear-gradient(180deg,#e8a87c,#e8a87c); border:none; border-radius:var(--r-md); color:#2a1505; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+.marquee { position:fixed; top:var(--header-h); left:0; right:0; height:var(--marquee-h); background:var(--bg); border-bottom:1px solid var(--border-1); overflow:hidden; display:flex; align-items:center; z-index:99; }
+.marquee-track { display:flex; gap:36px; white-space:nowrap; animation:scroll 40s linear infinite; font-family:var(--font-display); font-size:11px; font-weight:700; letter-spacing:0.08em; color:var(--text-3); }
+.marquee-track .peach { color:var(--sp-peach-400); }
+.marquee-track .teal { color:var(--sp-teal-400); }
+@keyframes scroll { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
+.sidebar { position:fixed; left:0; top:calc(var(--header-h) + var(--marquee-h)); bottom:0; width:var(--sidebar-w); background:var(--surface-1); border-right:1px solid var(--border-1); padding:20px 14px; overflow-y:auto; display:flex; flex-direction:column; gap:18px; }
+.nav-group { display:flex; flex-direction:column; gap:1px; }
+.nav-label { font-family:var(--font-display); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-3); padding:0 12px 6px; }
+.nav-item { display:flex; align-items:center; gap:12px; padding:9px 12px; border-radius:var(--r-md); color:var(--text-2); font-size:13.5px; font-weight:500; cursor:pointer; transition:all 0.12s; text-decoration:none; }
+.nav-item svg { width:17px; height:17px; flex-shrink:0; opacity:0.85; }
+.nav-item:hover { background:var(--surface-2); color:var(--text-1); }
+.nav-item.active { color:var(--sp-peach-400); background:var(--sp-peach-soft); font-weight:600; }
+.nav-badge { margin-left:auto; background:var(--sp-crimson); color:white; font-size:10px; font-weight:700; padding:1px 6px; border-radius:var(--r-pill); }
+.user-card { margin-top:auto; background:var(--surface-2); border:1px solid var(--border-1); border-radius:var(--r-md); padding:10px; display:flex; align-items:center; gap:10px; cursor:pointer; }
+.user-mascot { width: var(--mascot-lg); height: var(--mascot-lg); border-radius:var(--r-pill); background:var(--surface-3); display:grid; place-items:center; border:1.5px solid var(--sp-peach-400); }
+.user-name { font-size:12.5px; font-weight:600; color:var(--text-1); }
+.user-tier { font-size:10.5px; color:var(--sp-peach-400); font-weight:700; margin-top:1px; }
+.main { margin-left:var(--sidebar-w); margin-top:calc(var(--header-h) + var(--marquee-h)); padding:28px 32px 60px; max-width:1100px; }
+.page-title { font-family:var(--font-display); font-size:28px; font-weight:800; color:var(--text-1); letter-spacing:-0.02em; margin-bottom:4px; }
+.page-sub { font-size:13px; color:var(--text-3); margin-bottom:20px; }
+.ev-tabs { display:flex; gap:6px; margin-bottom:24px; }
+.ev-tab { padding:7px 16px; background:transparent; border:1px solid var(--border-1); border-radius:var(--r-pill); color:var(--text-2); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; font-family:inherit; display:inline-flex; align-items:center; gap:6px; }
+.ev-tab:hover { color:var(--text-1); border-color:var(--border-2); }
+.ev-tab.active { background:var(--sp-peach-400); border-color:var(--sp-peach-400); color:#2a1505; }
+.ev-count { background:rgba(0,0,0,0.25); border-radius:var(--r-pill); padding:1px 7px; font-size:11px; font-weight:700; }
+.ev-list { display:flex; flex-direction:column; gap:14px; }
+.ev-card { border-radius:var(--r-lg); padding:24px 28px; display:flex; align-items:center; gap:20px; cursor:pointer; transition:transform 0.15s, box-shadow 0.15s; border:1px solid rgba(255,255,255,0.06); }
+.ev-card:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+.ev-card[style*="display:none"] { display:none !important; }
+.ev-card-body { flex:1; min-width:0; }
+.ev-badge { display:inline-block; padding:3px 9px; border-radius:var(--r-pill); font-size:10.5px; font-weight:700; letter-spacing:0.04em; margin-bottom:8px; font-family:var(--font-display); }
+.ev-title { font-family:var(--font-display); font-size:19px; font-weight:700; color:#fff; margin-bottom:5px; letter-spacing:-0.01em; }
+.ev-desc { font-size:13px; color:rgba(255,255,255,0.65); margin-bottom:12px; }
+.ev-meta { display:flex; align-items:center; gap:16px; font-size:12px; color:rgba(255,255,255,0.55); }
+.ev-status { display:inline-flex; align-items:center; gap:5px; font-weight:600; }
+.ev-live-dot { width:7px; height:7px; border-radius:50%; background:#22c55e; display:inline-block; animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+.ev-card-right { display:flex; flex-direction:column; align-items:center; gap:12px; flex-shrink:0; }
+.ev-icon { width:52px; height:52px; border-radius:var(--r-md); background:rgba(255,255,255,0.15); display:grid; place-items:center; border:1px solid rgba(255,255,255,0.2); }
+.ev-icon svg { width:24px; height:24px; stroke:rgba(255,255,255,0.9); }
+.ev-btn { padding:8px 18px; border-radius:var(--r-md); font-size:13px; font-weight:700; cursor:pointer; font-family:var(--font-display); transition:all 0.12s; white-space:nowrap; border:none; }
+.ev-btn-join { background:rgba(255,255,255,0.18); color:#fff; border:1px solid rgba(255,255,255,0.3); }
+.ev-btn-join:hover { background:rgba(255,255,255,0.28); }
+.ev-btn-soon { background:rgba(0,0,0,0.25); color:rgba(255,255,255,0.5); border:1px solid rgba(255,255,255,0.1); cursor:default; }
+.ev-btn-view { background:rgba(255,255,255,0.18); color:#fff; border:1px solid rgba(255,255,255,0.3); }
+.ev-btn-view:hover { background:rgba(255,255,255,0.28); }
+
+/* ===================== LEADERBOARD PAGE CSS ===================== */
+
+/* Top 3 grid */
+.top3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+/* Featured card */
+.lb-card {
+  background:
+    radial-gradient(ellipse 120% 80% at 10% 0%, rgba(234,181,82,0.12), transparent 55%),
+    radial-gradient(ellipse 80% 100% at 90% 100%, rgba(92,168,134,0.10), transparent 60%),
+    var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.18s var(--ease), border-color 0.18s var(--ease);
+}
+.lb-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--sp-peach-400);
+}
+.lb-card.rank-1 { border-color: rgba(234,181,82,0.35); }
+.lb-card.rank-2 { border-color: rgba(156,216,184,0.2); }
+
+.rank-badge {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-mute);
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+.lb-card.rank-1 .rank-badge { color: var(--sp-peach-400); }
+.lb-card.rank-2 .rank-badge { color: var(--sp-teal-400); }
+
+.lb-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.lb-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-md);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.lb-token-info { flex: 1; min-width: 0; }
+.lb-token-name {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--sp-peach-400);
+  margin-bottom: 2px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lb-tagline {
+  font-size: 11.5px;
+  color: var(--text-3);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.lb-buy {
+  height: 32px;
+  padding: 0 16px;
+  background: var(--sp-teal-500);
+  border: none;
+  border-radius: var(--r-md);
+  color: #ecfeff;
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+.lb-buy:hover { background: var(--sp-teal-400); }
+
+.lb-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+.lb-metric-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--text-3);
+}
+.lb-metric-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+.lb-metric-val {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-1);
+  font-size: 13px;
+}
+.lb-metric-change {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.lb-creator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-1);
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+.lb-creator-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--r-pill);
+  flex-shrink: 0;
+  border: 1px solid var(--border-2);
+}
+.lb-creator-name { color: var(--text-2); font-weight: 500; }
+.lb-creator-age { margin-left: auto; color: var(--text-mute); }
+
+/* Table */
+.lb-table {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.lb-table-header {
+  display: grid;
+  grid-template-columns: 2.2fr 1.4fr 0.8fr 1.1fr 0.5fr;
+  padding: 12px 20px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  border-bottom: 1px solid var(--border-1);
+}
+.lb-row {
+  display: grid;
+  grid-template-columns: 2.2fr 1.4fr 0.8fr 1.1fr 0.5fr;
+  align-items: center;
+  padding: 13px 20px;
+  border-top: 1px solid var(--border-1);
+  cursor: pointer;
+  transition: background 0.12s var(--ease);
+}
+.lb-row:first-child { border-top: none; }
+.lb-row:hover { background: var(--surface-2); }
+
+.lb-row-token {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.lb-row-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.lb-row-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-1); /* Group A #5: roster rows desaturate to white */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lb-row-rank {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-mute);
+  margin-top: 1px;
+}
+
+.lb-row-creator {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.lb-row-creator-av {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--r-pill);
+  flex-shrink: 0;
+  border: 1px solid var(--border-2);
+}
+.lb-row-holders {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-2);
+}
+.lb-row-mc {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.lb-row-mc-val {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.lb-row-mc-change {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+.lb-row-buy {
+  height: 30px;
+  padding: 0 14px;
+  background: transparent;
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-md);
+  color: var(--text-2);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.lb-row-buy:hover {
+  border-color: var(--sp-teal-400);
+  color: var(--sp-teal-400);
+}
+
+/* Color helpers */
+.c-up { color: var(--sp-teal-400); }
+.c-down { color: var(--sp-crimson); }
+.c-flat { color: var(--text-3); }
+
+
+/* ===== CONNECTED WALLET ===== */
+.wallet-connected { position: relative; height: 36px; background: var(--surface-2); border: 1px solid var(--border-2); border-radius: var(--r-pill); padding: 3px 12px 3px 4px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.15s var(--ease); font-family: var(--font-body); }
+.wallet-connected:hover { border-color: var(--sp-peach-400); background: var(--sp-peach-soft); }
+.wallet-connected.open { border-color: var(--sp-peach-400); }
+.wc-avatar { width: var(--mascot-md); height: var(--mascot-md); border-radius: 50%; background: linear-gradient(180deg,#e8a87c,#e8a87c); display: grid; place-items: center; flex-shrink: 0; }
+.wc-avatar svg { width: 18px; height: 18px; }
+.wc-info { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
+.wc-balance { font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; color: var(--sp-peach-400); }
+.wc-addr { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-3); margin-top: 1px; }
+.wc-chevron { width: 12px; height: 12px; color: var(--text-3); flex-shrink: 0; transition: transform 0.15s var(--ease); }
+.wallet-connected.open .wc-chevron { transform: rotate(180deg); color: var(--sp-peach-400); }
+.wc-net-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sp-teal-400); flex-shrink: 0; box-shadow: 0 0 0 2px rgba(124,196,164,0.20); }
+.wc-net-dot.wrong { background: var(--sp-crimson); box-shadow: 0 0 0 2px rgba(214,90,84,0.20); }
+.wc-menu { position: absolute; top: calc(100% + 8px); right: 0; width: 220px; background: var(--surface-1); border: 1px solid var(--border-1); border-radius: var(--r-md); padding: 6px; display: none; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.wallet-connected.open .wc-menu { display: block; }
+.wc-menu-head { padding: 10px 10px 8px; border-bottom: 1px solid var(--border-1); margin-bottom: 4px; }
+.wc-menu-net { font-size: 10.5px; color: var(--text-3); font-family: var(--font-display); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+.wc-menu-bal { font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--text-1); margin-top: 2px; }
+.wc-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r-sm); color: var(--text-1); font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none; width: 100%; background: transparent; border: none; font-family: inherit; text-align: left; transition: background 0.12s var(--ease); }
+.wc-item:hover { background: var(--surface-2); }
+.wc-item svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
+.wc-item.danger { color: var(--sp-crimson); }
+.wc-item.danger:hover { background: rgba(214,90,84,0.10); }
+.wc-divider { height: 1px; background: var(--border-1); margin: 4px 0; }
+
+  /* === Patch 4a: Sidebar footer utility block === */
+  .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border-1); display: flex; flex-direction: column; gap: 10px; }
+  .sf-social { display: flex; gap: 12px; }
+  .sf-social a { color: var(--text-3); display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; transition: color 0.15s; text-decoration: none; }
+  .sf-social a:hover { color: var(--sp-peach-400); }
+  .sf-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sf-pill { font-size: 10.5px; font-weight: 600; color: var(--text-3); background: var(--surface-2); padding: 4px 10px; border-radius: 999px; text-decoration: none; transition: all 0.15s; }
+  .sf-pill:hover { color: var(--sp-peach-400); background: var(--sp-peach-soft); }
+  .sf-copyright { font-size: 10px; color: var(--text-mute); text-align: center; margin-top: 2px; }
+  /* === Patch 4b: Active item glow + group label refinement === */
+  .nav-item.active {
+    box-shadow: 0 0 16px rgba(232, 168, 124, 0.18);
+  }
+  .nav-label {
+    letter-spacing: 0.12em;
+    position: relative;
+    padding-left: 14px;
+  }
+  .nav-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--sp-peach-400);
+    opacity: 0.6;
+  }
+  /* === Patch 4c: User card anchor + tier-aware points color === */
+  .user-card {
+    box-shadow: 0 0 20px rgba(232, 168, 124, 0.10);
+    border-top: 1px solid rgba(232, 168, 124, 0.20);
+  }
+  .uc-pts.tier-seed,
+  .uc-pts.tier-sprout      { color: var(--text-1); }
+  .uc-pts.tier-sapling     { color: var(--sp-peach-400); }
+  .uc-pts.tier-tree        { color: var(--sp-teal-400); }
+  .uc-pts.tier-ancient     { color: var(--sp-peach-200); text-shadow: 0 0 8px rgba(232,168,124,0.4); }
+  /* === Patch 7: Hover lift micro-interaction === */
+  .nav-item {
+    transition: transform 0.15s var(--ease, ease), background 0.15s var(--ease, ease), color 0.12s var(--ease, ease), box-shadow 0.12s var(--ease, ease);
+  }
+  .nav-item:hover {
+    transform: translateY(-1px);
+    background: var(--sp-peach-soft);
+    color: var(--text-1);
+  }
+  .nav-item.active:hover {
+    transform: none;
+  }
+  /* === Patch 5: Peach stroke icons  - color via currentColor only === */
+  .nav-item .icon {
+    color: var(--sp-peach-200);
+    opacity: 0.85;
+    transition: fill 0.15s, color 0.15s, opacity 0.15s;
+  }
+  .nav-item.active .icon {
+    color: var(--sp-peach-400);
+    opacity: 1;
+  }
+  .nav-item:hover:not(.active) .icon {
+    color: var(--sp-peach-100);
+    opacity: 1;
+  }
+
+/* === Codex Wild theme rollout === */
+:root {
+  --bg: #0a1610;
+  --surface-1: #131f18;
+  --surface-2: #1a2a20;
+  --surface-3: #243528;
+  --border-1: #1f2d24;
+  --border-2: #2d4234;
+  --sp-peach-100: #f4cba0;
+  --sp-peach-200: #e8a87c;
+  --sp-peach-400: #e8a87c;
+  --sp-peach-500: #d68a5b;
+  --sp-peach-soft: rgba(232, 168, 124, 0.10);
+  --sp-forest-300: #5ba886;
+  --sp-forest-500: #3d7458;
+  --sp-forest-700: #3d7458;
+  --sp-cream: #f4cba0;
+  --sp-teal-300: #9ED8B8;
+  --sp-teal-400: #7CC4A4;
+  --sp-teal-500: #5BA886;
+  --sp-crimson: #D65A54;
+  --crimson-soft: rgba(214, 90, 84, 0.10);
+  --teal-soft: rgba(124, 196, 164, 0.10);
+  --text-1: #f5f7f4;
+  --text-2: #a3b0a7;
+  --text-3: #6f7d74;
+  --text-mute: #4a5650;
+  --w-paper: #fdf8ec;
+  --w-cream: #f4ecdc;
+  --w-ink: #2a1505;
+  --w-ink-2: #6b4a30;
+  --w-tape-y: rgba(255, 216, 130, 0.60);
+  --w-tape-p: rgba(255, 107, 138, 0.40);
+  --w-tape-g: rgba(184, 226, 92, 0.55);
+  --w-coral: #ff8b5e;
+  --w-pink: #ff6b8a;
+  --w-sunshine: #ffd35e;
+  --w-lime: #b8e25c;
+  --w-sky: #5ee2ff;
+  --w-grape: #a878ff;
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+  --font-disp-it: 'Fraunces', 'Plus Jakarta Sans', serif;
+  --font-hand: 'Caveat', cursive;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+  --header-h: 60px; --marquee-h: 30px; --sidebar-w: 240px;
+  --mascot-sm: 22px; --mascot-md: 30px; --mascot-lg: 40px;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --card: var(--surface-1);
+  --card2: var(--surface-2);
+  --card-boarder: var(--border-1);
+  --card-hover: var(--surface-3);
+  --primary: var(--sp-peach-400);
+  --primary-hover: var(--sp-peach-500);
+  --accent: var(--sp-teal-400);
+  --danger: var(--sp-crimson);
+  --danger-hover: #c14844;
+  --text-primary: var(--text-1);
+  --text-secondary: var(--text-2);
+  --text-tertiary: var(--text-3);
+}
+
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body {
+  background: var(--bg) !important;
+  background-image:
+    radial-gradient(ellipse 800px 400px at 20% 0%, rgba(232,168,124,0.06), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 90% 30%, rgba(124,196,164,0.05), transparent 60%) !important;
+  background-attachment: fixed !important;
+  color: var(--text-1);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+.marquee {
+  position: fixed !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: var(--marquee-h) !important;
+  background: var(--surface-1) !important;
+  border-bottom: 1px solid var(--border-1) !important;
+  overflow: hidden;
+  display: flex; align-items: center;
+  z-index: 1000;
+}
+.marquee-track {
+  display: flex; gap: 36px;
+  white-space: nowrap;
+  animation: scroll 42s linear infinite;
+  font-family: var(--font-display);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+}
+.marquee:hover .marquee-track { animation-duration: 14s; }
+.marquee-track .peach { color: var(--sp-peach-400); text-shadow: 0 0 12px rgba(232,168,124,0.35); }
+.marquee-track .teal { color: var(--sp-teal-400); text-shadow: 0 0 12px rgba(124,196,164,0.35); }
+@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+.header {
+  position: fixed !important;
+  top: var(--marquee-h) !important;
+  left: var(--sidebar-w) !important;
+  right: 0 !important;
+  height: var(--header-h) !important;
+  background: rgba(19,31,24,0.94) !important;
+  border-bottom: 1px solid var(--border-1) !important;
+  backdrop-filter: blur(14px);
+  z-index: 900;
+}
+.header .btn-primary, .btn-primary, .create-btn, .submit-btn, .primary-btn,
+button[type="submit"], .claim-btn, .join-btn, .vote-btn, .copy-btn, .save-btn {
+  background: linear-gradient(180deg, var(--sp-peach-200), var(--sp-peach-500)) !important;
+  color: var(--w-ink) !important;
+  border: 0 !important;
+  border-radius: var(--r-pill) !important;
+  font-family: var(--font-disp-it) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  box-shadow: 0 4px 0 var(--w-ink) !important;
+}
+
+.sidebar {
+  position: fixed !important;
+  top: var(--marquee-h) !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: var(--sidebar-w) !important;
+  background: linear-gradient(180deg, #131f18 0%, #0e1a13 100%) !important;
+  border-right: 1px solid var(--border-1) !important;
+  padding: 52px 14px 18px !important;
+  overflow-y: auto;
+  z-index: 950;
+}
+.sidebar::before {
+  content: "🌱 today's garden";
+  position: absolute;
+  top: 14px; left: 24px;
+  transform: rotate(-2deg);
+  font-family: var(--font-hand);
+  font-size: 21px;
+  color: var(--w-ink);
+  background: var(--w-tape-y);
+  padding: 2px 16px;
+  border-radius: 3px;
+}
+.logo, .sidebar .logo {
+  color: var(--sp-peach-400) !important;
+  text-decoration: none !important;
+}
+.logo-name, .logo-text, .brand-name {
+  font-family: var(--font-disp-it) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  color: var(--sp-peach-400) !important;
+}
+.logo-sub { font-family: var(--font-hand); color: var(--text-2); font-size: 16px; }
+.logo-mascot, .user-mascot {
+  background: linear-gradient(180deg, var(--sp-peach-100), var(--sp-peach-400)) !important;
+  border: 2px solid var(--w-ink) !important;
+  box-shadow: 4px 4px 0 var(--w-ink) !important;
+}
+.nav, .nav-group { gap: 8px !important; }
+.nav-item {
+  min-height: 38px;
+  border-radius: var(--r-pill) !important;
+  color: var(--text-2) !important;
+  text-decoration: none !important;
+  font-family: var(--font-display) !important;
+  font-weight: 800 !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+}
+.nav-item svg, .nav-item .icon {
+  width: 26px !important; height: 26px !important;
+  padding: 5px;
+  color: var(--w-ink) !important;
+  background: var(--w-paper);
+  border: 2px solid var(--w-ink);
+  border-radius: 9px;
+  box-shadow: 2px 2px 0 var(--w-ink);
+}
+.nav-item:hover, .nav-item.active {
+  background: var(--w-paper) !important;
+  color: var(--w-ink) !important;
+  border-color: rgba(42,21,5,0.18) !important;
+}
+.nav-item.active { box-shadow: 4px 4px 0 var(--w-ink); }
+.nav-badge {
+  background: var(--w-pink) !important;
+  color: var(--w-ink) !important;
+  border: 2px solid var(--w-ink);
+  box-shadow: 2px 2px 0 var(--w-ink);
+}
+.user-card, .sidebar-footer {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border-1) !important;
+  border-radius: var(--r-lg) !important;
+}
+.main, main, .content, .page, .container, .app-main {
+  margin-left: var(--sidebar-w);
+}
+.main, main {
+  padding-top: calc(var(--header-h) + var(--marquee-h) + 28px);
+}
+
+.page-title, h1, .section-title, .hero-title, .token-name, .club-name, .event-title,
+.reward-title, .profile-name, .points-total, .battle-token-name {
+  font-family: var(--font-disp-it) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+}
+.page-title, h1 { color: var(--text-1); }
+.page-subtitle, .section-subtitle { font-family: var(--font-hand); font-size: 19px; }
+
+.token-card, .club-card, .event-card, .reward-card, .leaderboard-row,
+.profile-hero, .profile-card, .referral-card, .points-hero, .points-card,
+.stat-card, .metric-card, .kpi-card, .dashboard-card, .form-container,
+.create-card, .privacy-card, .prediction-card, .battle-card, .contestant-card,
+.token-hero, .info-card, .card.polaroid, .wild-paper {
+  background: var(--w-paper) !important;
+  color: var(--w-ink) !important;
+  border: 0 !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: 0 14px 28px -8px rgba(0,0,0,0.55), 0 4px 8px rgba(0,0,0,0.3) !important;
+  position: relative;
+  overflow: visible;
+}
+.token-card::before, .club-card::before, .event-card::before, .reward-card::before,
+.leaderboard-row::before, .profile-hero::before, .form-container::before,
+.prediction-card::before, .battle-card::before, .contestant-card::before,
+.token-hero::before, .referral-card::before, .points-hero::before {
+  content: "";
+  position: absolute;
+  top: -10px; left: 34px;
+  width: 82px; height: 18px;
+  background: var(--w-tape-y);
+  transform: rotate(-2deg);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
+}
+.token-card:nth-of-type(even)::before, .club-card:nth-of-type(even)::before,
+.event-card:nth-of-type(even)::before, .reward-card:nth-of-type(even)::before {
+  background: var(--w-tape-p);
+  transform: rotate(2deg);
+}
+.token-card:nth-of-type(3n)::before, .club-card:nth-of-type(3n)::before,
+.event-card:nth-of-type(3n)::before, .reward-card:nth-of-type(3n)::before {
+  background: var(--w-tape-g);
+}
+.token-card *, .club-card *, .event-card *, .reward-card *, .leaderboard-row *,
+.profile-hero *, .profile-card *, .referral-card *, .points-hero *, .points-card *,
+.stat-card *, .metric-card *, .kpi-card *, .dashboard-card *, .form-container *,
+.prediction-card *, .battle-card *, .contestant-card *, .token-hero * {
+  color: inherit;
+}
+.token-symbol, .stat-value, .price-value, .points-value, .odds, .amount, .rank,
+.metric-value, .kpi-value {
+  font-family: var(--font-mono) !important;
+  font-weight: 800 !important;
+}
+.token-avatar, .avatar, .club-avatar, .event-icon, .reward-icon, .profile-avatar,
+.creator-avatar, .contestant-avatar {
+  border: 2.5px solid var(--w-ink) !important;
+  box-shadow: 4px 4px 0 var(--w-ink) !important;
+}
+.price-up, .positive, .up, .buy, .yes { color: #2e8b57 !important; }
+.price-down, .negative, .down, .sell, .no { color: #b94842 !important; }
+.price-change, .tag, .badge, .chip, .tier-badge, .status-badge, .date-badge {
+  border-radius: var(--r-pill) !important;
+  border: 1.5px solid rgba(42,21,5,0.45) !important;
+  background: rgba(184,226,92,0.35) !important;
+  color: var(--w-ink) !important;
+  font-family: var(--font-display) !important;
+  font-weight: 800 !important;
+}
+.token-grid, .clubs-grid, .events-grid, .rewards-grid, .cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.panel, .order-book, .chart-panel, .chart-container, .table-card, .activity-list,
+.history-list, .settings-list, .privacy-section {
+  background: var(--surface-1) !important;
+  color: var(--text-1) !important;
+  border: 1px solid var(--border-1) !important;
+  border-radius: var(--r-lg) !important;
+}
+.chart-panel, .chart-container {
+  box-shadow: 0 0 0 12px var(--w-paper), 0 14px 28px rgba(0,0,0,0.45) !important;
+}
+.order-book *, .chart-panel *, .chart-container *, .table-card *, .history-list *,
+.settings-list *, .privacy-section * {
+  color: inherit;
+}
+
+input, textarea, select, .form-input, .form-textarea, .form-select {
+  background: var(--w-cream) !important;
+  color: var(--w-ink) !important;
+  border: 1.5px solid var(--w-ink-2) !important;
+  border-radius: 8px !important;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none !important;
+  border-color: var(--sp-peach-500) !important;
+  box-shadow: 0 0 0 3px var(--sp-peach-soft) !important;
+}
+label, .form-label { color: var(--w-ink) !important; font-family: var(--font-disp-it); font-style: italic; }
+.tt-toggle, .toggle.active, input:checked + .toggle { background: var(--sp-teal-500) !important; }
+
+.buy-btn, .btn-buy, .yes-btn {
+  background: linear-gradient(180deg, var(--sp-teal-300), var(--sp-forest-500)) !important;
+  color: #06120c !important;
+  border-radius: var(--r-pill) !important;
+  box-shadow: 0 4px 0 var(--w-ink) !important;
+}
+.sell-btn, .btn-sell, .no-btn {
+  background: linear-gradient(180deg, #ef8a84, var(--sp-crimson)) !important;
+  color: #260705 !important;
+  border-radius: var(--r-pill) !important;
+  box-shadow: 0 4px 0 var(--w-ink) !important;
+}
+
+.sticker-badge {
+  position: absolute; top: -14px; right: -10px;
+  font-family: var(--font-disp-it); font-style: italic;
+  font-weight: 900; font-size: 11px; color: var(--w-ink);
+  padding: 5px 11px;
+  border-radius: 8px; border: 2px solid var(--w-ink);
+  box-shadow: 3px 3px 0 var(--w-ink);
+  z-index: 5; white-space: nowrap; text-transform: uppercase;
+  pointer-events: none; letter-spacing: 0.02em;
+  background: var(--sp-peach-400);
+}
+
+.mascot-character {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1200;
+}
+.mc-body {
+  width: 110px; height: 110px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--w-sunshine), var(--sp-peach-400));
+  border: 3px solid var(--w-ink);
+  box-shadow: 6px 6px 0 var(--w-ink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  animation: wildBob 3.6s ease-in-out infinite;
+  position: relative;
+}
+.mc-body svg { width: 70px; height: 70px; }
+.mc-label {
+  position: absolute;
+  right: -8px;
+  bottom: 2px;
+  transform: rotate(-3deg);
+  background: var(--w-paper);
+  border: 2px solid var(--w-ink);
+  box-shadow: 3px 3px 0 var(--w-ink);
+  border-radius: 8px;
+  padding: 4px 8px;
+  color: var(--w-ink);
+  font-family: var(--font-hand);
+  font-size: 16px;
+  white-space: nowrap;
+}
+.mc-bubble { display: none !important; }
+@keyframes wildBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+@media (max-width: 900px) {
+  .sidebar { position: static !important; width: auto !important; min-height: auto !important; padding-top: 44px !important; }
+  .header { left: 0 !important; top: var(--marquee-h) !important; }
+  .main, main, .content, .page, .container, .app-main { margin-left: 0 !important; }
+  .main, main { padding-top: 24px !important; }
+  .mascot-character { display: none; }
+}
+/* === end Codex Wild theme rollout === */
+/* === Codex Wild final polish === */
+body {
+  display: block !important;
+  justify-content: initial !important;
+  align-items: initial !important;
+  padding: 0 !important;
+  overflow-x: hidden;
+}
+.wiz-card, .edit-card, .settings-card, .reward-card, .reward-panel,
+.referral-hero, .ref-code-card, .ev-card, .pod-card, .battle-side,
+.war-card, .market-card, .creator-card, .token-row-card, .position-card {
+  background: var(--w-paper) !important;
+  color: var(--w-ink) !important;
+  border: 0 !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: 0 14px 28px -8px rgba(0,0,0,0.55), 0 4px 8px rgba(0,0,0,0.3) !important;
+  position: relative;
+  overflow: visible;
+}
+.wiz-card::before, .edit-card::before, .settings-card::before,
+.referral-hero::before, .ref-code-card::before, .ev-card::before,
+.pod-card::before, .battle-side::before, .war-card::before, .market-card::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 36px;
+  width: 86px;
+  height: 18px;
+  background: var(--w-tape-y);
+  transform: rotate(-2deg);
+  border-radius: 3px;
+}
+.wiz-card *, .edit-card *, .settings-card *, .reward-card *, .reward-panel *,
+.referral-hero *, .ref-code-card *, .ev-card *, .pod-card *, .battle-side *,
+.war-card *, .market-card *, .creator-card *, .token-row-card *, .position-card * {
+  color: inherit;
+}
+.step-title, .ev-title, .pod-name, .reward-name, .ref-code,
+.battle-name, .market-title {
+  font-family: var(--font-disp-it) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  color: var(--w-ink) !important;
+}
+.btn-next, .btn-save, .btn-claim, .btn-bet, .btn-create, .buy-full-btn,
+.execute-btn, .ev-btn, .btn-cancel, .btn-back {
+  border-radius: var(--r-pill) !important;
+  font-family: var(--font-disp-it) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+}
+.trading-panel {
+  width: min(420px, calc(100vw - 48px)) !important;
+  margin: calc(var(--marquee-h) + 48px) auto 64px !important;
+  background: var(--w-paper) !important;
+  color: var(--w-ink) !important;
+  border: 0 !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: 0 14px 28px -8px rgba(0,0,0,0.55), 0 4px 8px rgba(0,0,0,0.3) !important;
+}
+.trading-panel::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 42px;
+  width: 86px;
+  height: 18px;
+  background: var(--w-tape-y);
+  transform: rotate(-2deg);
+}
+.trading-panel *, .primary-toggle *, .trade-section * { color: inherit; }
+.trading-panel .preview-panel,
+.trading-panel .settings-header,
+.trading-panel .settings-content,
+.trading-panel .input-wrapper,
+.trading-panel .quick-btn,
+.trading-panel .setting-btn {
+  background: var(--w-cream) !important;
+  color: var(--w-ink) !important;
+  border-color: rgba(42,21,5,0.25) !important;
+}
+.trading-panel .primary-btn.buy,
+.trading-panel .execute-btn.buy {
+  background: linear-gradient(180deg, var(--sp-teal-300), var(--sp-forest-500)) !important;
+  color: #06120c !important;
+}
+.trading-panel .primary-btn.sell,
+.trading-panel .execute-btn.sell {
+  background: linear-gradient(180deg, #ef8a84, var(--sp-crimson)) !important;
+  color: #260705 !important;
+}
+.trading-panel .risk-card {
+  background: var(--surface-1) !important;
+  color: var(--text-1) !important;
+  border-color: var(--sp-peach-400) !important;
+}
+.bz-bar {
+  position: fixed !important;
+  top: var(--marquee-h) !important;
+  left: 12px !important;
+  z-index: 1001 !important;
+  background: var(--surface-2) !important;
+  color: var(--text-1) !important;
+  border: 1px solid var(--border-1) !important;
+}
+.badge-text::after { content: " Bronze"; }
+/* === end Codex Wild final polish === */
+
+
+
+
+
+
+/* === Wild Phase 8 - canonical sidebar (from anchor) === */
+/* ╔═══════════════════════════════════════════════════════════╗
+     ║ "STICKER DOCK" — sidebar redesign v0.3 (2026-05-27)        ║
+     ║ Sidebar: 240px wall-text → 100px circular sticker dock     ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  :root { --sidebar-w: 104px; }
+
+  /* Override main offset for the narrower dock */
+  .sidebar {
+    width: 104px !important;
+    padding: 16px 8px 14px !important;
+    align-items: center;
+    gap: 14px !important;
+    background:
+      radial-gradient(circle at 50% 12%, rgba(255,211,94,0.18), transparent 45%),
+      radial-gradient(circle at 50% 85%, rgba(255,107,138,0.14), transparent 45%),
+      rgba(20, 32, 24, 0.85);
+  }
+  .main { margin-left: var(--sidebar-w) !important; }
+
+  /* Hide top sidebar banner (the sticker-note style was too cluttered for narrow dock) */
+  .sidebar::before, .sidebar::after { display: none !important; }
+
+  /* Hide group labels in narrow dock */
+  .nav-label { display: none !important; }
+
+  /* Each nav group becomes a vertical stack with dotted divider */
+  .nav-group {
+    width: 100%;
+    align-items: center;
+    gap: 8px !important;
+    padding-bottom: 10px;
+    border-bottom: 1.5px dashed rgba(255,216,130,0.25);
+  }
+  .nav-group:last-of-type { border-bottom: none; padding-bottom: 0; }
+
+  /* The sticker pill itself */
+  .nav-item {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    place-items: center !important;
+    background: var(--w-paper) !important;
+    border: 2.5px solid var(--w-ink) !important;
+    box-shadow: 0 4px 0 var(--w-ink) !important;
+    color: var(--w-ink) !important;
+    font-size: 0 !important;       /* hide text node */
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s, background 0.2s !important;
+    flex-shrink: 0;
+  }
+  .nav-item:hover {
+    transform: translateY(-4px) scale(1.08) !important;
+    box-shadow: 0 8px 0 var(--w-ink) !important;
+    background: var(--w-sunshine) !important;
+  }
+  .nav-item .icon {
+    width: 28px !important;
+    height: 28px !important;
+    color: var(--w-ink) !important;
+    opacity: 1 !important;
+    stroke-width: 2 !important;
+    transition: transform 0.2s, color 0.2s !important;
+  }
+  .nav-item:hover .icon { color: var(--w-ink) !important; transform: scale(1.1); }
+
+  /* Color-cycle: each sticker has its own ring color (gradient inset) */
+  .nav-item:nth-of-type(6n+1) { background: linear-gradient(135deg, #fef6dd, #ffeab0) !important; }
+  .nav-item:nth-of-type(6n+2) { background: linear-gradient(135deg, #ffe1d4, #ffcfb8) !important; }
+  .nav-item:nth-of-type(6n+3) { background: linear-gradient(135deg, #e8e0fc, #d6c8fa) !important; }
+  .nav-item:nth-of-type(6n+4) { background: linear-gradient(135deg, #d8f5ff, #b8e6fc) !important; }
+  .nav-item:nth-of-type(6n+5) { background: linear-gradient(135deg, #e7f8d2, #ccecaa) !important; }
+  .nav-item:nth-of-type(6n+6) { background: linear-gradient(135deg, #ffd9e3, #ffc0cf) !important; }
+
+  /* Active: bigger ring, full coral→pink, white glow halo */
+  .nav-item.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+    transform: scale(1.12) !important;
+    box-shadow:
+      0 6px 0 var(--w-ink),
+      0 0 0 4px rgba(255,255,255,0.15),
+      0 0 28px rgba(255,107,138,0.55) !important;
+  }
+  .nav-item.active .icon { color: #fff !important; }
+  .nav-item.active::before { display: none !important; }
+
+  /* Tooltip label pops out to the right on hover */
+  .nav-item::after {
+    content: attr(data-label);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-6px);
+    background: var(--w-ink);
+    color: var(--w-sunshine);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 300;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+  }
+  .nav-item::before {
+    content: '';
+    position: absolute;
+    left: calc(100% + 4px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border: 6px solid transparent;
+    border-right-color: var(--w-ink);
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 300;
+  }
+  .nav-item:hover::after,
+  .nav-item:hover::before {
+    opacity: 1;
+  }
+  .nav-item:hover::after { transform: translateY(-50%) translateX(0); }
+
+  /* Active item: persistent tiny "you are here" tag below */
+  .nav-item.active + .nav-here,
+  .nav-item.active::marker { display: none; }
+
+  /* Nav badge (e.g. "3" on My Profile) — small pill at top-right of circle */
+  .nav-badge {
+    position: absolute !important;
+    top: -4px !important;
+    right: -4px !important;
+    margin: 0 !important;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 999px !important;
+    background: var(--w-pink) !important;
+    color: #fff !important;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    box-shadow: 2px 2px 0 var(--w-ink), 0 0 0 2px var(--w-paper);
+    display: grid;
+    place-items: center;
+    padding: 0 6px !important;
+  }
+
+  /* Compress user card → avatar-only circle at bottom */
+  .user-card {
+    margin-top: auto !important;
+    width: 64px !important;
+    height: 64px !important;
+    padding: 0 !important;
+    background: linear-gradient(135deg, var(--w-sunshine), var(--w-coral)) !important;
+    border-radius: 50% !important;
+    border: 2.5px solid var(--w-ink) !important;
+    box-shadow: 0 4px 0 var(--w-ink) !important;
+    overflow: hidden;
+    display: grid !important;
+    place-items: center !important;
+    gap: 0 !important;
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  }
+  .user-card::before, .user-card::after { display: none !important; }
+  .user-card:hover { transform: scale(1.08) translateY(-2px) !important; }
+  .user-card .user-mascot {
+    width: 56px !important;
+    height: 56px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+  .user-card .user-mascot svg { width: 44px; height: 44px; }
+  .user-card .user-info { display: none !important; }
+  /* Tooltip on user-card */
+  .user-card::after {
+    content: 'NobleFlame · Sprout · 642 pts';
+    display: block !important;
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-6px);
+    background: var(--w-ink);
+    color: var(--w-sunshine);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 13px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 300;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+  }
+  .user-card:hover::after { opacity: 1; transform: translateY(-50%) translateX(0); }
+
+  /* Sidebar footer — collapsed to just social icons */
+  .sidebar-footer {
+    padding: 8px 0 !important;
+    border-top: 1.5px dashed rgba(255,216,130,0.25) !important;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px !important;
+  }
+  .sidebar-footer .sf-pills { display: none !important; }
+  .sidebar-footer .sf-copyright { display: none !important; }
+  .sidebar-footer .sf-social { gap: 8px !important; }
+  .sidebar-footer .sf-social a {
+    width: 28px !important;
+    height: 28px !important;
+    background: rgba(255,211,94,0.15);
+    border: 1.5px solid rgba(255,211,94,0.4);
+    color: var(--w-sunshine) !important;
+    border-radius: 50% !important;
+  }
+  .sidebar-footer .sf-social a:hover {
+    background: var(--w-pink) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 0 var(--w-ink);
+  }
+
+  /* Floating doodle leaf above first nav item (decoration) */
+  .sidebar > .nav-group:first-of-type::before {
+    content: '';
+    position: relative;
+    display: block;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 4px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><filter id='s'><feDropShadow dx='2' dy='3' stdDeviation='0' flood-color='%231a1208'/></filter></defs><g filter='url(%23s)'><ellipse cx='32' cy='44' rx='14' ry='10' fill='%23ffd35e' stroke='%231a1208' stroke-width='2.5'/><ellipse cx='24' cy='28' rx='6' ry='12' transform='rotate(-25 24 28)' fill='%237cc4a4' stroke='%231a1208' stroke-width='2'/><ellipse cx='40' cy='28' rx='6' ry='12' transform='rotate(25 40 28)' fill='%235ba886' stroke='%231a1208' stroke-width='2'/><rect x='29' y='30' width='6' height='14' fill='%233d7458' stroke='%231a1208' stroke-width='2'/><circle cx='27' cy='46' r='2.5' fill='%231a1208'/><circle cx='37' cy='46' r='2.5' fill='%231a1208'/><circle cx='27.5' cy='45.5' r='0.8' fill='%23fff'/><circle cx='37.5' cy='45.5' r='0.8' fill='%23fff'/><path d='M 26 50 Q 32 53 38 50' stroke='%231a1208' stroke-width='1.5' fill='none' stroke-linecap='round'/></g></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* Responsive: on narrow viewport collapse to icons stay, no change needed */
+  /* ╚═══ end "STICKER DOCK" sidebar redesign ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ "STICKER + TEXT" — sidebar v0.4 (2026-05-27)              ║
+     ║ Combo: small sticker icon LEFT + italic label RIGHT.       ║
+     ║ Overrides v0.3 dock-only-icon styles.                      ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  :root { --sidebar-w: 204px; }
+
+  .sidebar {
+    width: 204px !important;
+    padding: 16px 12px 14px !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+  .main { margin-left: 204px !important; }
+
+  /* Show "today's garden" banner again */
+  .sidebar::before {
+    display: block !important;
+    content: "🌱 today's garden" !important;
+    background: var(--w-sunshine) !important;
+    color: var(--w-ink) !important;
+    border: 2px solid var(--w-ink) !important;
+    border-radius: 10px !important;
+    padding: 6px 12px !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 900 !important;
+    font-size: 12px !important;
+    box-shadow: 3px 3px 0 var(--w-ink) !important;
+    margin: 0 0 4px !important;
+    text-align: center !important;
+    width: 100% !important;
+    max-width: none !important;
+    text-transform: lowercase !important;
+    letter-spacing: 0.02em !important;
+    position: relative !important;
+  }
+  .sidebar::after { display: none !important; }
+
+  /* Hide the v0.3 decorative big mascot at top of first nav group */
+  .sidebar > .nav-group:first-of-type::before { display: none !important; }
+
+  /* Group: stacked items, dashed divider, tiny handwritten label */
+  .nav-group {
+    width: 100% !important;
+    align-items: stretch !important;
+    gap: 3px !important;
+    border-bottom: 1.5px dashed rgba(255,216,130,0.25) !important;
+    padding-bottom: 10px !important;
+  }
+  .nav-group:last-of-type { border-bottom: none !important; padding-bottom: 0 !important; }
+
+  /* Restore group labels — small handwritten note */
+  .nav-label {
+    display: block !important;
+    font-family: var(--font-hand) !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    text-transform: lowercase !important;
+    letter-spacing: 0 !important;
+    color: var(--w-sunshine) !important;
+    padding: 0 4px 4px !important;
+    position: relative;
+  }
+  .nav-label::before {
+    content: '✿' !important;
+    position: absolute !important;
+    left: -4px !important;
+    top: 1px !important;
+    transform: none !important;
+    color: var(--w-pink) !important;
+    background: none !important;
+    width: auto !important;
+    height: auto !important;
+    font-size: 9px !important;
+    opacity: 0.9 !important;
+  }
+  /* push the actual label to clear the dot */
+  .nav-label { padding-left: 12px !important; }
+
+  /* ===== Nav item: pill with sticker icon on LEFT, italic text on RIGHT ===== */
+  .nav-item {
+    width: 100% !important;
+    height: 46px !important;
+    border-radius: 999px !important;
+    padding: 4px 14px 4px 4px !important;
+    margin: 0 !important;
+    display: flex !important;
+    place-items: center !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    background: rgba(244, 236, 220, 0.92) !important;
+    border: 2px solid var(--w-ink) !important;
+    box-shadow: 0 3px 0 var(--w-ink) !important;
+    color: var(--w-ink) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    position: relative;
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s, background 0.18s !important;
+  }
+  .nav-item .ni-text {
+    flex: 1;
+    color: inherit;
+    font-family: inherit;
+    font-style: italic;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-item:hover {
+    transform: translateX(3px) !important;
+    background: var(--w-sunshine) !important;
+    box-shadow: 0 5px 0 var(--w-ink) !important;
+  }
+
+  /* Sticker icon circle (the SVG wrapper) on the LEFT */
+  .nav-item .icon {
+    width: 36px !important;
+    height: 36px !important;
+    padding: 7px !important;
+    border-radius: 50% !important;
+    border: 2px solid var(--w-ink) !important;
+    flex-shrink: 0 !important;
+    color: var(--w-ink) !important;
+    opacity: 1 !important;
+    stroke-width: 2 !important;
+    box-sizing: border-box !important;
+    box-shadow: 1px 1px 0 var(--w-ink);
+  }
+  /* Color cycle for stickers */
+  .nav-item:nth-of-type(6n+1) .icon { background: #ffeab0 !important; }
+  .nav-item:nth-of-type(6n+2) .icon { background: #ffcfb8 !important; }
+  .nav-item:nth-of-type(6n+3) .icon { background: #d6c8fa !important; }
+  .nav-item:nth-of-type(6n+4) .icon { background: #b8e6fc !important; }
+  .nav-item:nth-of-type(6n+5) .icon { background: #ccecaa !important; }
+  .nav-item:nth-of-type(6n+6) .icon { background: #ffc0cf !important; }
+  .nav-item:hover .icon { transform: rotate(-6deg) scale(1.08); }
+
+  /* Active state */
+  .nav-item.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+    color: #fff !important;
+    transform: none !important;
+    box-shadow: 0 4px 0 var(--w-ink), 0 0 22px rgba(255,107,138,0.4) !important;
+  }
+  .nav-item.active .ni-text { color: #fff !important; }
+  .nav-item.active .icon {
+    background: #fff !important;
+    color: var(--w-ink) !important;
+  }
+
+  /* Hide v0.3 tooltip pop-out and arrow (text is visible now) */
+  .nav-item::after, .nav-item::before { display: none !important; }
+
+  /* Badge moves back to inline-right of pill */
+  .nav-badge {
+    position: static !important;
+    margin-left: auto !important;
+    min-width: 22px;
+    height: 20px;
+    padding: 0 8px !important;
+    border-radius: 999px !important;
+    background: var(--w-ink) !important;
+    color: var(--w-sunshine) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    display: grid !important;
+    place-items: center !important;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.4) !important;
+    flex-shrink: 0;
+  }
+  .nav-item.active .nav-badge {
+    background: #fff !important;
+    color: var(--w-coral) !important;
+  }
+
+  /* ===== User card: expanded back ===== */
+  .user-card {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: auto !important;
+    background: linear-gradient(135deg, var(--w-paper), var(--w-cream)) !important;
+    border-radius: 14px !important;
+    border: 2px solid var(--w-ink) !important;
+    box-shadow: 0 4px 0 var(--w-ink), inset 0 0 0 1px rgba(0,0,0,0.04) !important;
+    padding: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    place-items: stretch !important;
+    overflow: visible !important;
+    position: relative;
+  }
+  .user-card:hover { transform: translateY(-2px) !important; }
+  .user-card .user-mascot {
+    display: grid !important;
+    width: 40px !important;
+    height: 40px !important;
+    background: var(--w-sunshine) !important;
+    border: 2px solid var(--w-ink) !important;
+    border-radius: 50% !important;
+    box-shadow: 1px 1px 0 var(--w-ink) !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+  }
+  .user-card .user-mascot svg { width: 28px !important; height: 28px !important; }
+  .user-card .user-info {
+    display: block !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  .user-card .user-name {
+    color: var(--w-ink) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 800 !important;
+    font-size: 13px !important;
+    line-height: 1.15 !important;
+  }
+  .user-card .user-tier {
+    color: var(--w-ink-2) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-size: 11px !important;
+    margin-top: 1px !important;
+  }
+  .user-card .uc-pts.tier-sprout { color: var(--w-coral) !important; }
+  .user-card::before, .user-card::after { display: none !important; }
+
+  /* ===== Sidebar footer: restore pills + copyright ===== */
+  .sidebar-footer {
+    padding: 10px 4px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    border-top: 1.5px dashed rgba(255,216,130,0.25) !important;
+  }
+  .sidebar-footer .sf-social {
+    display: flex !important;
+    gap: 6px !important;
+    justify-content: center !important;
+  }
+  .sidebar-footer .sf-social a {
+    width: 26px !important;
+    height: 26px !important;
+    background: rgba(255,211,94,0.15) !important;
+    border: 1.5px solid rgba(255,211,94,0.4) !important;
+    color: var(--w-sunshine) !important;
+    border-radius: 50% !important;
+  }
+  .sidebar-footer .sf-social a:hover {
+    background: var(--w-pink) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 0 var(--w-ink);
+  }
+  .sidebar-footer .sf-pills {
+    display: flex !important;
+    gap: 4px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+  .sidebar-footer .sf-pill {
+    background: rgba(255,211,94,0.12) !important;
+    color: var(--w-sunshine) !important;
+    border: 1px solid rgba(255,211,94,0.35) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 700 !important;
+    font-size: 10px !important;
+    padding: 3px 8px !important;
+  }
+  .sidebar-footer .sf-pill:hover {
+    background: var(--w-sunshine) !important;
+    color: var(--w-ink) !important;
+  }
+  .sidebar-footer .sf-copyright {
+    display: block !important;
+    color: var(--w-cream) !important;
+    opacity: 0.5 !important;
+    font-family: var(--font-hand) !important;
+    font-size: 11px !important;
+    text-align: center !important;
+  }
+
+  /* ╚═══ end "STICKER + TEXT" sidebar v0.4 ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ v0.5 SIMPLIFY (2026-05-28) — user feedback                ║
+     ║   (1) hide "Discover what's blooming" hero banner         ║
+     ║   (2) flat sidebar list — no group labels/dividers        ║
+     ║   (3) hide "Wild · v0.2" edition chip                     ║
+     ║   (4) one unified background for all nav sticker icons    ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  /* (1) Hide hero banner */
+  .page-head { display: none !important; }
+
+  /* (2) Flat nav list — no group labels, no group dividers */
+  .nav-label { display: none !important; }
+  .nav-group {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+    gap: 4px !important;
+  }
+  .sidebar { gap: 6px !important; }
+  .sidebar > .nav-group + .nav-group { margin-top: 0 !important; }
+
+  /* (3) Hide edition chip */
+  .wild-edition { display: none !important; }
+
+  /* (4) v0.6 FIX — unify nav-item PILL background (not the sticker icon).
+       Sticker icons keep their color cycle (cream/peach/grape/sky/lime/pink).
+       Override v0.3 dock's per-item gradient pill backgrounds. */
+  .sidebar .nav-item,
+  .sidebar .nav-item:nth-of-type(6n+1),
+  .sidebar .nav-item:nth-of-type(6n+2),
+  .sidebar .nav-item:nth-of-type(6n+3),
+  .sidebar .nav-item:nth-of-type(6n+4),
+  .sidebar .nav-item:nth-of-type(6n+5),
+  .sidebar .nav-item:nth-of-type(6n+6) {
+    background: rgba(244, 236, 220, 0.92) !important;
+  }
+  /* But keep active state's coral→pink gradient */
+  .sidebar .nav-item.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+  }
+
+  /* (5) Grid auto-fit — stretch cards to fill empty right-side space */
+  .token-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+  }
+
+  /* ╚═══ end v0.5 SIMPLIFY ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ v0.7 — sticker unify + hide bubble + live activity panel  ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  /* (1) Unify all card sticker badges to brand peach */
+  .sticker-badge.s-hot,
+  .sticker-badge.s-fresh,
+  .sticker-badge.s-gem,
+  .sticker-badge.s-rising,
+  .sticker-badge.s-rare,
+  .sticker-badge.s-yum {
+    background: var(--sp-peach-400) !important;
+    color: var(--w-ink) !important;
+  }
+
+  /* (2) Hide Sprout mascot speech bubble — keep body + label */
+  .mascot-character .mc-bubble,
+  .mascot-character .helper-bubble { display: none !important; }
+
+  /* (3) Live Activity right panel — fills empty right space */
+  :root { --la-w: 280px; }
+
+  .main { margin-right: var(--la-w) !important; }
+
+  .live-activity {
+    position: fixed;
+    top: calc(var(--header-h) + var(--marquee-h));
+    right: 0;
+    bottom: 0;
+    width: var(--la-w);
+    background: var(--surface-1);
+    border-left: 1.5px dashed rgba(255,216,130,0.30);
+    padding: 16px 12px 14px;
+    display: flex;
+    flex-direction: column;
+    z-index: 80;
+    overflow: hidden;
+  }
+
+  .la-header {
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 17px;
+    color: var(--w-sunshine);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .la-subhead {
+    font-family: var(--font-hand);
+    font-size: 13px;
+    color: var(--text-3);
+    margin-bottom: 12px;
+  }
+  .la-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2e8b57;
+    box-shadow: 0 0 0 3px rgba(46,139,87,0.3);
+    animation: laPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes laPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(46,139,87,0.6); }
+    50%      { box-shadow: 0 0 0 6px rgba(46,139,87,0); }
+  }
+
+  .la-feed {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 4px;
+    scrollbar-width: thin;
+  }
+  .la-feed::-webkit-scrollbar { width: 5px; }
+  .la-feed::-webkit-scrollbar-thumb { background: rgba(255,211,94,0.25); border-radius: 3px; }
+
+  .la-item {
+    background: var(--w-paper);
+    border: 1.5px solid var(--w-ink);
+    border-radius: 10px;
+    padding: 9px 11px 10px;
+    color: var(--w-ink);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: 2px 2px 0 var(--w-ink);
+    transition: transform 0.18s var(--ease);
+    position: relative;
+  }
+  .la-item:hover {
+    transform: translateY(-2px) translateX(-2px);
+    box-shadow: 4px 4px 0 var(--w-ink);
+  }
+  .la-item.fresh {
+    animation: laFresh 1.5s ease-out;
+  }
+  @keyframes laFresh {
+    0%   { background: var(--w-sunshine); transform: translateX(8px); }
+    100% { background: var(--w-paper); transform: translateX(0); }
+  }
+
+  .la-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .la-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--w-ink);
+    flex-shrink: 0;
+  }
+  .la-name {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 11.5px;
+    color: var(--w-ink);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .la-time {
+    font-size: 10px;
+    color: var(--w-ink-2);
+    font-family: var(--font-body);
+    opacity: 0.7;
+  }
+
+  .la-body {
+    font-size: 11.5px;
+    color: var(--w-ink-2);
+    line-height: 1.35;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .la-verb {
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 800;
+    color: var(--w-ink);
+  }
+  .la-verb.buy  { color: #2e8b57; }
+  .la-verb.sell { color: #b94842; }
+  .la-verb.mint { color: var(--sp-peach-500); }
+  .la-verb.grad { color: var(--w-grape); }
+
+  .la-token {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--w-ink);
+    background: rgba(0,0,0,0.07);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10.5px;
+  }
+  .la-amount {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 11px;
+  }
+  .la-amount.up   { color: #2e8b57; }
+  .la-amount.down { color: #b94842; }
+
+  /* Hide live activity on narrow screens */
+  @media (max-width: 1100px) {
+    .live-activity { display: none; }
+    .main { margin-right: 0 !important; }
+  }
+
+  /* ╚═══ end v0.7 ═══╝ */
+
+  /* ╔═══ v0.8 — unify sidebar nav icon bg (one color) ═══╗ */
+  .sidebar .nav-item .icon,
+  .sidebar .nav-item:nth-of-type(6n+1) .icon,
+  .sidebar .nav-item:nth-of-type(6n+2) .icon,
+  .sidebar .nav-item:nth-of-type(6n+3) .icon,
+  .sidebar .nav-item:nth-of-type(6n+4) .icon,
+  .sidebar .nav-item:nth-of-type(6n+5) .icon,
+  .sidebar .nav-item:nth-of-type(6n+6) .icon {
+    background: #ffeab0 !important;
+  }
+  /* Keep active item's icon distinct */
+  .sidebar .nav-item.active .icon {
+    background: #fff !important;
+  }
+  /* ╚═══ end v0.8 ═══╝ */
+
+/* Force the anchor sidebar background over the earlier Codex linear-gradient !important rule. */
+.sidebar {
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255,211,94,0.18), transparent 45%),
+    radial-gradient(circle at 50% 85%, rgba(255,107,138,0.14), transparent 45%),
+    rgba(20, 32, 24, 0.85) !important;
+}
+/* === end Wild Phase 8 - canonical sidebar === */
+
+/* === Wild Phase 9 - tier system (added by phase9-tiers.js) === */
+
+/* === Wild Phase 9 - Tier 2 clean functional card: .lb-card-head === */
+.lb-card-head {
+  background: var(--surface-1) !important;
+  color: var(--text-1) !important;
+  border: 1px solid var(--border-1) !important;
+  border-radius: var(--r-md) !important;
+  padding: 16px !important;
+  position: relative !important;
+  transition: border-color 0.18s var(--ease), transform 0.18s var(--ease),
+              box-shadow 0.18s var(--ease) !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+}
+.lb-card-head::before { content: none !important; }
+.lb-card-head:hover {
+  border-color: var(--sp-peach-400) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px -8px rgba(232,168,124,0.18) !important;
+}
+.lb-card-head::after {
+  content: '' !important;
+  position: absolute !important;
+  left: 0; top: 14px; bottom: 14px;
+  width: 3px !important;
+  background: var(--sp-peach-400) !important;
+  border-radius: 0 2px 2px 0 !important;
+}
+.lb-card-head [class*='name']:not([class*='sub']),
+.lb-card-head [class*='title']:not([class*='sub']) {
+  font-family: var(--font-disp-it) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  color: var(--sp-peach-400) !important;
+}
+.lb-card-head,
+.lb-card-head p,
+.lb-card-head span:not([class*='btn']):not([class*='badge']):not([class*='delta']) {
+  color: var(--text-2) !important;
+}
+.lb-card-head [class*='value'], .lb-card-head [class*='price'] {
+  color: var(--text-1) !important;
+  font-family: var(--font-mono) !important;
+  font-weight: 700 !important;
+}
+.lb-card-head [class*='delta'], .lb-card-head [class*='change'] {
+  color: var(--sp-teal-400) !important;
+  background: transparent !important;
+  padding: 0 !important;
+  font-family: var(--font-mono) !important;
+  font-weight: 600 !important;
+}
+.lb-card-head [class*='down'], .lb-card-head .negative {
+  color: var(--sp-crimson) !important;
+}
+/* === end Wild Phase 9 - tier system === */
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="logo" onclick="location.href='token_list_v4.html'" style="cursor:pointer" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
+  <div class="logo-mascot" style="width:var(--mascot-lg);height:var(--mascot-lg);border-radius:10px;background:linear-gradient(180deg,#e8a87c,#e8a87c);display:grid;place-items:center;flex-shrink:0">
+    <svg viewBox="0 0 64 64" fill="none">
+        <ellipse cx="32" cy="46" rx="16" ry="11" fill="#8B4513"/>
+        <ellipse cx="24" cy="28" rx="6" ry="11" transform="rotate(-25 24 28)" fill="#7cc4a4"/>
+        <ellipse cx="40" cy="28" rx="6" ry="11" transform="rotate(25 40 28)" fill="#5ba886"/>
+        <rect x="30" y="30" width="4" height="14" fill="#3d7458"/>
+        <circle cx="27" cy="48" r="1.5" fill="#1a1208"/>
+        <circle cx="37" cy="48" r="1.5" fill="#1a1208"/>
+        <path d="M 27 51 Q 32 53.5 37 51" stroke="#1a1208" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      </svg>
+  </div>
+  <div>
+    <span class="logo-text" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:17px;font-weight:800;color:#e8a87c;letter-spacing:-0.01em">Sprout</span>
+    <span style="display:block;font-size:9px;font-weight:600;color:#6f7d74;letter-spacing:0.06em;text-transform:lowercase">the meme garden</span>
+  </div>
+</div>
+
+  <div class="header-search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" placeholder="Search the garden - tokens, creators, addresses...">
+  </div>
+
+  <div class="header-actions">
+    <div class="wallet-connected" onclick="toggleWalletMenu(event)">
+  <div class="wc-avatar">
+    <svg viewBox="0 0 24 24" fill="none">
+        <ellipse cx="12" cy="18" rx="7" ry="4" fill="#8B4513"/>
+        <ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-25 8 10)" fill="#7cc4a4"/>
+        <ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(25 16 10)" fill="#5ba886"/>
+        <rect x="11" y="12" width="2" height="6" fill="#3d7458"/>
+        <circle cx="10" cy="19" r="0.6" fill="#1a1208"/>
+        <circle cx="14" cy="19" r="0.6" fill="#1a1208"/>
+        <path d="M 10 20.5 Q 12 21.5 14 20.5" stroke="#1a1208" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+      </svg>
+  </div>
+  <div class="wc-info">
+    <div class="wc-balance">12.45 SOL</div>
+    <div class="wc-addr">7xK9...mP3q</div>
+  </div>
+  <span class="wc-net-dot" title="Solana mainnet"></span>
+  <svg class="wc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+
+  <div class="wc-menu">
+    <div class="wc-menu-head">
+      <div class="wc-menu-net"><span class="wc-net-dot"></span> Solana mainnet</div>
+      <div class="wc-menu-bal">12.45 SOL</div>
+    </div>
+    <a class="wc-item" href="my_profile.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My profile
+    </a>
+    <button class="wc-item" onclick="event.stopPropagation(); navigator.clipboard&&navigator.clipboard.writeText('7xK9...mP3q')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy address
+    </button>
+    <a class="wc-item" href="edit_profile_privacy.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+    <div class="wc-divider"></div>
+    <button class="wc-item danger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Disconnect
+    </button>
+  </div>
+</div>
+    <button onclick="location.href='create_token.html'" class="btn-primary">Create token</button>
+  </div>
+</header>
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="peach">PLANT YOUR SEED</span><span>·</span>
+    <span>WATCH WHAT'S BLOOMING</span><span>·</span>
+    <span class="peach">MAKE MONEY ON THE MEMECONOMY</span><span>·</span>
+    <span>NO BOT DRAMA</span><span>·</span>
+    <span class="teal">TALLEST TREE WINS</span><span>·</span>
+    <span class="peach">SEEDS PLANTED HERE</span><span>·</span>
+    <span class="peach">PLANT YOUR SEED</span><span>·</span>
+    <span>WATCH WHAT'S BLOOMING</span><span>·</span>
+    <span class="peach">MAKE MONEY ON THE MEMECONOMY</span><span>·</span>
+    <span>NO BOT DRAMA</span><span>·</span>
+    <span class="teal">TALLEST TREE WINS</span><span>·</span>
+    <span class="peach">SEEDS PLANTED HERE</span>
+  </div>
+</div>
+<aside class="sidebar">
+
+  <div class="nav-group">
+    <div class="nav-label">Discover</div>
+    <a class="nav-item active" href="token_list_v4.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/><path d="M12 7l1.2 3.2 3.3.2-2.5 2.3.7 3.3L12 14.4l-2.7 1.6.7-3.3L7.5 10.4l3.3-.2z" fill="rgba(0,0,0,0.35)"/></svg>
+      Discover
+    </a>
+    <a class="nav-item active" href="FR-012_TokenWar.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+      Arena
+    </a>
+    <a class="nav-item active" href="clubs.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 17.5 4.5 15"/><path d="m17 9-3 6"/><path d="M11 4 7 10"/><path d="M21 9c-2 4-3.5 6.5-7.5 8.5L8 16"/><path d="M14 4c2 4 3.5 6.5 7.5 8.5"/></svg>
+      Clubs
+    </a>
+    <a class="nav-item active" href="events.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Events
+    </a>
+    <a class="nav-item active" href="leaderboard.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+      Leader Board
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Personal</div>
+    <a class="nav-item" href="my_profile.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My Profile
+      <span class="nav-badge">3</span>
+    </a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Earn</div>
+    <a class="nav-item" href="rewards.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+      Points
+    </a>
+    <a class="nav-item" href="points.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      Rewards
+    </a>
+    <a class="nav-item" href="referrals.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Referrals
+    </a>
+    <a class="nav-item" href="token_list_v4.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Stake
+    </a>
+  </div>
+
+  <!-- User card (signature moment: mascot Tier) -->
+  <div class="user-card" onclick="location.href='my_profile.html'" style="cursor:pointer">
+    <div class="user-mascot">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+  <path d="M3 9L12 5L21 9" fill="#3d7458"/>
+  <rect x="5" y="9" width="14" height="11" rx="1" fill="#3d7458"/>
+  <path d="M9 9L10 7L11 9Z" fill="#e8a87c"/>
+  <path d="M13 9L14 7L15 9Z" fill="#e8a87c"/>
+  <circle cx="12" cy="14" r="4" fill="#e8a87c"/>
+  <ellipse cx="10.5" cy="13" rx="0.7" ry="0.9" fill="#3d7458"/>
+  <ellipse cx="13.5" cy="13" rx="0.7" ry="0.9" fill="#3d7458"/>
+  <path d="M10.5 15.5 Q12 16.5 13.5 15.5" stroke="#3d7458" stroke-width="0.6" fill="none" stroke-linecap="round"/>
+</svg>
+    </div>
+    <div class="user-info">
+      <div class="user-name">NobleFlame</div>
+      <div class="user-tier">Sprout * <span class="uc-pts tier-sprout">642 pts</span></div>
+    </div>
+  </div>
+
+  <!-- Sidebar footer: social + doc pills + copyright -->
+  <div class="sidebar-footer">
+    <div class="sf-social">
+      <a href="token_list_v4.html" aria-label="Telegram">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.167 13.958l-2.946-.924c-.64-.203-.658-.64.135-.954l11.566-4.463c.537-.194 1.006.131.972.604z"/></svg>
+      </a>
+      <a href="token_list_v4.html" aria-label="X">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.745l7.73-8.835L1.254 2.25H8.08l4.261 5.632 5.903-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+    <div class="sf-pills">
+      <a class="sf-pill" href="token_list_v4.html">Doc</a>
+      <a class="sf-pill" href="token_list_v4.html">FAQ</a>
+      <a class="sf-pill" href="token_list_v4.html">How it works</a>
+    </div>
+    <div class="sf-copyright">&copy; 2026 Sprout</div>
+  </div>
+</aside>
+
+<main class="main">
+  <div style="margin-bottom:24px">
+    <h1 style="font-family:var(--font-display);font-size:28px;font-weight:800;color:var(--text-1);letter-spacing:-0.02em;margin-bottom:4px">Leaderboard</h1>
+    <p style="font-size:13px;color:var(--text-3)">Top tokens ranked by market cap * Updated live</p>
+  </div>
+
+  <div class="top3-grid">
+  <div class="lb-card rank-1" onclick="location.href='token_detail.html'">
+    <div class="rank-badge">#001</div>
+    <div class="lb-card-head">
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#1a3a4a,#2a9d8f)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><circle cx="30" cy="30" r="22" fill="rgba(0,0,0,0.3)"/><circle cx="22" cy="22" rx="14" fill="#2a9d8f"/><circle cx="20" cy="20" r="8" fill="#1a3a4a" opacity="0.8"/></svg></div>
+      <div class="lb-token-info">
+        <div class="lb-token-name">STAR003</div>
+        <div class="lb-tagline">Stellar meme coin 🌟</div>
+      </div>
+      <button class="lb-buy" onclick="event.stopPropagation()">buy</button>
+    </div>
+    <div class="lb-metrics">
+      <div class="lb-metric-row">
+        <span class="lb-metric-label">mc</span>
+        <span class="lb-metric-val c-up">+1.01%</span>
+        <span class="lb-metric-val">$3.57M</span>
+      </div>
+      <div class="lb-metric-row">
+        <span class="lb-metric-label">24h vol</span>
+        <span class="lb-metric-val c-up">+48.45%</span>
+        <span class="lb-metric-val">$10.2K</span>
+      </div>
+    </div>
+    <div class="lb-creator">
+      <div class="lb-creator-avatar" style="background:linear-gradient(135deg,#2a9d8f,#1a3a4a)"></div>
+      <span>by</span>
+      <span class="lb-creator-name">kxce...vnWy</span>
+      <span class="lb-creator-age">&bull; 2mos 23d ago</span>
+    </div>
+  </div>
+  <div class="lb-card rank-2" onclick="location.href='token_detail.html'">
+    <div class="rank-badge">#002</div>
+    <div class="lb-card-head">
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#1e3a5f,#4a90d9)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><polygon points="30,10 48,28 30,52 12,28" fill="#4a90d9" opacity="0.9"/><polygon points="30,10 48,28 30,34" fill="#1e3a5f" opacity="0.5"/></svg></div>
+      <div class="lb-token-info">
+        <div class="lb-token-name">DIAMOND098</div>
+        <div class="lb-tagline">Diamond hands only 💎</div>
+      </div>
+      <button class="lb-buy" onclick="event.stopPropagation()">buy</button>
+    </div>
+    <div class="lb-metrics">
+      <div class="lb-metric-row">
+        <span class="lb-metric-label">mc</span>
+        <span class="lb-metric-val c-flat">+1.01%</span>
+        <span class="lb-metric-val">$3.21M</span>
+      </div>
+      <div class="lb-metric-row">
+        <span class="lb-metric-label">24h vol</span>
+        <span class="lb-metric-val c-flat">0.00%</span>
+        <span class="lb-metric-val">$0.00</span>
+      </div>
+    </div>
+    <div class="lb-creator">
+      <div class="lb-creator-avatar" style="background:linear-gradient(135deg,#4a90d9,#1e3a5f)"></div>
+      <span>by</span>
+      <span class="lb-creator-name">eLK3...mHAt</span>
+      <span class="lb-creator-age">&bull; 2mos 19d ago</span>
+    </div>
+  </div>
+  <div class="lb-card " onclick="location.href='token_detail.html'">
+    <div class="rank-badge">#003</div>
+    <div class="lb-card-head">
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#5a2a10,#d45a20)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><path d="M30 52 C15 45 10 35 18 25 C20 35 26 38 28 30 C32 38 40 42 30 52Z" fill="#d45a20"/><path d="M30 46 C22 42 20 36 25 30 C26 36 30 38 30 46Z" fill="#5a2a10" opacity="0.7"/></svg></div>
+      <div class="lb-token-info">
+        <div class="lb-token-name">FIRE094</div>
+        <div class="lb-tagline">Hot token of the week 🔥</div>
+      </div>
+      <button class="lb-buy" onclick="event.stopPropagation()">buy</button>
+    </div>
+    <div class="lb-metrics">
+      <div class="lb-metric-row">
+        <span class="lb-metric-label">mc</span>
+        <span class="lb-metric-val c-up">+1.01%</span>
+        <span class="lb-metric-val">$3.21M</span>
+      </div>
+      <div class="lb-metric-row">
+        <span class="lb-metric-label">24h vol</span>
+        <span class="lb-metric-val c-up">+100.00%</span>
+        <span class="lb-metric-val">$4.34</span>
+      </div>
+    </div>
+    <div class="lb-creator">
+      <div class="lb-creator-avatar" style="background:linear-gradient(135deg,#d45a20,#5a2a10)"></div>
+      <span>by</span>
+      <span class="lb-creator-name">Ychp...enMU</span>
+      <span class="lb-creator-age">&bull; 2mos 18d ago</span>
+    </div>
+  </div>
+</div>
+
+  <div class="lb-table">
+  <div class="lb-table-header">
+    <div>Token</div>
+    <div>Creator</div>
+    <div>Holders</div>
+    <div>Market Cap</div>
+    <div></div>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#1a3a4a,#2a9d8f)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><circle cx="30" cy="30" r="22" fill="rgba(0,0,0,0.3)"/><circle cx="22" cy="22" rx="14" fill="#2a9d8f"/><circle cx="20" cy="20" r="8" fill="#1a3a4a" opacity="0.8"/></svg></div>
+      <div>
+        <div class="lb-row-name">STAR003</div>
+        <div class="lb-row-rank">#001</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#2a9d8f,#1a3a4a)"></div>
+      kxce...vnWy
+    </div>
+    <div class="lb-row-holders">12,450</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$3.57M</div>
+      <div class="lb-row-mc-change c-up">+1.01%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#1e3a5f,#4a90d9)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><polygon points="30,8 35,22 50,22 38,30 42,45 30,36 18,45 22,30 10,22 25,22" fill="#4a90d9" opacity="0.9"/></svg></div>
+      <div>
+        <div class="lb-row-name">DIAMOND098</div>
+        <div class="lb-row-rank">#002</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#4a90d9,#1e3a5f)"></div>
+      eLK3...mHAt
+    </div>
+    <div class="lb-row-holders">n/a</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$3.21M</div>
+      <div class="lb-row-mc-change c-up">+1.01%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#5a2a10,#d45a20)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><path d="M30 52 C15 45 10 35 18 25 C20 35 26 38 28 30 C32 38 40 42 30 52Z" fill="#d45a20"/><path d="M30 46 C22 42 20 36 25 30 C26 36 30 38 30 46Z" fill="#5a2a10" opacity="0.7"/></svg></div>
+      <div>
+        <div class="lb-row-name">FIRE094</div>
+        <div class="lb-row-rank">#003</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#d45a20,#5a2a10)"></div>
+      Ychp...enMU
+    </div>
+    <div class="lb-row-holders">3,911</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$3.21M</div>
+      <div class="lb-row-mc-change c-up">+1.01%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#2a1a4a,#7c4a9d)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><polygon points="30,10 48,28 30,52 12,28" fill="#7c4a9d" opacity="0.9"/><polygon points="30,10 48,28 30,34" fill="#2a1a4a" opacity="0.5"/></svg></div>
+      <div>
+        <div class="lb-row-name">MOON030</div>
+        <div class="lb-row-rank">#004</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#7c4a9d,#2a1a4a)"></div>
+      pvEM...V1pp
+    </div>
+    <div class="lb-row-holders">8,234</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$3.17M</div>
+      <div class="lb-row-mc-change c-up">+1.01%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#1a3a2a,#2a9d5a)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><path d="M30 8 C30 8 20 25 20 38 L30 44 L40 38 C40 25 30 8 30 8Z" fill="#2a9d5a"/><circle cx="30" cy="32" r="5" fill="#1a3a2a" opacity="0.8"/></svg></div>
+      <div>
+        <div class="lb-row-name">SILVER037</div>
+        <div class="lb-row-rank">#005</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#2a9d5a,#1a3a2a)"></div>
+      24AF...cyEq
+    </div>
+    <div class="lb-row-holders">5,123</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$3.04M</div>
+      <div class="lb-row-mc-change c-up">+1.01%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#3a2a10,#9d7a2a)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><circle cx="30" cy="30" r="22" fill="rgba(0,0,0,0.3)"/><circle cx="22" cy="22" rx="14" fill="#9d7a2a"/><circle cx="20" cy="20" r="8" fill="#3a2a10" opacity="0.8"/></svg></div>
+      <div>
+        <div class="lb-row-name">PEPE</div>
+        <div class="lb-row-rank">#006</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#9d7a2a,#3a2a10)"></div>
+      2Kx9...Qw3L
+    </div>
+    <div class="lb-row-holders">3,456</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$450K</div>
+      <div class="lb-row-mc-change c-up">+12.5%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#3a1a2a,#9d4a6a)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><polygon points="30,8 35,22 50,22 38,30 42,45 30,36 18,45 22,30 10,22 25,22" fill="#9d4a6a" opacity="0.9"/></svg></div>
+      <div>
+        <div class="lb-row-name">DOGE KILLER</div>
+        <div class="lb-row-rank">#007</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#9d4a6a,#3a1a2a)"></div>
+      9Bn4...rT7m
+    </div>
+    <div class="lb-row-holders">2,891</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$320K</div>
+      <div class="lb-row-mc-change c-down">-5.2%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+  <div class="lb-row" onclick="location.href='token_detail.html'">
+    <div class="lb-row-token">
+      <div class="lb-row-avatar" style="background:linear-gradient(135deg,#1a2a4a,#2a5a9d)"><svg viewBox="0 0 60 60" style="width:100%;height:100%"><rect width="60" height="60" fill="transparent"/><path d="M30 52 C15 45 10 35 18 25 C20 35 26 38 28 30 C32 38 40 42 30 52Z" fill="#2a5a9d"/><path d="M30 46 C22 42 20 36 25 30 C26 36 30 38 30 46Z" fill="#1a2a4a" opacity="0.7"/></svg></div>
+      <div>
+        <div class="lb-row-name">ROCKET SHIP</div>
+        <div class="lb-row-rank">#008</div>
+      </div>
+    </div>
+    <div class="lb-row-creator">
+      <div class="lb-row-creator-av" style="background:linear-gradient(135deg,#2a5a9d,#1a2a4a)"></div>
+      3Wx8...Km5N
+    </div>
+    <div class="lb-row-holders">1,567</div>
+    <div class="lb-row-mc">
+      <div class="lb-row-mc-val">$150K</div>
+      <div class="lb-row-mc-change c-up">+15.3%</div>
+    </div>
+    <button class="lb-row-buy" onclick="event.stopPropagation()">buy</button>
+  </div>
+</div>
+
+</main>
+
+<script>
+function toggleWalletMenu(e) { e.stopPropagation(); document.querySelectorAll('.wallet-connected').forEach(w => w.classList.toggle('open')); }
+document.addEventListener('click', e => { if (!e.target.closest('.wallet-connected')) document.querySelectorAll('.wallet-connected').forEach(w => w.classList.remove('open')); });
+</script>
+
+<div class="mascot-character" id="mascotChar">
+  <div class="mc-body" title="Ask Sprout">
+    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <ellipse cx="32" cy="50" rx="20" ry="12" fill="#3d7458"/>
+      <ellipse cx="22" cy="26" rx="7" ry="13" transform="rotate(-28 22 26)" fill="#7cc4a4"/>
+      <ellipse cx="42" cy="26" rx="7" ry="13" transform="rotate(28 42 26)" fill="#5ba886"/>
+      <ellipse cx="32" cy="20" rx="5" ry="10" fill="#9ED8B8"/>
+      <rect x="29.5" y="28" width="5" height="18" fill="#3d7458"/>
+      <circle cx="26" cy="51" r="3" fill="#1a1208"/>
+      <circle cx="38" cy="51" r="3" fill="#1a1208"/>
+      <circle cx="27" cy="50" r="1.1" fill="#fff"/>
+      <circle cx="39" cy="50" r="1.1" fill="#fff"/>
+      <path d="M 26 56 Q 32 60 38 56" stroke="#1a1208" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <ellipse cx="20" cy="55" rx="3" ry="2" fill="#ff6b8a" opacity="0.7"/>
+      <ellipse cx="44" cy="55" rx="3" ry="2" fill="#ff6b8a" opacity="0.7"/>
+    </svg>
+    <span class="mc-label">🌱 Sprout · tap for tips</span>
+  </div>
+</div>
+
+<script>
+(function() {
+  const stickerTargets = '.token-card, .club-card, .event-card, .reward-card, .leaderboard-row, .prediction-card, .contestant-card';
+  const stickers = [
+    { cls: 's-hot',    text: '🔥 Blazing' },
+    { cls: 's-fresh',  text: '🌱 Fresh' },
+    { cls: 's-gem',    text: '💎 Gem' },
+    { cls: 's-rising', text: '🚀 Rising' },
+    { cls: 's-rare',   text: '✨ Rare drop' },
+    { cls: 's-yum',    text: '🍑 Juicy' }
+  ];
+  document.querySelectorAll(stickerTargets).forEach((card, i) => {
+    if (card.querySelector('.sticker-badge')) return;
+    const s = stickers[i % stickers.length];
+    const b = document.createElement('div');
+    b.className = 'sticker-badge ' + s.cls;
+    b.textContent = s.text;
+    const rot = ((i % 5) - 2) * 1.1;
+    if (i % 2 === 1) {
+      b.style.right = 'auto';
+      b.style.left = '-12px';
+      b.style.transform = 'rotate(' + (-rot).toFixed(1) + 'deg)';
+    } else {
+      b.style.transform = 'rotate(' + rot.toFixed(1) + 'deg)';
+    }
+    card.appendChild(b);
+  });
+  document.querySelectorAll('.nav-item').forEach(item => {
+    const clone = item.cloneNode(true);
+    clone.querySelectorAll('svg, .nav-badge').forEach(n => n.remove());
+    const label = clone.textContent.replace(/\s+/g, ' ').trim();
+    if (label) item.setAttribute('data-label', label);
+  });
+})();
+</script>
+</body>
+</html>
+
+
+
+
+                                                                                                

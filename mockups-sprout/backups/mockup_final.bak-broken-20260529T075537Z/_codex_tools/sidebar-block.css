@@ -1,0 +1,793 @@
+/* ╔═══════════════════════════════════════════════════════════╗
+     ║ "STICKER DOCK" — sidebar redesign v0.3 (2026-05-27)        ║
+     ║ Sidebar: 240px wall-text → 100px circular sticker dock     ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  :root { --sidebar-w: 104px; }
+
+  /* Override main offset for the narrower dock */
+  .sidebar {
+    width: 104px !important;
+    padding: 16px 8px 14px !important;
+    align-items: center;
+    gap: 14px !important;
+    background:
+      radial-gradient(circle at 50% 12%, rgba(255,211,94,0.18), transparent 45%),
+      radial-gradient(circle at 50% 85%, rgba(255,107,138,0.14), transparent 45%),
+      rgba(20, 32, 24, 0.85);
+  }
+  .main { margin-left: var(--sidebar-w) !important; }
+
+  /* Hide top sidebar banner (the sticker-note style was too cluttered for narrow dock) */
+  .sidebar::before, .sidebar::after { display: none !important; }
+
+  /* Hide group labels in narrow dock */
+  .nav-label { display: none !important; }
+
+  /* Each nav group becomes a vertical stack with dotted divider */
+  .nav-group {
+    width: 100%;
+    align-items: center;
+    gap: 8px !important;
+    padding-bottom: 10px;
+    border-bottom: 1.5px dashed rgba(255,216,130,0.25);
+  }
+  .nav-group:last-of-type { border-bottom: none; padding-bottom: 0; }
+
+  /* The sticker pill itself */
+  .nav-item {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    place-items: center !important;
+    background: var(--w-paper) !important;
+    border: 2.5px solid var(--w-ink) !important;
+    box-shadow: 0 4px 0 var(--w-ink) !important;
+    color: var(--w-ink) !important;
+    font-size: 0 !important;       /* hide text node */
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s, background 0.2s !important;
+    flex-shrink: 0;
+  }
+  .nav-item:hover {
+    transform: translateY(-4px) scale(1.08) !important;
+    box-shadow: 0 8px 0 var(--w-ink) !important;
+    background: var(--w-sunshine) !important;
+  }
+  .nav-item .icon {
+    width: 28px !important;
+    height: 28px !important;
+    color: var(--w-ink) !important;
+    opacity: 1 !important;
+    stroke-width: 2 !important;
+    transition: transform 0.2s, color 0.2s !important;
+  }
+  .nav-item:hover .icon { color: var(--w-ink) !important; transform: scale(1.1); }
+
+  /* Color-cycle: each sticker has its own ring color (gradient inset) */
+  .nav-item:nth-of-type(6n+1) { background: linear-gradient(135deg, #fef6dd, #ffeab0) !important; }
+  .nav-item:nth-of-type(6n+2) { background: linear-gradient(135deg, #ffe1d4, #ffcfb8) !important; }
+  .nav-item:nth-of-type(6n+3) { background: linear-gradient(135deg, #e8e0fc, #d6c8fa) !important; }
+  .nav-item:nth-of-type(6n+4) { background: linear-gradient(135deg, #d8f5ff, #b8e6fc) !important; }
+  .nav-item:nth-of-type(6n+5) { background: linear-gradient(135deg, #e7f8d2, #ccecaa) !important; }
+  .nav-item:nth-of-type(6n+6) { background: linear-gradient(135deg, #ffd9e3, #ffc0cf) !important; }
+
+  /* Active: bigger ring, full coral→pink, white glow halo */
+  .nav-item.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+    transform: scale(1.12) !important;
+    box-shadow:
+      0 6px 0 var(--w-ink),
+      0 0 0 4px rgba(255,255,255,0.15),
+      0 0 28px rgba(255,107,138,0.55) !important;
+  }
+  .nav-item.active .icon { color: #fff !important; }
+  .nav-item.active::before { display: none !important; }
+
+  /* Tooltip label pops out to the right on hover */
+  .nav-item::after {
+    content: attr(data-label);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-6px);
+    background: var(--w-ink);
+    color: var(--w-sunshine);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 300;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+  }
+  .nav-item::before {
+    content: '';
+    position: absolute;
+    left: calc(100% + 4px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border: 6px solid transparent;
+    border-right-color: var(--w-ink);
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 300;
+  }
+  .nav-item:hover::after,
+  .nav-item:hover::before {
+    opacity: 1;
+  }
+  .nav-item:hover::after { transform: translateY(-50%) translateX(0); }
+
+  /* Active item: persistent tiny "you are here" tag below */
+  .nav-item.active + .nav-here,
+  .nav-item.active::marker { display: none; }
+
+  /* Nav badge (e.g. "3" on My Profile) — small pill at top-right of circle */
+  .nav-badge {
+    position: absolute !important;
+    top: -4px !important;
+    right: -4px !important;
+    margin: 0 !important;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 999px !important;
+    background: var(--w-pink) !important;
+    color: #fff !important;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    box-shadow: 2px 2px 0 var(--w-ink), 0 0 0 2px var(--w-paper);
+    display: grid;
+    place-items: center;
+    padding: 0 6px !important;
+  }
+
+  /* Compress user card → avatar-only circle at bottom */
+  .user-card {
+    margin-top: auto !important;
+    width: 64px !important;
+    height: 64px !important;
+    padding: 0 !important;
+    background: linear-gradient(135deg, var(--w-sunshine), var(--w-coral)) !important;
+    border-radius: 50% !important;
+    border: 2.5px solid var(--w-ink) !important;
+    box-shadow: 0 4px 0 var(--w-ink) !important;
+    overflow: hidden;
+    display: grid !important;
+    place-items: center !important;
+    gap: 0 !important;
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  }
+  .user-card::before, .user-card::after { display: none !important; }
+  .user-card:hover { transform: scale(1.08) translateY(-2px) !important; }
+  .user-card .user-mascot {
+    width: 56px !important;
+    height: 56px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+  .user-card .user-mascot svg { width: 44px; height: 44px; }
+  .user-card .user-info { display: none !important; }
+  /* Tooltip on user-card */
+  .user-card::after {
+    content: 'NobleFlame · Sprout · 642 pts';
+    display: block !important;
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-6px);
+    background: var(--w-ink);
+    color: var(--w-sunshine);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 13px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 300;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+  }
+  .user-card:hover::after { opacity: 1; transform: translateY(-50%) translateX(0); }
+
+  /* Sidebar footer — collapsed to just social icons */
+  .sidebar-footer {
+    padding: 8px 0 !important;
+    border-top: 1.5px dashed rgba(255,216,130,0.25) !important;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px !important;
+  }
+  .sidebar-footer .sf-pills { display: none !important; }
+  .sidebar-footer .sf-copyright { display: none !important; }
+  .sidebar-footer .sf-social { gap: 8px !important; }
+  .sidebar-footer .sf-social a {
+    width: 28px !important;
+    height: 28px !important;
+    background: rgba(255,211,94,0.15);
+    border: 1.5px solid rgba(255,211,94,0.4);
+    color: var(--w-sunshine) !important;
+    border-radius: 50% !important;
+  }
+  .sidebar-footer .sf-social a:hover {
+    background: var(--w-pink) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 0 var(--w-ink);
+  }
+
+  /* Floating doodle leaf above first nav item (decoration) */
+  .sidebar > .nav-group:first-of-type::before {
+    content: '';
+    position: relative;
+    display: block;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 4px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><filter id='s'><feDropShadow dx='2' dy='3' stdDeviation='0' flood-color='%231a1208'/></filter></defs><g filter='url(%23s)'><ellipse cx='32' cy='44' rx='14' ry='10' fill='%23ffd35e' stroke='%231a1208' stroke-width='2.5'/><ellipse cx='24' cy='28' rx='6' ry='12' transform='rotate(-25 24 28)' fill='%237cc4a4' stroke='%231a1208' stroke-width='2'/><ellipse cx='40' cy='28' rx='6' ry='12' transform='rotate(25 40 28)' fill='%235ba886' stroke='%231a1208' stroke-width='2'/><rect x='29' y='30' width='6' height='14' fill='%233d7458' stroke='%231a1208' stroke-width='2'/><circle cx='27' cy='46' r='2.5' fill='%231a1208'/><circle cx='37' cy='46' r='2.5' fill='%231a1208'/><circle cx='27.5' cy='45.5' r='0.8' fill='%23fff'/><circle cx='37.5' cy='45.5' r='0.8' fill='%23fff'/><path d='M 26 50 Q 32 53 38 50' stroke='%231a1208' stroke-width='1.5' fill='none' stroke-linecap='round'/></g></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* Responsive: on narrow viewport collapse to icons stay, no change needed */
+  /* ╚═══ end "STICKER DOCK" sidebar redesign ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ "STICKER + TEXT" — sidebar v0.4 (2026-05-27)              ║
+     ║ Combo: small sticker icon LEFT + italic label RIGHT.       ║
+     ║ Overrides v0.3 dock-only-icon styles.                      ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  :root { --sidebar-w: 204px; }
+
+  .sidebar {
+    width: 204px !important;
+    padding: 16px 12px 14px !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+  .main { margin-left: 204px !important; }
+
+  /* Show "today's garden" banner again */
+  .sidebar::before {
+    display: block !important;
+    content: "🌱 today's garden" !important;
+    background: var(--w-sunshine) !important;
+    color: var(--w-ink) !important;
+    border: 2px solid var(--w-ink) !important;
+    border-radius: 10px !important;
+    padding: 6px 12px !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 900 !important;
+    font-size: 12px !important;
+    box-shadow: 3px 3px 0 var(--w-ink) !important;
+    margin: 0 0 4px !important;
+    text-align: center !important;
+    width: 100% !important;
+    max-width: none !important;
+    text-transform: lowercase !important;
+    letter-spacing: 0.02em !important;
+    position: relative !important;
+  }
+  .sidebar::after { display: none !important; }
+
+  /* Hide the v0.3 decorative big mascot at top of first nav group */
+  .sidebar > .nav-group:first-of-type::before { display: none !important; }
+
+  /* Group: stacked items, dashed divider, tiny handwritten label */
+  .nav-group {
+    width: 100% !important;
+    align-items: stretch !important;
+    gap: 3px !important;
+    border-bottom: 1.5px dashed rgba(255,216,130,0.25) !important;
+    padding-bottom: 10px !important;
+  }
+  .nav-group:last-of-type { border-bottom: none !important; padding-bottom: 0 !important; }
+
+  /* Restore group labels — small handwritten note */
+  .nav-label {
+    display: block !important;
+    font-family: var(--font-hand) !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    text-transform: lowercase !important;
+    letter-spacing: 0 !important;
+    color: var(--w-sunshine) !important;
+    padding: 0 4px 4px !important;
+    position: relative;
+  }
+  .nav-label::before {
+    content: '✿' !important;
+    position: absolute !important;
+    left: -4px !important;
+    top: 1px !important;
+    transform: none !important;
+    color: var(--w-pink) !important;
+    background: none !important;
+    width: auto !important;
+    height: auto !important;
+    font-size: 9px !important;
+    opacity: 0.9 !important;
+  }
+  /* push the actual label to clear the dot */
+  .nav-label { padding-left: 12px !important; }
+
+  /* ===== Nav item: pill with sticker icon on LEFT, italic text on RIGHT ===== */
+  .nav-item {
+    width: 100% !important;
+    height: 46px !important;
+    border-radius: 999px !important;
+    padding: 4px 14px 4px 4px !important;
+    margin: 0 !important;
+    display: flex !important;
+    place-items: center !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    background: rgba(244, 236, 220, 0.92) !important;
+    border: 2px solid var(--w-ink) !important;
+    box-shadow: 0 3px 0 var(--w-ink) !important;
+    color: var(--w-ink) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    position: relative;
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s, background 0.18s !important;
+  }
+  .nav-item .ni-text {
+    flex: 1;
+    color: inherit;
+    font-family: inherit;
+    font-style: italic;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-item:hover {
+    transform: translateX(3px) !important;
+    background: var(--w-sunshine) !important;
+    box-shadow: 0 5px 0 var(--w-ink) !important;
+  }
+
+  /* Sticker icon circle (the SVG wrapper) on the LEFT */
+  .nav-item .icon {
+    width: 36px !important;
+    height: 36px !important;
+    padding: 7px !important;
+    border-radius: 50% !important;
+    border: 2px solid var(--w-ink) !important;
+    flex-shrink: 0 !important;
+    color: var(--w-ink) !important;
+    opacity: 1 !important;
+    stroke-width: 2 !important;
+    box-sizing: border-box !important;
+    box-shadow: 1px 1px 0 var(--w-ink);
+  }
+  /* Color cycle for stickers */
+  .nav-item:nth-of-type(6n+1) .icon { background: #ffeab0 !important; }
+  .nav-item:nth-of-type(6n+2) .icon { background: #ffcfb8 !important; }
+  .nav-item:nth-of-type(6n+3) .icon { background: #d6c8fa !important; }
+  .nav-item:nth-of-type(6n+4) .icon { background: #b8e6fc !important; }
+  .nav-item:nth-of-type(6n+5) .icon { background: #ccecaa !important; }
+  .nav-item:nth-of-type(6n+6) .icon { background: #ffc0cf !important; }
+  .nav-item:hover .icon { transform: rotate(-6deg) scale(1.08); }
+
+  /* Active state */
+  .nav-item.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+    color: #fff !important;
+    transform: none !important;
+    box-shadow: 0 4px 0 var(--w-ink), 0 0 22px rgba(255,107,138,0.4) !important;
+  }
+  .nav-item.active .ni-text { color: #fff !important; }
+  .nav-item.active .icon {
+    background: #fff !important;
+    color: var(--w-ink) !important;
+  }
+
+  /* Hide v0.3 tooltip pop-out and arrow (text is visible now) */
+  .nav-item::after, .nav-item::before { display: none !important; }
+
+  /* Badge moves back to inline-right of pill */
+  .nav-badge {
+    position: static !important;
+    margin-left: auto !important;
+    min-width: 22px;
+    height: 20px;
+    padding: 0 8px !important;
+    border-radius: 999px !important;
+    background: var(--w-ink) !important;
+    color: var(--w-sunshine) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    display: grid !important;
+    place-items: center !important;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.4) !important;
+    flex-shrink: 0;
+  }
+  .nav-item.active .nav-badge {
+    background: #fff !important;
+    color: var(--w-coral) !important;
+  }
+
+  /* ===== User card: expanded back ===== */
+  .user-card {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: auto !important;
+    background: linear-gradient(135deg, var(--w-paper), var(--w-cream)) !important;
+    border-radius: 14px !important;
+    border: 2px solid var(--w-ink) !important;
+    box-shadow: 0 4px 0 var(--w-ink), inset 0 0 0 1px rgba(0,0,0,0.04) !important;
+    padding: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    place-items: stretch !important;
+    overflow: visible !important;
+    position: relative;
+  }
+  .user-card:hover { transform: translateY(-2px) !important; }
+  .user-card .user-mascot {
+    display: grid !important;
+    width: 40px !important;
+    height: 40px !important;
+    background: var(--w-sunshine) !important;
+    border: 2px solid var(--w-ink) !important;
+    border-radius: 50% !important;
+    box-shadow: 1px 1px 0 var(--w-ink) !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+  }
+  .user-card .user-mascot svg { width: 28px !important; height: 28px !important; }
+  .user-card .user-info {
+    display: block !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  .user-card .user-name {
+    color: var(--w-ink) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 800 !important;
+    font-size: 13px !important;
+    line-height: 1.15 !important;
+  }
+  .user-card .user-tier {
+    color: var(--w-ink-2) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-size: 11px !important;
+    margin-top: 1px !important;
+  }
+  .user-card .uc-pts.tier-sprout { color: var(--w-coral) !important; }
+  .user-card::before, .user-card::after { display: none !important; }
+
+  /* ===== Sidebar footer: restore pills + copyright ===== */
+  .sidebar-footer {
+    padding: 10px 4px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    border-top: 1.5px dashed rgba(255,216,130,0.25) !important;
+  }
+  .sidebar-footer .sf-social {
+    display: flex !important;
+    gap: 6px !important;
+    justify-content: center !important;
+  }
+  .sidebar-footer .sf-social a {
+    width: 26px !important;
+    height: 26px !important;
+    background: rgba(255,211,94,0.15) !important;
+    border: 1.5px solid rgba(255,211,94,0.4) !important;
+    color: var(--w-sunshine) !important;
+    border-radius: 50% !important;
+  }
+  .sidebar-footer .sf-social a:hover {
+    background: var(--w-pink) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 0 var(--w-ink);
+  }
+  .sidebar-footer .sf-pills {
+    display: flex !important;
+    gap: 4px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+  .sidebar-footer .sf-pill {
+    background: rgba(255,211,94,0.12) !important;
+    color: var(--w-sunshine) !important;
+    border: 1px solid rgba(255,211,94,0.35) !important;
+    font-family: var(--font-disp-it) !important;
+    font-style: italic !important;
+    font-weight: 700 !important;
+    font-size: 10px !important;
+    padding: 3px 8px !important;
+  }
+  .sidebar-footer .sf-pill:hover {
+    background: var(--w-sunshine) !important;
+    color: var(--w-ink) !important;
+  }
+  .sidebar-footer .sf-copyright {
+    display: block !important;
+    color: var(--w-cream) !important;
+    opacity: 0.5 !important;
+    font-family: var(--font-hand) !important;
+    font-size: 11px !important;
+    text-align: center !important;
+  }
+
+  /* ╚═══ end "STICKER + TEXT" sidebar v0.4 ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ v0.5 SIMPLIFY (2026-05-28) — user feedback                ║
+     ║   (1) hide "Discover what's blooming" hero banner         ║
+     ║   (2) flat sidebar list — no group labels/dividers        ║
+     ║   (3) hide "Wild · v0.2" edition chip                     ║
+     ║   (4) one unified background for all nav sticker icons    ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  /* (1) Hide hero banner */
+  .page-head { display: none !important; }
+
+  /* (2) Flat nav list — no group labels, no group dividers */
+  .nav-label { display: none !important; }
+  .nav-group {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+    gap: 4px !important;
+  }
+  .sidebar { gap: 6px !important; }
+  .sidebar > .nav-group + .nav-group { margin-top: 0 !important; }
+
+  /* (3) Hide edition chip */
+  .wild-edition { display: none !important; }
+
+  /* (4) v0.6 FIX — unify nav-item PILL background (not the sticker icon).
+       Sticker icons keep their color cycle (cream/peach/grape/sky/lime/pink).
+       Override v0.3 dock's per-item gradient pill backgrounds. */
+  .sidebar .nav-item,
+  .sidebar .nav-item:nth-of-type(6n+1),
+  .sidebar .nav-item:nth-of-type(6n+2),
+  .sidebar .nav-item:nth-of-type(6n+3),
+  .sidebar .nav-item:nth-of-type(6n+4),
+  .sidebar .nav-item:nth-of-type(6n+5),
+  .sidebar .nav-item:nth-of-type(6n+6) {
+    background: rgba(244, 236, 220, 0.92) !important;
+  }
+  /* But keep active state's coral→pink gradient */
+  .sidebar .nav-item.active {
+    background: linear-gradient(135deg, var(--w-coral), var(--w-pink)) !important;
+  }
+
+  /* (5) Grid auto-fit — stretch cards to fill empty right-side space */
+  .token-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+  }
+
+  /* ╚═══ end v0.5 SIMPLIFY ═══╝ */
+
+  /* ╔═══════════════════════════════════════════════════════════╗
+     ║ v0.7 — sticker unify + hide bubble + live activity panel  ║
+     ╚═══════════════════════════════════════════════════════════╝ */
+
+  /* (1) Unify all card sticker badges to brand peach */
+  .sticker-badge.s-hot,
+  .sticker-badge.s-fresh,
+  .sticker-badge.s-gem,
+  .sticker-badge.s-rising,
+  .sticker-badge.s-rare,
+  .sticker-badge.s-yum {
+    background: var(--sp-peach-400) !important;
+    color: var(--w-ink) !important;
+  }
+
+  /* (2) Hide Sprout mascot speech bubble — keep body + label */
+  .mascot-character .mc-bubble,
+  .mascot-character .helper-bubble { display: none !important; }
+
+  /* (3) Live Activity right panel — fills empty right space */
+  :root { --la-w: 280px; }
+
+  .main { margin-right: var(--la-w) !important; }
+
+  .live-activity {
+    position: fixed;
+    top: calc(var(--header-h) + var(--marquee-h));
+    right: 0;
+    bottom: 0;
+    width: var(--la-w);
+    background: var(--surface-1);
+    border-left: 1.5px dashed rgba(255,216,130,0.30);
+    padding: 16px 12px 14px;
+    display: flex;
+    flex-direction: column;
+    z-index: 80;
+    overflow: hidden;
+  }
+
+  .la-header {
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 17px;
+    color: var(--w-sunshine);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .la-subhead {
+    font-family: var(--font-hand);
+    font-size: 13px;
+    color: var(--text-3);
+    margin-bottom: 12px;
+  }
+  .la-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2e8b57;
+    box-shadow: 0 0 0 3px rgba(46,139,87,0.3);
+    animation: laPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes laPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(46,139,87,0.6); }
+    50%      { box-shadow: 0 0 0 6px rgba(46,139,87,0); }
+  }
+
+  .la-feed {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 4px;
+    scrollbar-width: thin;
+  }
+  .la-feed::-webkit-scrollbar { width: 5px; }
+  .la-feed::-webkit-scrollbar-thumb { background: rgba(255,211,94,0.25); border-radius: 3px; }
+
+  .la-item {
+    background: var(--w-paper);
+    border: 1.5px solid var(--w-ink);
+    border-radius: 10px;
+    padding: 9px 11px 10px;
+    color: var(--w-ink);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: 2px 2px 0 var(--w-ink);
+    transition: transform 0.18s var(--ease);
+    position: relative;
+  }
+  .la-item:hover {
+    transform: translateY(-2px) translateX(-2px);
+    box-shadow: 4px 4px 0 var(--w-ink);
+  }
+  .la-item.fresh {
+    animation: laFresh 1.5s ease-out;
+  }
+  @keyframes laFresh {
+    0%   { background: var(--w-sunshine); transform: translateX(8px); }
+    100% { background: var(--w-paper); transform: translateX(0); }
+  }
+
+  .la-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .la-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--w-ink);
+    flex-shrink: 0;
+  }
+  .la-name {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 11.5px;
+    color: var(--w-ink);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .la-time {
+    font-size: 10px;
+    color: var(--w-ink-2);
+    font-family: var(--font-body);
+    opacity: 0.7;
+  }
+
+  .la-body {
+    font-size: 11.5px;
+    color: var(--w-ink-2);
+    line-height: 1.35;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .la-verb {
+    font-family: var(--font-disp-it);
+    font-style: italic;
+    font-weight: 800;
+    color: var(--w-ink);
+  }
+  .la-verb.buy  { color: #2e8b57; }
+  .la-verb.sell { color: #b94842; }
+  .la-verb.mint { color: var(--sp-peach-500); }
+  .la-verb.grad { color: var(--w-grape); }
+
+  .la-token {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--w-ink);
+    background: rgba(0,0,0,0.07);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10.5px;
+  }
+  .la-amount {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 11px;
+  }
+  .la-amount.up   { color: #2e8b57; }
+  .la-amount.down { color: #b94842; }
+
+  /* Hide live activity on narrow screens */
+  @media (max-width: 1100px) {
+    .live-activity { display: none; }
+    .main { margin-right: 0 !important; }
+  }
+
+  /* ╚═══ end v0.7 ═══╝ */
+
+  /* ╔═══ v0.8 — unify sidebar nav icon bg (one color) ═══╗ */
+  .sidebar .nav-item .icon,
+  .sidebar .nav-item:nth-of-type(6n+1) .icon,
+  .sidebar .nav-item:nth-of-type(6n+2) .icon,
+  .sidebar .nav-item:nth-of-type(6n+3) .icon,
+  .sidebar .nav-item:nth-of-type(6n+4) .icon,
+  .sidebar .nav-item:nth-of-type(6n+5) .icon,
+  .sidebar .nav-item:nth-of-type(6n+6) .icon {
+    background: #ffeab0 !important;
+  }
+  /* Keep active item's icon distinct */
+  .sidebar .nav-item.active .icon {
+    background: #fff !important;
+  }
+  /* ╚═══ end v0.8 ═══╝ */
