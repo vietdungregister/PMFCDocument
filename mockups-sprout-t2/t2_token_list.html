@@ -1,0 +1,1239 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Sprout · Discover — T2 Token List</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400..900;1,400..900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-1: #0B0F0D;
+  --bg-2: #0F1411;
+  --surface-1: #141A16;
+  --surface-2: #1A211D;
+  --surface-3: #232B26;
+  --border-1: rgba(255,255,255,0.07);
+  --border-2: rgba(255,255,255,0.13);
+  --text-1: #F4F5F2;
+  --text-2: #9AA39C;
+  --text-3: #5E665F;
+  --sprout: #74C589;
+  --sprout-bright: #8AD49C;
+  --sprout-soft: rgba(116,197,137,0.16);
+  --sprout-glow: rgba(116,197,137,0.32);
+  --coral: #E07A6A;
+  --coral-soft: rgba(224,122,106,0.15);
+  --peach: #E8A87C;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-pill: 999px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --font-disp: 'Fraunces', serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg-1);
+  color: var(--text-1);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === Top header === */
+.topbar {
+  height: 56px;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border-1);
+  display: flex; align-items: center;
+  padding: 0 24px;
+  gap: 24px;
+  position: sticky; top: 0; z-index: 50;
+}
+.tb-brand {
+  display: flex; align-items: center; gap: 10px;
+  min-width: 184px;
+}
+.tb-mark {
+  width: 30px; height: 30px;
+  border-radius: 7px;
+  background: var(--sprout);
+  display: grid; place-items: center;
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  color: var(--bg-1); font-size: 17px;
+}
+.tb-name {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 20px; letter-spacing: -0.01em;
+}
+.tb-search {
+  flex: 1; max-width: 480px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 14px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-pill);
+  transition: border-color 0.18s var(--ease);
+}
+.tb-search:focus-within { border-color: var(--sprout); }
+.tb-search input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text-1); font-family: var(--font-body); font-size: 13px;
+}
+.tb-search input::placeholder { color: var(--text-3); }
+.tb-search-icon { color: var(--text-3); font-size: 14px; }
+.tb-kbd {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3);
+  border: 1px solid var(--border-1);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.tb-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.tb-icon-btn {
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border-radius: var(--r-sm);
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  font-size: 14px;
+  position: relative;
+}
+.tb-icon-btn:hover { color: var(--text-1); border-color: var(--border-2); }
+.tb-icon-btn .dot {
+  position: absolute; top: 6px; right: 6px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--sprout);
+  box-shadow: 0 0 8px var(--sprout-glow);
+}
+.tb-wallet {
+  background: var(--sprout);
+  color: var(--bg-1);
+  border: 1px solid var(--sprout);
+  padding: 7px 14px;
+  border-radius: var(--r-sm);
+  font-family: var(--font-body); font-weight: 600; font-size: 13px;
+  cursor: pointer;
+  transition: background 0.18s var(--ease);
+  display: flex; align-items: center; gap: 8px;
+}
+.tb-wallet:hover { background: var(--sprout-bright); }
+.tb-wallet-mono {
+  font-family: var(--font-mono); font-weight: 600;
+}
+
+/* === Ticker marquee === */
+.ticker {
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border-1);
+  height: 30px;
+  display: flex; align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+.ticker-label {
+  background: var(--surface-1);
+  padding: 0 14px;
+  height: 100%;
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-2); text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-right: 1px solid var(--border-1);
+  position: relative; z-index: 2;
+  flex-shrink: 0;
+}
+.ticker-pulse {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--sprout);
+  box-shadow: 0 0 6px var(--sprout-glow);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+.ticker-track {
+  display: flex; gap: 32px;
+  white-space: nowrap;
+  animation: tickrun 60s linear infinite;
+  padding-left: 32px;
+  font-family: var(--font-mono); font-size: 12px;
+}
+@keyframes tickrun { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ticker-item { display: inline-flex; align-items: center; gap: 8px; }
+.ticker-name { color: var(--text-2); }
+.ticker-price { color: var(--text-1); font-weight: 600; }
+.ticker-delta.pos { color: var(--sprout); font-weight: 600; }
+.ticker-delta.neg { color: var(--coral); font-weight: 600; }
+
+/* === Shell === */
+.shell {
+  display: grid;
+  grid-template-columns: 220px 1fr 280px;
+  min-height: calc(100vh - 86px);
+}
+
+/* === Sidebar === */
+.sidebar {
+  background: var(--bg-2);
+  border-right: 1px solid var(--border-1);
+  padding: 22px 16px;
+}
+.nav-section { margin-bottom: 22px; }
+.nav-label {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text-3); padding: 0 8px; margin-bottom: 6px;
+  font-weight: 600;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: var(--r-sm);
+  color: var(--text-2); cursor: pointer;
+  transition: all 0.18s var(--ease);
+  font-weight: 500;
+  position: relative;
+}
+.nav-item:hover { background: var(--surface-1); color: var(--text-1); }
+.nav-item.active { background: var(--surface-1); color: var(--text-1); }
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: -16px; top: 8px; bottom: 8px;
+  width: 3px;
+  background: var(--sprout);
+  border-radius: 0 2px 2px 0;
+}
+.nav-icon {
+  width: 18px; height: 18px; display: grid; place-items: center;
+  font-size: 14px; color: var(--text-3);
+}
+.nav-item.active .nav-icon { color: var(--sprout); }
+.nav-pill {
+  margin-left: auto;
+  font-family: var(--font-mono); font-size: 9px;
+  background: var(--sprout-soft);
+  color: var(--sprout);
+  padding: 2px 6px;
+  border-radius: var(--r-pill);
+  font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sidebar-foot {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-1);
+}
+.tier-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  padding: 14px;
+  position: relative;
+}
+.tier-card::before {
+  content: '';
+  position: absolute; left: 0; top: 12px; bottom: 12px;
+  width: 3px; background: var(--sprout);
+  border-radius: 0 2px 2px 0;
+}
+.tier-label {
+  font-family: var(--font-mono); font-size: 9px;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 4px;
+}
+.tier-name {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 18px; color: var(--sprout);
+  margin-bottom: 6px;
+}
+.tier-progress {
+  height: 4px; background: var(--surface-3);
+  border-radius: 2px; overflow: hidden;
+  margin-bottom: 6px;
+}
+.tier-progress-fill {
+  height: 100%; width: 64%;
+  background: var(--sprout);
+  border-radius: 2px;
+}
+.tier-meta {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-2);
+  display: flex; justify-content: space-between;
+}
+
+/* === Main === */
+.main { padding: 24px 28px 60px; min-width: 0; }
+
+.page-head {
+  display: flex; align-items: end; justify-content: space-between;
+  margin-bottom: 22px; gap: 16px;
+}
+.ph-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 38px; line-height: 1; letter-spacing: -0.02em;
+  color: var(--text-1);
+}
+.ph-sub {
+  color: var(--text-2); margin-top: 8px; font-size: 13px;
+  display: flex; align-items: center; gap: 10px;
+}
+.ph-sub-pulse {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--sprout);
+  box-shadow: 0 0 6px var(--sprout-glow);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.btn {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  color: var(--text-1);
+  padding: 8px 14px;
+  border-radius: var(--r-sm);
+  font-family: var(--font-body); font-weight: 500; font-size: 13px;
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.btn:hover { border-color: var(--border-2); }
+.btn.primary {
+  background: var(--sprout);
+  color: var(--bg-1);
+  border-color: var(--sprout);
+  font-weight: 700;
+}
+.btn.primary:hover { background: var(--sprout-bright); }
+
+/* === Tabs === */
+.tabs {
+  display: flex; gap: 4px;
+  border-bottom: 1px solid var(--border-1);
+  margin-bottom: 18px;
+}
+.tab {
+  padding: 10px 14px;
+  font-family: var(--font-body); font-weight: 500; font-size: 13px;
+  color: var(--text-2);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.18s var(--ease);
+  margin-bottom: -1px;
+  display: flex; align-items: center; gap: 7px;
+}
+.tab:hover { color: var(--text-1); }
+.tab.active {
+  color: var(--sprout);
+  border-bottom-color: var(--sprout);
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+}
+.tab-count {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3);
+  background: var(--surface-1);
+  padding: 2px 6px;
+  border-radius: var(--r-pill);
+}
+.tab.active .tab-count { background: var(--sprout-soft); color: var(--sprout); }
+
+/* === Chip filters === */
+.chip-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.chip {
+  padding: 5px 12px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  font-weight: 500;
+}
+.chip:hover { color: var(--text-1); border-color: var(--border-2); }
+.chip.on {
+  background: var(--sprout-soft);
+  border-color: var(--sprout);
+  color: var(--sprout);
+  font-weight: 700;
+}
+
+/* === Hero featured === */
+.hero {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-lg);
+  padding: 24px 26px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 28px;
+  align-items: center;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 360px 220px at 0% 0%, var(--sprout-soft), transparent 60%);
+  pointer-events: none;
+}
+.hero-kicker {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--sprout); text-transform: uppercase;
+  letter-spacing: 0.14em; font-weight: 700;
+  background: var(--sprout-soft);
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  margin-bottom: 14px;
+  position: relative; z-index: 1;
+}
+.hero-row {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 14px;
+  position: relative; z-index: 1;
+}
+.hero-mark {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-1);
+  display: grid; place-items: center;
+  font-size: 30px;
+}
+.hero-id {}
+.hero-name {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 32px; color: var(--sprout);
+  line-height: 1.05; letter-spacing: -0.02em;
+}
+.hero-ticker {
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-2);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  margin-top: 3px;
+}
+.hero-stats {
+  display: grid; grid-template-columns: repeat(4, auto);
+  gap: 28px;
+  position: relative; z-index: 1;
+}
+.hs-label {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.08em; margin-bottom: 4px;
+}
+.hs-val {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 20px; color: var(--text-1);
+  letter-spacing: -0.01em;
+}
+.hs-val.pos { color: var(--sprout); }
+.hs-val.neg { color: var(--coral); }
+
+.hero-chart {
+  position: relative; z-index: 1;
+  height: 120px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.hero-chart svg { width: 100%; height: 100%; }
+.hero-actions { display: flex; gap: 8px; }
+.hero-actions .btn { flex: 1; justify-content: center; }
+
+/* === Stat cards row === */
+.stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 14px; margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  position: relative;
+}
+.stat-card::before {
+  content: '';
+  position: absolute; left: 0; top: 12px; bottom: 12px;
+  width: 3px; background: var(--sprout);
+  border-radius: 0 2px 2px 0;
+}
+.stat-label {
+  font-size: 10px; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 6px; font-weight: 600;
+}
+.stat-row {
+  display: flex; align-items: end; justify-content: space-between;
+}
+.stat-value {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 22px; color: var(--text-1);
+  letter-spacing: -0.01em; line-height: 1;
+}
+.stat-delta {
+  font-family: var(--font-mono); font-weight: 600;
+  font-size: 11px;
+}
+.stat-delta.pos { color: var(--sprout); }
+.stat-delta.neg { color: var(--coral); }
+.stat-spark { margin-top: 8px; height: 24px; }
+.stat-spark svg { width: 100%; height: 100%; }
+
+/* === Section title === */
+.section-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 22px; color: var(--text-1);
+  margin: 6px 0 14px;
+  letter-spacing: -0.01em;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-title::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: var(--border-1);
+}
+.section-title .count {
+  font-family: var(--font-mono); font-style: normal;
+  font-size: 11px; color: var(--text-3); font-weight: 500;
+}
+
+/* === Token grid === */
+.token-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+  margin-bottom: 30px;
+}
+.token-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  padding: 16px 16px 14px 19px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.18s var(--ease), border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+.token-card::before {
+  content: '';
+  position: absolute; left: 0; top: 12px; bottom: 12px;
+  width: 3px; background: var(--sprout);
+  border-radius: 0 2px 2px 0;
+}
+.token-card:hover {
+  border-color: var(--border-2);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -12px var(--sprout-glow);
+}
+.token-card.hot::after {
+  content: '🔥 HOT';
+  position: absolute; top: 12px; right: 12px;
+  font-family: var(--font-mono); font-size: 9px;
+  font-weight: 700; letter-spacing: 0.06em;
+  background: var(--sprout-soft);
+  color: var(--sprout);
+  padding: 3px 7px;
+  border-radius: var(--r-pill);
+}
+.tc-head {
+  display: flex; align-items: center; gap: 11px;
+  margin-bottom: 12px;
+}
+.tc-mark {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  display: grid; place-items: center;
+  font-size: 20px;
+  border: 1px solid var(--border-1);
+}
+.tc-id { flex: 1; min-width: 0; }
+.tc-name {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 17px; color: var(--sprout);
+  line-height: 1.15; letter-spacing: -0.01em;
+}
+.tc-ticker {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3); margin-top: 2px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.tc-rank {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-3); font-weight: 600;
+}
+
+.tc-mid {
+  display: flex; align-items: end; justify-content: space-between;
+  margin-bottom: 8px; gap: 12px;
+}
+.tc-price-block {}
+.tc-price {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 17px; color: var(--text-1);
+  letter-spacing: -0.01em; line-height: 1;
+}
+.tc-delta {
+  font-family: var(--font-mono); font-weight: 600;
+  font-size: 12px; margin-top: 4px;
+}
+.tc-delta.pos { color: var(--sprout); }
+.tc-delta.neg { color: var(--coral); }
+
+.tc-spark {
+  width: 100px; height: 36px;
+}
+.tc-spark svg { width: 100%; height: 100%; }
+
+.tc-foot {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-2);
+  padding-top: 10px;
+  border-top: 1px solid var(--border-1);
+  letter-spacing: 0.02em;
+}
+.tc-foot span b { color: var(--text-1); font-weight: 600; }
+
+/* === LA panel === */
+.la {
+  background: var(--bg-2);
+  border-left: 1px solid var(--border-1);
+  padding: 22px 18px;
+  overflow-y: auto;
+}
+.la-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.la-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 18px; color: var(--text-1);
+  display: flex; align-items: center; gap: 8px;
+}
+.la-pulse {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--sprout);
+  box-shadow: 0 0 8px var(--sprout-glow);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.la-tag {
+  font-family: var(--font-mono); font-size: 9px;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.la-list { display: flex; flex-direction: column; gap: 10px; }
+.la-item {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-sm);
+  padding: 10px 12px 10px 14px;
+  position: relative;
+  font-size: 12px; color: var(--text-2);
+  line-height: 1.4;
+}
+.la-item::before {
+  content: '';
+  position: absolute; left: 0; top: 10px; bottom: 10px;
+  width: 2px; background: var(--sprout);
+  border-radius: 0 2px 2px 0;
+}
+.la-item.coral::before { background: var(--coral); }
+.la-actor {
+  font-family: var(--font-disp); font-style: italic; font-weight: 700;
+  color: var(--text-1);
+}
+.la-token {
+  color: var(--sprout); font-weight: 600;
+}
+.la-amount {
+  font-family: var(--font-mono); font-weight: 600;
+  color: var(--text-1);
+}
+.la-time {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3);
+  margin-top: 4px;
+  display: block;
+}
+
+/* === Mascot === */
+.mascot-wrap {
+  position: fixed; bottom: 22px; right: 22px;
+  z-index: 100;
+  display: flex; align-items: end; gap: 10px;
+}
+.mascot-bubble {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  font-size: 12px;
+  color: var(--text-1);
+  max-width: 200px;
+  font-family: var(--font-disp); font-style: italic;
+  position: relative;
+}
+.mascot-bubble::before {
+  content: '';
+  position: absolute; left: 0; top: 12px; bottom: 12px;
+  width: 2px; background: var(--sprout);
+  border-radius: 0 2px 2px 0;
+}
+.mascot {
+  width: 54px; height: 54px;
+  background: var(--sprout);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px var(--sprout-glow);
+  transition: transform 0.18s var(--ease);
+}
+.mascot:hover { transform: translateY(-3px) scale(1.05); }
+
+/* === Story label === */
+.story-label {
+  position: fixed; top: 70px; right: 24px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  padding: 5px 9px;
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-2);
+  letter-spacing: 0.04em;
+  z-index: 200;
+}
+.story-label b { color: var(--sprout); }
+</style>
+</head>
+<body>
+
+<!-- ==== Topbar ==== -->
+<header class="topbar">
+  <div class="tb-brand">
+    <div class="tb-mark">S</div>
+    <div class="tb-name">Sprout</div>
+  </div>
+  <div class="tb-search">
+    <span class="tb-search-icon">⌕</span>
+    <input placeholder="Search tokens, traders, clubs…">
+    <span class="tb-kbd">⌘ K</span>
+  </div>
+  <div class="tb-actions">
+    <div class="tb-icon-btn" title="Watchlist">☆</div>
+    <div class="tb-icon-btn" title="Notifications">◔<span class="dot"></span></div>
+    <button class="tb-wallet">
+      <span class="tb-wallet-mono">7xK9…aR2v</span>
+    </button>
+  </div>
+</header>
+
+<!-- ==== Ticker ==== -->
+<div class="ticker">
+  <div class="ticker-label"><span class="ticker-pulse"></span>Live</div>
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="ticker-name">SPROUT</span><span class="ticker-price">$0.0428</span><span class="ticker-delta pos">+24.8%</span></span>
+    <span class="ticker-item"><span class="ticker-name">PEPECO</span><span class="ticker-price">$0.0019</span><span class="ticker-delta pos">+18.2%</span></span>
+    <span class="ticker-item"><span class="ticker-name">FOXDEN</span><span class="ticker-price">$0.124</span><span class="ticker-delta neg">−4.2%</span></span>
+    <span class="ticker-item"><span class="ticker-name">VERDE</span><span class="ticker-price">$0.0081</span><span class="ticker-delta pos">+8.4%</span></span>
+    <span class="ticker-item"><span class="ticker-name">PEACH</span><span class="ticker-price">$0.0034</span><span class="ticker-delta pos">+42.1%</span></span>
+    <span class="ticker-item"><span class="ticker-name">WAVE</span><span class="ticker-price">$0.0156</span><span class="ticker-delta neg">−1.8%</span></span>
+    <span class="ticker-item"><span class="ticker-name">MOON</span><span class="ticker-price">$0.0091</span><span class="ticker-delta pos">+11.6%</span></span>
+    <span class="ticker-item"><span class="ticker-name">DOGI</span><span class="ticker-price">$0.0271</span><span class="ticker-delta pos">+6.4%</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item"><span class="ticker-name">SPROUT</span><span class="ticker-price">$0.0428</span><span class="ticker-delta pos">+24.8%</span></span>
+    <span class="ticker-item"><span class="ticker-name">PEPECO</span><span class="ticker-price">$0.0019</span><span class="ticker-delta pos">+18.2%</span></span>
+    <span class="ticker-item"><span class="ticker-name">FOXDEN</span><span class="ticker-price">$0.124</span><span class="ticker-delta neg">−4.2%</span></span>
+    <span class="ticker-item"><span class="ticker-name">VERDE</span><span class="ticker-price">$0.0081</span><span class="ticker-delta pos">+8.4%</span></span>
+    <span class="ticker-item"><span class="ticker-name">PEACH</span><span class="ticker-price">$0.0034</span><span class="ticker-delta pos">+42.1%</span></span>
+    <span class="ticker-item"><span class="ticker-name">WAVE</span><span class="ticker-price">$0.0156</span><span class="ticker-delta neg">−1.8%</span></span>
+    <span class="ticker-item"><span class="ticker-name">MOON</span><span class="ticker-price">$0.0091</span><span class="ticker-delta pos">+11.6%</span></span>
+    <span class="ticker-item"><span class="ticker-name">DOGI</span><span class="ticker-price">$0.0271</span><span class="ticker-delta pos">+6.4%</span></span>
+  </div>
+</div>
+
+<div class="story-label">T2 / Story A green · <b>Token List</b></div>
+
+<!-- ==== Shell ==== -->
+<div class="shell">
+
+  <!-- == Sidebar == -->
+  <aside class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Explore</div>
+      <div class="nav-item active"><span class="nav-icon">◎</span>Discover</div>
+      <div class="nav-item"><span class="nav-icon">⌃</span>Leaderboard</div>
+      <div class="nav-item"><span class="nav-icon">○</span>Arena<span class="nav-pill">live</span></div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Community</div>
+      <div class="nav-item"><span class="nav-icon">◇</span>Clubs</div>
+      <div class="nav-item"><span class="nav-icon">▷</span>Events</div>
+      <div class="nav-item"><span class="nav-icon">★</span>Rewards<span class="nav-pill">3</span></div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Account</div>
+      <div class="nav-item"><span class="nav-icon">◐</span>Portfolio</div>
+      <div class="nav-item"><span class="nav-icon">⊙</span>Profile</div>
+    </div>
+    <div class="sidebar-foot">
+      <div class="tier-card">
+        <div class="tier-label">Your tier</div>
+        <div class="tier-name">Sapling</div>
+        <div class="tier-progress"><div class="tier-progress-fill"></div></div>
+        <div class="tier-meta"><span>5,420 pts</span><span>→ Tree</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- == Main == -->
+  <main class="main">
+
+    <div class="page-head">
+      <div>
+        <h1 class="ph-title">Discover</h1>
+        <div class="ph-sub"><span class="ph-sub-pulse"></span>1,284 tokens · updated 12s ago</div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn">⚙ Filter</button>
+        <button class="btn">⇅ Sort: Volume</button>
+        <button class="btn primary">＋ Launch token</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active">Trending <span class="tab-count">24</span></div>
+      <div class="tab">New launches <span class="tab-count">38</span></div>
+      <div class="tab">Top gainers <span class="tab-count">12</span></div>
+      <div class="tab">Watchlist <span class="tab-count">5</span></div>
+    </div>
+
+    <!-- Chip filters -->
+    <div class="chip-row">
+      <div class="chip on">All chains</div>
+      <div class="chip">Solana</div>
+      <div class="chip">Base</div>
+      <div class="chip">Ethereum</div>
+      <div class="chip" style="margin-left:auto;">⚡ Recently launched</div>
+      <div class="chip">📈 Volume {'>'} $100K</div>
+      <div class="chip">🌱 Sprout-graduated</div>
+    </div>
+
+    <!-- Hero featured -->
+    <section class="hero">
+      <div>
+        <div class="hero-kicker">🌱 Featured · #1 trending</div>
+        <div class="hero-row">
+          <div class="hero-mark">🌱</div>
+          <div class="hero-id">
+            <div class="hero-name">Sprout</div>
+            <div class="hero-ticker">$SPROUT · Solana · Launched 3 weeks ago</div>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hs-label">Price</div>
+            <div class="hs-val">$0.0428</div>
+          </div>
+          <div>
+            <div class="hs-label">24h</div>
+            <div class="hs-val pos">+24.8%</div>
+          </div>
+          <div>
+            <div class="hs-label">Market cap</div>
+            <div class="hs-val">$42M</div>
+          </div>
+          <div>
+            <div class="hs-label">Holders</div>
+            <div class="hs-val">18.4K</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-chart">
+        <svg viewBox="0 0 280 80" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="hg" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#74C589" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#74C589" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,62 L20,58 L40,60 L60,52 L80,55 L100,46 L120,48 L140,38 L160,42 L180,30 L200,32 L220,22 L240,26 L260,14 L280,18 L280,80 L0,80 Z" fill="url(#hg)"/>
+          <polyline points="0,62 20,58 40,60 60,52 80,55 100,46 120,48 140,38 160,42 180,30 200,32 220,22 240,26 260,14 280,18" fill="none" stroke="#74C589" stroke-width="2"/>
+        </svg>
+        <div class="hero-actions">
+          <button class="btn">Watchlist</button>
+          <button class="btn primary">Trade</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Market stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Volume 24h</div>
+        <div class="stat-row">
+          <div class="stat-value">$8.42M</div>
+          <div class="stat-delta pos">+12.4%</div>
+        </div>
+        <div class="stat-spark">
+          <svg viewBox="0 0 80 24" preserveAspectRatio="none">
+            <polyline points="0,18 10,16 20,14 30,15 40,10 50,12 60,8 70,6 80,4" fill="none" stroke="#74C589" stroke-width="1.5"/>
+          </svg>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active tokens</div>
+        <div class="stat-row">
+          <div class="stat-value">1,284</div>
+          <div class="stat-delta pos">+38</div>
+        </div>
+        <div class="stat-spark">
+          <svg viewBox="0 0 80 24" preserveAspectRatio="none">
+            <polyline points="0,20 10,18 20,17 30,15 40,14 50,12 60,10 70,8 80,6" fill="none" stroke="#74C589" stroke-width="1.5"/>
+          </svg>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Traders</div>
+        <div class="stat-row">
+          <div class="stat-value">42.8K</div>
+          <div class="stat-delta pos">+5.1%</div>
+        </div>
+        <div class="stat-spark">
+          <svg viewBox="0 0 80 24" preserveAspectRatio="none">
+            <polyline points="0,16 10,15 20,17 30,12 40,14 50,10 60,11 70,9 80,7" fill="none" stroke="#74C589" stroke-width="1.5"/>
+          </svg>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Rewards pool</div>
+        <div class="stat-row">
+          <div class="stat-value">$124K</div>
+          <div class="stat-delta neg">−2.3%</div>
+        </div>
+        <div class="stat-spark">
+          <svg viewBox="0 0 80 24" preserveAspectRatio="none">
+            <polyline points="0,8 10,10 20,9 30,12 40,11 50,14 60,13 70,16 80,18" fill="none" stroke="#E07A6A" stroke-width="1.5"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trending now -->
+    <div class="section-title">Trending now <span class="count">24 tokens</span></div>
+    <div class="token-grid">
+
+      <div class="token-card hot">
+        <div class="tc-head">
+          <div class="tc-mark">🌱</div>
+          <div class="tc-id">
+            <div class="tc-name">Sprout</div>
+            <div class="tc-ticker">$SPROUT · SOL</div>
+          </div>
+        </div>
+        <div class="tc-mid">
+          <div class="tc-price-block">
+            <div class="tc-price">$0.0428</div>
+            <div class="tc-delta pos">+24.8%</div>
+          </div>
+          <div class="tc-spark">
+            <svg viewBox="0 0 100 36" preserveAspectRatio="none">
+              <polyline points="0,28 10,26 20,24 30,18 40,20 50,14 60,16 70,8 80,10 90,4 100,6" fill="none" stroke="#74C589" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tc-foot">
+          <span>Vol <b>$2.1M</b></span>
+          <span>MC <b>$42M</b></span>
+          <span>18K hldrs</span>
+        </div>
+      </div>
+
+      <div class="token-card hot">
+        <div class="tc-head">
+          <div class="tc-mark">🐸</div>
+          <div class="tc-id">
+            <div class="tc-name">Pepe Eco</div>
+            <div class="tc-ticker">$PEPECO · SOL</div>
+          </div>
+        </div>
+        <div class="tc-mid">
+          <div class="tc-price-block">
+            <div class="tc-price">$0.0019</div>
+            <div class="tc-delta pos">+18.2%</div>
+          </div>
+          <div class="tc-spark">
+            <svg viewBox="0 0 100 36" preserveAspectRatio="none">
+              <polyline points="0,26 10,24 20,20 30,22 40,16 50,18 60,12 70,14 80,8 90,10 100,6" fill="none" stroke="#74C589" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tc-foot">
+          <span>Vol <b>$1.4M</b></span>
+          <span>MC <b>$19M</b></span>
+          <span>12K hldrs</span>
+        </div>
+      </div>
+
+      <div class="token-card">
+        <div class="tc-head">
+          <div class="tc-mark">🦊</div>
+          <div class="tc-id">
+            <div class="tc-name">Fox Den</div>
+            <div class="tc-ticker">$FOXDEN · SOL</div>
+          </div>
+          <div class="tc-rank">#3</div>
+        </div>
+        <div class="tc-mid">
+          <div class="tc-price-block">
+            <div class="tc-price">$0.124</div>
+            <div class="tc-delta neg">−4.2%</div>
+          </div>
+          <div class="tc-spark">
+            <svg viewBox="0 0 100 36" preserveAspectRatio="none">
+              <polyline points="0,12 10,14 20,10 30,16 40,12 50,18 60,16 70,22 80,20 90,26 100,24" fill="none" stroke="#E07A6A" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tc-foot">
+          <span>Vol <b>$890K</b></span>
+          <span>MC <b>$12M</b></span>
+          <span>9.2K hldrs</span>
+        </div>
+      </div>
+
+      <div class="token-card">
+        <div class="tc-head">
+          <div class="tc-mark">🌿</div>
+          <div class="tc-id">
+            <div class="tc-name">Verde</div>
+            <div class="tc-ticker">$VERDE · SOL</div>
+          </div>
+          <div class="tc-rank">#4</div>
+        </div>
+        <div class="tc-mid">
+          <div class="tc-price-block">
+            <div class="tc-price">$0.0081</div>
+            <div class="tc-delta pos">+8.4%</div>
+          </div>
+          <div class="tc-spark">
+            <svg viewBox="0 0 100 36" preserveAspectRatio="none">
+              <polyline points="0,24 10,22 20,20 30,18 40,16 50,18 60,14 70,16 80,12 90,14 100,10" fill="none" stroke="#74C589" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tc-foot">
+          <span>Vol <b>$620K</b></span>
+          <span>MC <b>$8.1M</b></span>
+          <span>6.4K hldrs</span>
+        </div>
+      </div>
+
+      <div class="token-card hot">
+        <div class="tc-head">
+          <div class="tc-mark">🍑</div>
+          <div class="tc-id">
+            <div class="tc-name">Peach Run</div>
+            <div class="tc-ticker">$PEACH · BASE</div>
+          </div>
+        </div>
+        <div class="tc-mid">
+          <div class="tc-price-block">
+            <div class="tc-price">$0.0034</div>
+            <div class="tc-delta pos">+42.1%</div>
+          </div>
+          <div class="tc-spark">
+            <svg viewBox="0 0 100 36" preserveAspectRatio="none">
+              <polyline points="0,30 10,28 20,26 30,22 40,18 50,12 60,14 70,8 80,4 90,6 100,2" fill="none" stroke="#74C589" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tc-foot">
+          <span>Vol <b>$520K</b></span>
+          <span>MC <b>$6.4M</b></span>
+          <span>4.1K hldrs</span>
+        </div>
+      </div>
+
+      <div class="token-card">
+        <div class="tc-head">
+          <div class="tc-mark">🌊</div>
+          <div class="tc-id">
+            <div class="tc-name">Wave</div>
+            <div class="tc-ticker">$WAVE · SOL</div>
+          </div>
+          <div class="tc-rank">#6</div>
+        </div>
+        <div class="tc-mid">
+          <div class="tc-price-block">
+            <div class="tc-price">$0.0156</div>
+            <div class="tc-delta neg">−1.8%</div>
+          </div>
+          <div class="tc-spark">
+            <svg viewBox="0 0 100 36" preserveAspectRatio="none">
+              <polyline points="0,14 10,18 20,16 30,20 40,18 50,22 60,20 70,18 80,22 90,20 100,24" fill="none" stroke="#E07A6A" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tc-foot">
+          <span>Vol <b>$410K</b></span>
+          <span>MC <b>$5.2M</b></span>
+          <span>3.8K hldrs</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- New launches -->
+    <div class="section-title">New launches <span class="count">last 24h</span></div>
+    <div class="token-grid">
+
+      <div class="token-card">
+        <div class="tc-head">
+          <div class="tc-mark">🦋</div>
+          <div class="tc-id">
+            <div class="tc-name">Flutter</div>
+            <div class="tc-ticker">$FLUT · SOL · 4h ago</div>
+          </div>
+        </div>
+        <div class="tc-mid">
+          <div class="tc-price-block">
+            <div class="tc-price">$0.0007</div>
+            <div class="tc-delta pos">+62.0%</div>
+          </div>
+          <div class="tc-spark">
+            <svg viewBox="0 0 100 36" preserveAspectRatio="none">
+              <polyline points="0,32 10,28 20,24 30,18 40,20 50,12 60,14 70,8 80,10 90,4 100,6" fill="none" stroke="#74C589" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tc-foot">
+          <span>Vol <b>$84K</b></span>
+          <span>MC <b>$1.2M</b></span>
+          <span>820 hldrs</span>
+        </div>
+      </div>
+
+      <div class="token-card">
+        <div class="tc-head">
+          <div class="tc-mark">🌵</div>
+          <div class="tc-id">
+            <div class="tc-name">Cactus</div>
+            <div class="tc-ticker">$CACT · BASE · 9h ago</div>
+          </div>
+        </div>
+        <div class="tc-mid">
+          <div class="tc-price-block">
+            <div class="tc-price">$0.0021</div>
+            <div class="tc-delta pos">+18.4%</div>
+          </div>
+          <div class="tc-spark">
+            <svg viewBox="0 0 100 36" preserveAspectRatio="none">
+              <polyline points="0,28 10,26 20,22 30,24 40,18 50,20 60,14 70,16 80,10 90,12 100,8" fill="none" stroke="#74C589" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tc-foot">
+          <span>Vol <b>$62K</b></span>
+          <span>MC <b>$840K</b></span>
+          <span>540 hldrs</span>
+        </div>
+      </div>
+
+      <div class="token-card">
+        <div class="tc-head">
+          <div class="tc-mark">🦔</div>
+          <div class="tc-id">
+            <div class="tc-name">Hedgie</div>
+            <div class="tc-ticker">$HEDG · SOL · 14h ago</div>
+          </div>
+        </div>
+        <div class="tc-mid">
+          <div class="tc-price-block">
+            <div class="tc-price">$0.0014</div>
+            <div class="tc-delta neg">−12.4%</div>
+          </div>
+          <div class="tc-spark">
+            <svg viewBox="0 0 100 36" preserveAspectRatio="none">
+              <polyline points="0,8 10,10 20,14 30,12 40,18 50,16 60,22 70,20 80,26 90,24 100,28" fill="none" stroke="#E07A6A" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tc-foot">
+          <span>Vol <b>$41K</b></span>
+          <span>MC <b>$520K</b></span>
+          <span>312 hldrs</span>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- == LA panel == -->
+  <aside class="la">
+    <div class="la-head">
+      <div class="la-title"><span class="la-pulse"></span>Live activity</div>
+      <div class="la-tag">last 60s</div>
+    </div>
+    <div class="la-list">
+      <div class="la-item">
+        <span class="la-actor">moonowl</span> bought <span class="la-amount">$2.4K</span> of <span class="la-token">$SPROUT</span>
+        <span class="la-time">2s ago</span>
+      </div>
+      <div class="la-item">
+        <span class="la-actor">flutter</span> launched <span class="la-token">$FLUT</span>
+        <span class="la-time">14s ago</span>
+      </div>
+      <div class="la-item">
+        <span class="la-actor">slow.eth</span> bought <span class="la-amount">$840</span> of <span class="la-token">$PEACH</span>
+        <span class="la-time">28s ago</span>
+      </div>
+      <div class="la-item coral">
+        <span class="la-actor">cactus</span> sold <span class="la-amount">$1.2K</span> of <span class="la-token">$FOXDEN</span>
+        <span class="la-time">42s ago</span>
+      </div>
+      <div class="la-item">
+        <span class="la-actor">verde.fan</span> joined club <span class="la-token">Green Pact</span>
+        <span class="la-time">51s ago</span>
+      </div>
+      <div class="la-item">
+        <span class="la-actor">hedgie</span> bought <span class="la-amount">$320</span> of <span class="la-token">$HEDG</span>
+        <span class="la-time">58s ago</span>
+      </div>
+      <div class="la-item coral">
+        <span class="la-actor">wavebot</span> sold <span class="la-amount">$960</span> of <span class="la-token">$WAVE</span>
+        <span class="la-time">1m ago</span>
+      </div>
+      <div class="la-item">
+        <span class="la-actor">cactus</span> graduated <span class="la-token">$CACT</span> to Sprout Pool
+        <span class="la-time">1m ago</span>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- Mascot -->
+<div class="mascot-wrap">
+  <div class="mascot-bubble">Watching <b>$SPROUT</b> — up <b>+24%</b> 🌱</div>
+  <div class="mascot">🌱</div>
+</div>
+
+</body>
+</html>

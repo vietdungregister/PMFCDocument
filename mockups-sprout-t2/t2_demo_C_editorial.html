@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Sprout Editorial — T2 Story C Demo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400..900;1,400..900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Caveat:wght@500;700&display=swap');
+
+:root {
+  --paper: #F4EFE5;
+  --paper-warm: #EDE6D8;
+  --card: #FFFCF6;
+  --ink-1: #1B1410;
+  --ink-2: #5C544D;
+  --ink-3: #8C857D;
+  --rule: rgba(27,20,16,0.12);
+  --rule-soft: rgba(27,20,16,0.06);
+  --peach: #D87E4F;
+  --peach-soft: #F3D5BD;
+  --coral: #C8462E;
+  --teal: #3F8B7B;
+  --r-sm: 4px;
+  --r-md: 6px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --font-disp: 'Fraunces', serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-hand: 'Caveat', cursive;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink-1);
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === Masthead === */
+.masthead {
+  border-bottom: 1px solid var(--ink-1);
+  border-top: 4px solid var(--ink-1);
+  padding: 14px 36px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--paper);
+}
+.mh-brand {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 26px; letter-spacing: -0.02em; color: var(--ink-1);
+}
+.mh-meta {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-2); text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: flex; gap: 18px;
+}
+.mh-meta span { position: relative; }
+.mh-meta span + span::before {
+  content: '·'; position: absolute; left: -12px; color: var(--ink-3);
+}
+
+.shell { display: grid; grid-template-columns: 200px 1fr; min-height: calc(100vh - 60px); }
+
+/* === Sidebar === */
+.sidebar {
+  padding: 32px 24px 32px 36px;
+  border-right: 1px solid var(--rule);
+}
+.nav-label {
+  font-family: var(--font-mono);
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--ink-3); margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+}
+.nav-section { margin-bottom: 26px; }
+.nav-item {
+  display: block;
+  padding: 6px 0;
+  color: var(--ink-2);
+  font-family: var(--font-disp); font-style: italic; font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: color 0.18s var(--ease);
+}
+.nav-item:hover { color: var(--ink-1); }
+.nav-item.active {
+  color: var(--peach);
+  font-weight: 900;
+}
+.nav-item.active::before {
+  content: '→ ';
+  font-family: var(--font-body);
+}
+
+/* === Main === */
+.main { padding: 32px 40px 60px; max-width: 1180px; }
+
+.section-rule {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 24px;
+}
+.section-rule-label {
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.16em;
+  color: var(--ink-1); font-weight: 700;
+}
+.section-rule-line {
+  flex: 1; height: 1px; background: var(--ink-1);
+}
+.section-rule-date {
+  font-family: var(--font-disp); font-style: italic;
+  font-size: 13px; color: var(--ink-2);
+}
+
+/* === Hero featured === */
+.hero {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 32px;
+}
+.hero-kicker {
+  font-family: var(--font-mono);
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--peach);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.hero-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 64px; line-height: 0.95; letter-spacing: -0.03em;
+  color: var(--ink-1);
+  margin-bottom: 18px;
+}
+.hero-lede {
+  font-family: var(--font-disp); font-style: italic; font-weight: 400;
+  font-size: 19px; line-height: 1.5;
+  color: var(--ink-2);
+  margin-bottom: 20px;
+  max-width: 540px;
+}
+.hero-lede::first-letter {
+  font-family: var(--font-disp);
+  font-weight: 900; font-style: italic;
+  font-size: 56px; line-height: 0.9;
+  color: var(--peach);
+  float: left;
+  padding: 6px 10px 0 0;
+}
+.hero-byline {
+  font-family: var(--font-mono);
+  font-size: 11px; color: var(--ink-3);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 24px;
+}
+.hero-byline b { color: var(--ink-1); font-weight: 700; }
+
+.hero-stats {
+  display: grid; grid-template-columns: repeat(3, auto);
+  gap: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+}
+.hs-label {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--ink-3); text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 4px;
+}
+.hs-value {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 24px; color: var(--ink-1);
+  letter-spacing: -0.01em;
+}
+.hs-value.pos { color: var(--teal); }
+.hs-value.neg { color: var(--coral); }
+
+.hero-art {
+  background: var(--card);
+  border-radius: var(--r-md);
+  padding: 28px;
+  position: relative;
+  box-shadow: 0 1px 0 var(--rule), 0 12px 32px -16px rgba(27,20,16,0.18);
+  display: flex; flex-direction: column; justify-content: center;
+  min-height: 280px;
+}
+.hero-art-emoji {
+  font-size: 120px;
+  text-align: center;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+.hero-art-caption {
+  font-family: var(--font-hand);
+  font-size: 22px; color: var(--peach);
+  text-align: center;
+  transform: rotate(-2deg);
+}
+.hero-art::after {
+  content: 'cover';
+  position: absolute; top: 14px; right: 14px;
+  font-family: var(--font-mono); font-size: 9px;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--ink-3);
+}
+
+/* === Pull quote === */
+.pullquote {
+  margin: 0 auto 40px;
+  max-width: 760px;
+  padding: 24px 0;
+  text-align: center;
+  border-top: 1px solid var(--ink-1);
+  border-bottom: 1px solid var(--ink-1);
+}
+.pullquote-text {
+  font-family: var(--font-disp); font-style: italic; font-weight: 600;
+  font-size: 28px; line-height: 1.35;
+  color: var(--ink-1);
+  letter-spacing: -0.01em;
+}
+.pullquote-attr {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--ink-2); text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 12px;
+}
+
+/* === Also reading === */
+.also-grid {
+  display: grid; grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.list-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 28px; color: var(--ink-1);
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+
+.listing {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 18px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: padding-left 0.18s var(--ease);
+}
+.listing:hover { padding-left: 6px; }
+.listing-num {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 28px; color: var(--peach);
+  line-height: 1;
+}
+.listing-body { }
+.listing-name {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 20px; color: var(--ink-1);
+  line-height: 1.15;
+  margin-bottom: 4px;
+}
+.listing-ticker {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--ink-3); letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.listing-note {
+  font-family: var(--font-disp); font-style: italic; font-weight: 400;
+  font-size: 14px; color: var(--ink-2);
+  line-height: 1.45;
+  max-width: 460px;
+}
+.listing-price {
+  text-align: right;
+}
+.listing-price-val {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 15px; color: var(--ink-1);
+}
+.listing-price-delta {
+  font-family: var(--font-mono); font-weight: 600;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.listing-price-delta.pos { color: var(--teal); }
+.listing-price-delta.neg { color: var(--coral); }
+
+/* === Sidebar by-the-numbers === */
+.bynums {
+  background: var(--paper-warm);
+  border-radius: var(--r-md);
+  padding: 24px 22px;
+  position: relative;
+}
+.bynums::before {
+  content: 'By the numbers';
+  position: absolute; top: -10px; left: 16px;
+  background: var(--paper);
+  padding: 0 8px;
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 16px; color: var(--ink-1);
+  letter-spacing: -0.01em;
+}
+.bn-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.bn-row:last-child { border-bottom: none; }
+.bn-label {
+  font-family: var(--font-disp); font-style: italic;
+  font-size: 14px; color: var(--ink-2);
+}
+.bn-val {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 15px; color: var(--ink-1);
+}
+.bn-val.pos { color: var(--teal); }
+.bn-val.neg { color: var(--coral); }
+
+.bn-footer {
+  margin-top: 14px;
+  font-family: var(--font-hand);
+  font-size: 17px; color: var(--peach);
+  line-height: 1.2;
+  transform: rotate(-1deg);
+}
+
+/* === Critic's picks === */
+.picks-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 28px; color: var(--ink-1);
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  display: flex; align-items: baseline; gap: 12px;
+}
+.picks-title::after {
+  content: '— this week';
+  font-family: var(--font-hand);
+  font-size: 22px; color: var(--peach);
+  font-weight: 500; font-style: normal;
+}
+
+.picks-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.pick {
+  background: var(--card);
+  border-radius: var(--r-md);
+  padding: 22px 22px 20px;
+  box-shadow: 0 1px 0 var(--rule), 0 8px 24px -14px rgba(27,20,16,0.16);
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.18s var(--ease);
+}
+.pick:hover { transform: translateY(-3px); }
+.pick-emoji {
+  font-size: 44px; line-height: 1;
+  margin-bottom: 14px;
+}
+.pick-name {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 22px; color: var(--ink-1);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+.pick-ticker {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--ink-3); letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.pick-quote {
+  font-family: var(--font-disp); font-style: italic;
+  font-size: 14px; color: var(--ink-2);
+  line-height: 1.45;
+  margin-bottom: 16px;
+  padding-left: 12px;
+  border-left: 2px solid var(--peach);
+}
+.pick-foot {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+.pick-price {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 15px; color: var(--ink-1);
+}
+.pick-delta {
+  font-family: var(--font-mono); font-weight: 600;
+  font-size: 12px;
+}
+.pick-delta.pos { color: var(--teal); }
+.pick-delta.neg { color: var(--coral); }
+
+/* === Mascot with speech === */
+.mascot-wrap {
+  position: fixed; bottom: 24px; right: 24px;
+  display: flex; align-items: end; gap: 12px;
+  z-index: 100;
+}
+.mascot-bubble {
+  background: var(--card);
+  padding: 12px 16px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px -8px rgba(27,20,16,0.25);
+  font-family: var(--font-hand);
+  font-size: 17px; color: var(--ink-1);
+  max-width: 200px;
+  position: relative;
+  transform: rotate(-1.5deg);
+}
+.mascot-bubble::after {
+  content: '';
+  position: absolute; bottom: 8px; right: -8px;
+  width: 14px; height: 14px;
+  background: var(--card);
+  transform: rotate(45deg);
+}
+.mascot {
+  width: 58px; height: 58px;
+  background: var(--peach);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(216,126,79,0.4);
+  transition: transform 0.18s var(--ease);
+}
+.mascot:hover { transform: translateY(-2px); }
+
+/* === Story label === */
+.story-label {
+  position: fixed; top: 16px; right: 36px;
+  background: var(--ink-1);
+  color: var(--paper);
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.04em;
+  z-index: 200;
+}
+.story-label b { color: var(--peach-soft); }
+</style>
+</head>
+<body>
+<div class="story-label">T2 / Story C · <b>Sprout Editorial</b></div>
+
+<header class="masthead">
+  <div class="mh-brand">Sprout</div>
+  <div class="mh-meta">
+    <span>Issue №042</span>
+    <span>Thu, May 28 · 2026</span>
+    <span>Today's edition</span>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Sections</div>
+      <div class="nav-item active">Discover</div>
+      <div class="nav-item">Leaderboard</div>
+      <div class="nav-item">Arena</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Community</div>
+      <div class="nav-item">Clubs</div>
+      <div class="nav-item">Events</div>
+      <div class="nav-item">Rewards</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Account</div>
+      <div class="nav-item">Portfolio</div>
+      <div class="nav-item">Profile</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="section-rule">
+      <div class="section-rule-label">Discover</div>
+      <div class="section-rule-line"></div>
+      <div class="section-rule-date">today's edit · 12s ago</div>
+    </div>
+
+    <section class="hero">
+      <div>
+        <div class="hero-kicker">Featured · Trending #1</div>
+        <h1 class="hero-title">Sprout, again.</h1>
+        <p class="hero-lede">Three weeks after launch and the namesake token is still the most-traded asset on its own network. A 24-hour surge of nearly 25% has pushed it past $42M market cap, with volume comfortably leading the field.</p>
+        <div class="hero-byline">By <b>The Editors</b> · 5 min read</div>
+        <div class="hero-stats">
+          <div>
+            <div class="hs-label">Price</div>
+            <div class="hs-value">$0.0428</div>
+          </div>
+          <div>
+            <div class="hs-label">24h</div>
+            <div class="hs-value pos">+24.8%</div>
+          </div>
+          <div>
+            <div class="hs-label">Market cap</div>
+            <div class="hs-value">$42M</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="hero-art-emoji">🌱</div>
+        <div class="hero-art-caption">the one to watch</div>
+      </div>
+    </section>
+
+    <div class="pullquote">
+      <div class="pullquote-text">"It is rare for a network's signature token to outperform its own ecosystem — Sprout has done it twice this month."</div>
+      <div class="pullquote-attr">— Editor's note, Issue №042</div>
+    </div>
+
+    <section class="also-grid">
+      <div>
+        <h2 class="list-title">Also on the rise</h2>
+
+        <div class="listing">
+          <div class="listing-num">02</div>
+          <div class="listing-body">
+            <div class="listing-name">Pepe Eco</div>
+            <div class="listing-ticker">$PEPECO</div>
+            <div class="listing-note">A revival of the original — same energy, half the supply. Holders skew young and loud.</div>
+          </div>
+          <div class="listing-price">
+            <div class="listing-price-val">$0.0019</div>
+            <div class="listing-price-delta pos">+18.2%</div>
+          </div>
+        </div>
+
+        <div class="listing">
+          <div class="listing-num">03</div>
+          <div class="listing-body">
+            <div class="listing-name">Fox Den</div>
+            <div class="listing-ticker">$FOXDEN</div>
+            <div class="listing-note">Down today, but volume held. The DAO vote on lockup mechanics may be the real story.</div>
+          </div>
+          <div class="listing-price">
+            <div class="listing-price-val">$0.124</div>
+            <div class="listing-price-delta neg">−4.2%</div>
+          </div>
+        </div>
+
+        <div class="listing">
+          <div class="listing-num">04</div>
+          <div class="listing-body">
+            <div class="listing-name">Verde</div>
+            <div class="listing-ticker">$VERDE</div>
+            <div class="listing-note">Quiet performer. Steady accumulation from a small set of wallets. Worth keeping a tab on.</div>
+          </div>
+          <div class="listing-price">
+            <div class="listing-price-val">$0.0081</div>
+            <div class="listing-price-delta pos">+8.4%</div>
+          </div>
+        </div>
+
+        <div class="listing">
+          <div class="listing-num">05</div>
+          <div class="listing-body">
+            <div class="listing-name">Peach Run</div>
+            <div class="listing-ticker">$PEACH</div>
+            <div class="listing-note">The breakout. Up 42% on the day, but on thin volume — read accordingly.</div>
+          </div>
+          <div class="listing-price">
+            <div class="listing-price-val">$0.0034</div>
+            <div class="listing-price-delta pos">+42.1%</div>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="bynums">
+          <div class="bn-row"><div class="bn-label">Volume 24h</div><div class="bn-val">$8.42M</div></div>
+          <div class="bn-row"><div class="bn-label">Active tokens</div><div class="bn-val">1,284</div></div>
+          <div class="bn-row"><div class="bn-label">Traders</div><div class="bn-val">42,891</div></div>
+          <div class="bn-row"><div class="bn-label">Rewards pool</div><div class="bn-val neg">$124K</div></div>
+          <div class="bn-row"><div class="bn-label">Top mover</div><div class="bn-val pos">+42.1%</div></div>
+          <div class="bn-footer">numbers refresh every 12 sec ✿</div>
+        </div>
+      </aside>
+    </section>
+
+    <h2 class="picks-title">Critics' picks</h2>
+    <div class="picks-grid">
+      <div class="pick">
+        <div class="pick-emoji">🦊</div>
+        <div class="pick-name">Fox Den</div>
+        <div class="pick-ticker">$FOXDEN</div>
+        <div class="pick-quote">A rare meme token with actual treasury discipline. Lockup vote could be the catalyst.</div>
+        <div class="pick-foot">
+          <span class="pick-price">$0.124</span>
+          <span class="pick-delta neg">−4.2%</span>
+        </div>
+      </div>
+      <div class="pick">
+        <div class="pick-emoji">🌿</div>
+        <div class="pick-name">Verde</div>
+        <div class="pick-ticker">$VERDE</div>
+        <div class="pick-quote">Slow accumulation from small wallets — patient money usually knows something.</div>
+        <div class="pick-foot">
+          <span class="pick-price">$0.0081</span>
+          <span class="pick-delta pos">+8.4%</span>
+        </div>
+      </div>
+      <div class="pick">
+        <div class="pick-emoji">🌊</div>
+        <div class="pick-name">Wave</div>
+        <div class="pick-ticker">$WAVE</div>
+        <div class="pick-quote">Down but interesting. Holder distribution flattened this week — a healthier shape.</div>
+        <div class="pick-foot">
+          <span class="pick-price">$0.0156</span>
+          <span class="pick-delta neg">−1.8%</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="mascot-wrap">
+  <div class="mascot-bubble">Read the editor's note?</div>
+  <div class="mascot">🌱</div>
+</div>
+</body>
+</html>

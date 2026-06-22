@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sprout T2 — Design System Demos</title>
+  <meta name="description" content="Sprout Token 2 design system mockups — Story A and C variants plus full token reference." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,400;1,600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0B0F0D;
+      --surface: #141918;
+      --border: rgba(255,255,255,0.08);
+      --accent: #5DCA87;
+      --accent-dim: rgba(93,202,135,0.15);
+      --text: #F0F4F2;
+      --muted: #7A8C83;
+      --teal: #38BFA1;
+      --studio: #C2A87A;
+      --editorial: #D4B9FF;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4rem 1.5rem 6rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .eyebrow {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 44ch;
+      line-height: 1.6;
+    }
+
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      margin: 2rem auto 0;
+      border-radius: 2px;
+    }
+
+    .demo-list {
+      list-style: none;
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .demo-item a {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      padding: 1.4rem 1.6rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+    }
+
+    .demo-item a:hover {
+      border-color: rgba(255,255,255,0.18);
+      background: #1a201d;
+      transform: translateY(-2px);
+    }
+
+    .demo-badge {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .badge-green  { background: rgba(93,202,135,0.15);  color: var(--accent); }
+    .badge-studio { background: rgba(194,168,122,0.15); color: var(--studio); }
+    .badge-teal   { background: rgba(56,191,161,0.18);  color: var(--teal); }
+    .badge-editorial { background: rgba(212,185,255,0.15); color: var(--editorial); }
+    .badge-token  { background: rgba(255,255,255,0.07); color: var(--muted); }
+
+    .demo-content { flex: 1; min-width: 0; }
+
+    .demo-name {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .demo-desc {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .demo-arrow {
+      flex-shrink: 0;
+      color: var(--muted);
+      margin-top: 4px;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .demo-item a:hover .demo-arrow {
+      color: var(--accent);
+      transform: translateX(3px);
+    }
+
+    footer {
+      margin-top: 4rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    footer span { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <p class="eyebrow">Sprout · Token Set 2</p>
+    <h1>Design System Demos</h1>
+    <p class="subtitle">Mockups cho vòng review T2 — Story A (3 màu sắc) · Story C (Editorial) · Bảng token đầy đủ.</p>
+    <div class="divider"></div>
+  </header>
+
+  <ul class="demo-list">
+
+    <li class="demo-item">
+      <a href="t2_demo_A_studio.html" id="link-story-a-studio">
+        <span class="demo-badge badge-studio">A</span>
+        <div class="demo-content">
+          <div class="demo-name">Story A — Studio Warm</div>
+          <div class="demo-desc">Palette ấm mang tông Amber/Gold, gợi cảm giác chuyên nghiệp và sang trọng. Biến thể gốc của Story A.</div>
+        </div>
+        <svg class="demo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </li>
+
+    <li class="demo-item">
+      <a href="t2_demo_A_green.html" id="link-story-a-green">
+        <span class="demo-badge badge-green">A</span>
+        <div class="demo-content">
+          <div class="demo-name">Story A — Sprout Green</div>
+          <div class="demo-desc">Palette xanh lá đặc trưng của Sprout. Năng lượng tươi, thân thiện, phù hợp cho màn hình chính.</div>
+        </div>
+        <svg class="demo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </li>
+
+    <li class="demo-item">
+      <a href="t2_demo_A_teal.html" id="link-story-a-teal">
+        <span class="demo-badge badge-teal">A</span>
+        <div class="demo-content">
+          <div class="demo-name">Story A — Teal Ocean</div>
+          <div class="demo-desc">Palette xanh teal, cân bằng giữa sự tin cậy và hiện đại. Tốt cho bối cảnh DeFi/Finance.</div>
+        </div>
+        <svg class="demo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </li>
+
+    <li class="demo-item">
+      <a href="t2_demo_C_editorial.html" id="link-story-c-editorial">
+        <span class="demo-badge badge-editorial">C</span>
+        <div class="demo-content">
+          <div class="demo-name">Story C — Editorial</div>
+          <div class="demo-desc">Hướng tiếp cận editorial táo bạo: typography lớn, layout bất đối xứng, palette tím/cream. Dành cho premium feel.</div>
+        </div>
+        <svg class="demo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </li>
+
+    <li class="demo-item">
+      <a href="t2_token_list.html" id="link-token-list">
+        <span class="demo-badge badge-token">TK</span>
+        <div class="demo-content">
+          <div class="demo-name">Full Token List — T2</div>
+          <div class="demo-desc">Danh sách đầy đủ toàn bộ design token của T2: màu sắc, typography, spacing, shadow, radius và hơn thế nữa.</div>
+        </div>
+        <svg class="demo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </li>
+
+  </ul>
+
+  <footer>
+    <p>Sprout Design System · Token Set 2 &nbsp;·&nbsp; <span>vietdungregister/PMFCDocument</span></p>
+    <p style="margin-top:0.4rem;">GitHub Pages · Chỉ dùng nội bộ cho mục đích review</p>
+  </footer>
+
+</body>
+</html>
