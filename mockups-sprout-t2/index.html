@@ -1,243 +1,638 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sprout T2 — Design System Demos</title>
-  <meta name="description" content="Sprout Token 2 design system mockups — Story A and C variants plus full token reference." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,400;1,600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="utf-8">
+<title>Sprout · Design System Demos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400..900;1,400..900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-    :root {
-      --bg: #0B0F0D;
-      --surface: #141918;
-      --border: rgba(255,255,255,0.08);
-      --accent: #5DCA87;
-      --accent-dim: rgba(93,202,135,0.15);
-      --text: #F0F4F2;
-      --muted: #7A8C83;
-      --teal: #38BFA1;
-      --studio: #C2A87A;
-      --editorial: #D4B9FF;
-    }
+:root {
+  --bg-1: #0B0F0D;
+  --bg-2: #0F1411;
+  --surface-1: #141A16;
+  --surface-2: #1A211D;
+  --surface-3: #232B26;
+  --border-1: rgba(255,255,255,0.07);
+  --border-2: rgba(255,255,255,0.13);
+  --text-1: #F4F5F2;
+  --text-2: #9AA39C;
+  --text-3: #5E665F;
+  --sprout: #74C589;
+  --sprout-bright: #8AD49C;
+  --sprout-soft: rgba(116,197,137,0.16);
+  --sprout-glow: rgba(116,197,137,0.32);
+  --peach: #E8A87C;
+  --peach-soft: rgba(232,168,124,0.16);
+  --teal: #7CC4A4;
+  --teal-soft: rgba(124,196,164,0.16);
+  --coral: #E07A6A;
+  --violet: #C7A0E0;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-pill: 999px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --font-disp: 'Fraunces', serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 4rem 1.5rem 6rem;
-    }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-    header {
-      text-align: center;
-      margin-bottom: 3.5rem;
-    }
+body {
+  background: var(--bg-1);
+  color: var(--text-1);
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  line-height: 1.55;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
 
-    .eyebrow {
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.75rem;
-    }
+/* === Top header === */
+.topbar {
+  height: 64px;
+  padding: 0 36px;
+  display: flex; align-items: center; gap: 16px;
+  border-bottom: 1px solid var(--border-1);
+  background: var(--bg-2);
+}
+.brand {
+  display: flex; align-items: center; gap: 12px;
+}
+.brand-mark {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  background: var(--sprout);
+  display: grid; place-items: center;
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 19px; color: var(--bg-1);
+}
+.brand-name {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 22px; letter-spacing: -0.01em;
+}
+.brand-tag {
+  font-family: var(--font-mono);
+  font-size: 10px; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+}
+.tb-spacer { flex: 1; }
+.tb-meta {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-2);
+  display: flex; gap: 18px;
+}
+.tb-meta span { position: relative; }
+.tb-meta b { color: var(--text-1); font-weight: 600; }
 
-    h1 {
-      font-family: 'Fraunces', serif;
-      font-style: italic;
-      font-weight: 600;
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      line-height: 1.15;
-      color: var(--text);
-      margin-bottom: 1rem;
-    }
+/* === Shell layout === */
+.shell {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 36px 80px;
+  gap: 36px;
+  align-items: start;
+}
 
-    .subtitle {
-      font-size: 0.95rem;
-      color: var(--muted);
-      max-width: 44ch;
-      line-height: 1.6;
-    }
+/* === Hero intro === */
+.hero {
+  margin-bottom: 36px;
+}
+.hero-kicker {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--sprout); text-transform: uppercase;
+  letter-spacing: 0.16em; font-weight: 700;
+  background: var(--sprout-soft);
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  margin-bottom: 16px;
+}
+.hero-kicker .pulse {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--sprout);
+  box-shadow: 0 0 8px var(--sprout-glow);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+.hero-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 56px; line-height: 0.95; letter-spacing: -0.025em;
+  color: var(--text-1);
+  margin-bottom: 16px;
+}
+.hero-sub {
+  font-family: var(--font-disp); font-style: italic;
+  font-size: 19px; color: var(--text-2);
+  max-width: 640px;
+  line-height: 1.5;
+}
 
-    .divider {
-      width: 48px;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      margin: 2rem auto 0;
-      border-radius: 2px;
-    }
+/* === Section === */
+.section {
+  margin-bottom: 36px;
+}
+.section-head {
+  display: flex; align-items: end; justify-content: space-between;
+  margin-bottom: 18px;
+  gap: 12px;
+}
+.section-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 26px; color: var(--text-1);
+  letter-spacing: -0.015em;
+  display: flex; align-items: baseline; gap: 12px;
+}
+.section-tag {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.1em; font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  font-style: normal;
+}
+.section-tag.live { color: var(--sprout); border-color: var(--sprout); background: var(--sprout-soft); }
+.section-tag.candidate { color: var(--peach); border-color: var(--peach); background: var(--peach-soft); }
+.section-tag.explore { color: var(--violet); border-color: var(--violet); background: rgba(199,160,224,0.14); }
+.section-sub {
+  font-size: 13px; color: var(--text-2);
+  margin-top: 4px;
+  max-width: 540px;
+}
 
-    .demo-list {
-      list-style: none;
-      width: 100%;
-      max-width: 680px;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
+/* === Card === */
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+.card-grid.two { grid-template-columns: 1fr 1fr; }
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  padding: 18px 20px 18px 24px;
+  position: relative;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  transition: transform 0.18s var(--ease), border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+.card::before {
+  content: '';
+  position: absolute; left: 0; top: 14px; bottom: 14px;
+  width: 3px; background: var(--sprout);
+  border-radius: 0 2px 2px 0;
+}
+.card.peach::before { background: var(--peach); }
+.card.teal::before { background: var(--teal); }
+.card.violet::before { background: var(--violet); }
+.card:hover {
+  border-color: var(--border-2);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -12px var(--sprout-glow);
+}
+.card.peach:hover { box-shadow: 0 10px 24px -12px rgba(232,168,124,0.28); }
+.card.teal:hover { box-shadow: 0 10px 24px -12px rgba(124,196,164,0.28); }
+.card.violet:hover { box-shadow: 0 10px 24px -12px rgba(199,160,224,0.28); }
 
-    .demo-item a {
-      display: flex;
-      align-items: flex-start;
-      gap: 1.25rem;
-      padding: 1.4rem 1.6rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      text-decoration: none;
-      color: inherit;
-      transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
-    }
+.card-emoji {
+  width: 48px; height: 48px;
+  border-radius: 11px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-1);
+  display: grid; place-items: center;
+  font-size: 24px;
+}
+.card-body { min-width: 0; }
+.card-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 19px; color: var(--text-1);
+  letter-spacing: -0.01em; line-height: 1.2;
+  margin-bottom: 4px;
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+}
+.card-pill {
+  font-family: var(--font-mono); font-size: 9px;
+  font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  font-style: normal;
+}
+.card-pill.deployed { background: var(--sprout-soft); color: var(--sprout); }
+.card-pill.poc { background: var(--peach-soft); color: var(--peach); }
+.card-pill.alt { background: rgba(199,160,224,0.14); color: var(--violet); }
+.card-pill.original { background: var(--teal-soft); color: var(--teal); }
 
-    .demo-item a:hover {
-      border-color: rgba(255,255,255,0.18);
-      background: #1a201d;
-      transform: translateY(-2px);
-    }
+.card-desc {
+  font-size: 13px; color: var(--text-2);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.card-meta {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+  display: flex; gap: 14px; flex-wrap: wrap;
+}
+.card-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.card-meta .dot {
+  display: inline-block;
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.card-meta .dot.sprout { background: var(--sprout); }
+.card-meta .dot.peach  { background: var(--peach); }
+.card-meta .dot.teal   { background: var(--teal); }
+.card-meta .dot.cream  { background: #F4EFE5; }
 
-    .demo-badge {
-      flex-shrink: 0;
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-top: 2px;
-    }
+.card-arrow {
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--text-3);
+  transition: transform 0.18s var(--ease), color 0.18s var(--ease);
+}
+.card:hover .card-arrow { color: var(--sprout); transform: translateX(4px); }
+.card.peach:hover .card-arrow { color: var(--peach); }
+.card.teal:hover .card-arrow { color: var(--teal); }
+.card.violet:hover .card-arrow { color: var(--violet); }
 
-    .badge-green  { background: rgba(93,202,135,0.15);  color: var(--accent); }
-    .badge-studio { background: rgba(194,168,122,0.15); color: var(--studio); }
-    .badge-teal   { background: rgba(56,191,161,0.18);  color: var(--teal); }
-    .badge-editorial { background: rgba(212,185,255,0.15); color: var(--editorial); }
-    .badge-token  { background: rgba(255,255,255,0.07); color: var(--muted); }
+/* === Right sidebar === */
+.aside {
+  position: sticky;
+  top: 24px;
+}
+.aside-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  padding: 20px 22px;
+  position: relative;
+}
+.aside-card::before {
+  content: '';
+  position: absolute; left: 0; top: 16px; bottom: 16px;
+  width: 3px; background: var(--sprout);
+  border-radius: 0 2px 2px 0;
+}
+.aside-card + .aside-card { margin-top: 16px; }
+.aside-label {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.1em; font-weight: 600;
+  margin-bottom: 6px;
+}
+.aside-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 19px; color: var(--text-1);
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+}
+.aside-body {
+  font-size: 13px; color: var(--text-2);
+  line-height: 1.55;
+}
+.aside-body strong { color: var(--text-1); font-weight: 600; font-family: var(--font-disp); font-style: italic; }
 
-    .demo-content { flex: 1; min-width: 0; }
+.nav-list { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.18s var(--ease);
+}
+.nav-item:hover { background: var(--surface-2); color: var(--text-1); }
+.nav-item .nav-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--sprout);
+  flex-shrink: 0;
+}
+.nav-item .nav-dot.peach { background: var(--peach); }
+.nav-item .nav-dot.teal { background: var(--teal); }
+.nav-item .nav-dot.violet { background: var(--violet); }
+.nav-item .nav-count {
+  margin-left: auto;
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3);
+}
 
-    .demo-name {
-      font-family: 'Fraunces', serif;
-      font-style: italic;
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 0.3rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+.legend-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 0;
+  font-size: 12px; color: var(--text-2);
+  border-bottom: 1px solid var(--border-1);
+}
+.legend-row:last-child { border-bottom: none; }
+.legend-pill {
+  font-family: var(--font-mono); font-size: 9px;
+  font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  flex-shrink: 0;
+}
+.legend-pill.deployed { background: var(--sprout-soft); color: var(--sprout); }
+.legend-pill.poc { background: var(--peach-soft); color: var(--peach); }
+.legend-pill.alt { background: rgba(199,160,224,0.14); color: var(--violet); }
+.legend-pill.original { background: var(--teal-soft); color: var(--teal); }
 
-    .demo-desc {
-      font-size: 0.83rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
+/* === Footer === */
+.footer {
+  margin-top: 36px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-1);
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-3);
+  display: flex; justify-content: space-between;
+  letter-spacing: 0.04em;
+}
 
-    .demo-arrow {
-      flex-shrink: 0;
-      color: var(--muted);
-      margin-top: 4px;
-      transition: color 0.2s ease, transform 0.2s ease;
-    }
-
-    .demo-item a:hover .demo-arrow {
-      color: var(--accent);
-      transform: translateX(3px);
-    }
-
-    footer {
-      margin-top: 4rem;
-      font-size: 0.78rem;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.7;
-    }
-
-    footer span { color: var(--accent); }
-  </style>
+@media (max-width: 1080px) {
+  .shell { grid-template-columns: 1fr; }
+  .aside { position: static; }
+  .card-grid.two { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
 
-  <header>
-    <p class="eyebrow">Sprout · Token Set 2</p>
-    <h1>Design System Demos</h1>
-    <p class="subtitle">Mockups cho vòng review T2 — Story A (3 màu sắc) · Story C (Editorial) · Bảng token đầy đủ.</p>
-    <div class="divider"></div>
-  </header>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">S</div>
+    <div class="brand-name">Sprout</div>
+    <div class="brand-tag">Design System</div>
+  </div>
+  <div class="tb-spacer"></div>
+  <div class="tb-meta">
+    <span>Issue <b>№001</b></span>
+    <span>Updated <b>Jun 22 · 2026</b></span>
+  </div>
+</header>
 
-  <ul class="demo-list">
+<div class="shell">
+  <main>
 
-    <li class="demo-item">
-      <a href="t2_demo_A_studio.html" id="link-story-a-studio">
-        <span class="demo-badge badge-studio">A</span>
-        <div class="demo-content">
-          <div class="demo-name">Story A — Studio Warm</div>
-          <div class="demo-desc">Palette ấm mang tông Amber/Gold, gợi cảm giác chuyên nghiệp và sang trọng. Biến thể gốc của Story A.</div>
+    <section class="hero">
+      <div class="hero-kicker"><span class="pulse"></span>Internal · For team review</div>
+      <h1 class="hero-title">Design directions, side by side.</h1>
+      <p class="hero-sub">Team đang đứng giữa 2 hướng cho Sprout: giữ Wild theme đã build (analog, playful, brand-heavy) hay chuyển sang T2 candidate (clean, modern, consistent). Mọi link bên dưới đều live — click để xem trực tiếp.</p>
+    </section>
+
+    <!-- ============ PRODUCTION / DEPLOYED ============ -->
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Production current <span class="section-tag live">DEPLOYED</span></div>
+          <div class="section-sub">Đang live trên GitHub Pages — đây là 2 phiên bản team có thể thấy ngay hôm nay.</div>
         </div>
-        <svg class="demo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </li>
+      </div>
 
-    <li class="demo-item">
-      <a href="t2_demo_A_green.html" id="link-story-a-green">
-        <span class="demo-badge badge-green">A</span>
-        <div class="demo-content">
-          <div class="demo-name">Story A — Sprout Green</div>
-          <div class="demo-desc">Palette xanh lá đặc trưng của Sprout. Năng lượng tươi, thân thiện, phù hợp cho màn hình chính.</div>
+      <div class="card-grid two">
+        <a class="card" href="../mockups-sprout/mockup_final/token_list_v4.html">
+          <div class="card-emoji">🌿</div>
+          <div class="card-body">
+            <div class="card-title">Wild theme <span class="card-pill deployed">live</span></div>
+            <div class="card-desc">18 trang đã apply đầy đủ. Cream polaroid + washi tape + sticker badges + italic Fraunces + mascot. Analog, playful, brand-heavy.</div>
+            <div class="card-meta">
+              <span><span class="dot cream"></span>cream paper</span>
+              <span><span class="dot peach"></span>peach #E8A87C</span>
+              <span>18 pages</span>
+            </div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
+
+        <a class="card teal" href="../mockups-sprout/token_list_v4.html">
+          <div class="card-emoji">◐</div>
+          <div class="card-body">
+            <div class="card-title">Clean MVP <span class="card-pill original">original</span></div>
+            <div class="card-desc">Bản clean gốc trước khi apply Wild. Dark surface MVP + cards thẳng + palette peach/teal/mint của Sprout. Đây là baseline để so sánh.</div>
+            <div class="card-meta">
+              <span><span class="dot teal"></span>teal #7CC4A4</span>
+              <span><span class="dot peach"></span>peach #E8A87C</span>
+              <span>18 pages</span>
+            </div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ MVP INCREMENTAL ============ -->
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-title">MVP enhanced <span class="section-tag candidate">INCREMENTAL</span></div>
+          <div class="section-sub">Giữ nguyên MVP gốc (palette peach/teal, Plus Jakarta, glow Mood B), chỉ thêm 1 thứ: Live Activity panel bên phải. Hướng "không phá đi làm lại" — risk thấp, change nhỏ nhưng cảm giác sống động hơn ngay.</div>
         </div>
-        <svg class="demo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </li>
+      </div>
 
-    <li class="demo-item">
-      <a href="t2_demo_A_teal.html" id="link-story-a-teal">
-        <span class="demo-badge badge-teal">A</span>
-        <div class="demo-content">
-          <div class="demo-name">Story A — Teal Ocean</div>
-          <div class="demo-desc">Palette xanh teal, cân bằng giữa sự tin cậy và hiện đại. Tốt cho bối cảnh DeFi/Finance.</div>
+      <div class="card-grid">
+        <a class="card teal" href="./t2_demo_mvp_la.html">
+          <div class="card-emoji">◐</div>
+          <div class="card-body">
+            <div class="card-title">Clean MVP + Live Activity panel <span class="card-pill original">enhanced</span></div>
+            <div class="card-desc">MVP gốc giữ 100%, thêm LA panel 280px bên phải theo đúng MVP language (teal pulse, peach/crimson accent bar, font-display matching). Item có color code: teal=buy, crimson=sell, peach=featured. Responsive tự ẩn ở viewport &lt; 1280px.</div>
+            <div class="card-meta">
+              <span><span class="dot teal"></span>teal pulse #7CC4A4</span>
+              <span><span class="dot peach"></span>peach accents</span>
+              <span>1 page + LA</span>
+            </div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ T2 CANDIDATE ============ -->
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-title">T2 production candidate <span class="section-tag candidate">REWRITE</span></div>
+          <div class="section-sub">Hướng làm lại toàn diện — clean modern dark, sprout green, italic Fraunces, 1 visual language cho mọi card. Risk cao hơn MVP enhanced nhưng identity rõ ràng. Nếu chọn sẽ scale ra 4 trang POC kế (leaderboard, token_detail, profile, clubs).</div>
         </div>
-        <svg class="demo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </li>
+      </div>
 
-    <li class="demo-item">
-      <a href="t2_demo_C_editorial.html" id="link-story-c-editorial">
-        <span class="demo-badge badge-editorial">C</span>
-        <div class="demo-content">
-          <div class="demo-name">Story C — Editorial</div>
-          <div class="demo-desc">Hướng tiếp cận editorial táo bạo: typography lớn, layout bất đối xứng, palette tím/cream. Dành cho premium feel.</div>
+      <div class="card-grid">
+        <a class="card peach" href="./t2_token_list.html">
+          <div class="card-emoji">🌱</div>
+          <div class="card-body">
+            <div class="card-title">Full Token List — T2 green <span class="card-pill poc">candidate</span></div>
+            <div class="card-desc">Trang Discover hoàn chỉnh — topbar + live ticker + hero featured + stats sparkline + tabs + chip filters + token grid với sparkline + LA panel + mascot. Đây là production candidate, team xem cái này trước.</div>
+            <div class="card-meta">
+              <span><span class="dot sprout"></span>sprout green #74C589</span>
+              <span>dark surface</span>
+              <span>1 page (POC)</span>
+            </div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ T2 EXPLORATION ============ -->
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-title">T2 exploration <span class="section-tag explore">REFERENCE</span></div>
+          <div class="section-sub">Các artifact quá trình tìm direction T2. Không phải production — chỉ để giải thích "tại sao landed ở Sprout Green" và compare các palette/story khác.</div>
         </div>
-        <svg class="demo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </li>
+      </div>
 
-    <li class="demo-item">
-      <a href="t2_token_list.html" id="link-token-list">
-        <span class="demo-badge badge-token">TK</span>
-        <div class="demo-content">
-          <div class="demo-name">Full Token List — T2</div>
-          <div class="demo-desc">Danh sách đầy đủ toàn bộ design token của T2: màu sắc, typography, spacing, shadow, radius và hơn thế nữa.</div>
+      <div class="card-grid two">
+        <a class="card violet" href="./t2_demo_A_green.html">
+          <div class="card-emoji">A</div>
+          <div class="card-body">
+            <div class="card-title">Story A · Sprout Green <span class="card-pill alt">chosen</span></div>
+            <div class="card-desc">Discover page đơn giản với green primary #74C589. Đây là palette chốt cho T2 candidate.</div>
+            <div class="card-meta">
+              <span><span class="dot sprout"></span>green #74C589</span>
+              <span>1 page</span>
+            </div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
+
+        <a class="card violet" href="./t2_demo_A_teal.html">
+          <div class="card-emoji">A</div>
+          <div class="card-body">
+            <div class="card-title">Story A · Teal MVP <span class="card-pill alt">alt palette</span></div>
+            <div class="card-desc">Cùng layout Story A nhưng dùng teal #7CC4A4 có sẵn trong palette MVP. Mint-y, mềm hơn.</div>
+            <div class="card-meta">
+              <span><span class="dot teal"></span>teal #7CC4A4</span>
+              <span>1 page</span>
+            </div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
+
+        <a class="card violet" href="./t2_demo_A_studio.html">
+          <div class="card-emoji">A</div>
+          <div class="card-body">
+            <div class="card-title">Story A · Peach (early) <span class="card-pill alt">rejected</span></div>
+            <div class="card-desc">Version đầu tiên của Story A, dùng peach #E8A87C. Đẹp nhưng thiếu "Sprout" feel.</div>
+            <div class="card-meta">
+              <span><span class="dot peach"></span>peach #E8A87C</span>
+              <span>1 page</span>
+            </div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
+
+        <a class="card violet" href="./t2_demo_C_editorial.html">
+          <div class="card-emoji">C</div>
+          <div class="card-body">
+            <div class="card-title">Story C · Editorial <span class="card-pill alt">rejected</span></div>
+            <div class="card-desc">Hướng khác hoàn toàn: cream paper, magazine layout, Caveat handwriting. Đẹp nhưng khó scale ra trang utility.</div>
+            <div class="card-meta">
+              <span><span class="dot cream"></span>cream paper</span>
+              <span>1 page</span>
+            </div>
+          </div>
+          <div class="card-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <div class="footer">
+      <span>SPROUT · DESIGN SYSTEM DEMOS · INTERNAL</span>
+      <span>BUILT FOR TEAM REVIEW · JUN 2026</span>
+    </div>
+
+  </main>
+
+  <!-- ============ RIGHT SIDEBAR ============ -->
+  <aside class="aside">
+    <div class="aside-card">
+      <div class="aside-label">Where to start</div>
+      <div class="aside-title">TL;DR</div>
+      <div class="aside-body">
+        Mở 3 tab cạnh nhau để compare: <strong>Wild</strong>, <strong>MVP + LA</strong>, <strong>T2 candidate</strong>. Đây là 3 hướng đi khác nhau cho team chọn. Ignore Story exploration nếu chưa quan tâm — đó chỉ là quá trình.
+      </div>
+    </div>
+
+    <div class="aside-card">
+      <div class="aside-label">Quick jump</div>
+      <div class="aside-title">All versions</div>
+      <div class="nav-list">
+        <a class="nav-item" href="../mockups-sprout/mockup_final/token_list_v4.html">
+          <span class="nav-dot"></span>Wild theme <span class="nav-count">18p</span>
+        </a>
+        <a class="nav-item" href="../mockups-sprout/token_list_v4.html">
+          <span class="nav-dot teal"></span>Clean MVP <span class="nav-count">18p</span>
+        </a>
+        <a class="nav-item" href="./t2_demo_mvp_la.html">
+          <span class="nav-dot teal"></span>MVP + LA <span class="nav-count">1p</span>
+        </a>
+        <a class="nav-item" href="./t2_token_list.html">
+          <span class="nav-dot peach"></span>T2 candidate <span class="nav-count">1p</span>
+        </a>
+        <a class="nav-item" href="./t2_demo_A_green.html">
+          <span class="nav-dot violet"></span>A · Green
+        </a>
+        <a class="nav-item" href="./t2_demo_A_teal.html">
+          <span class="nav-dot violet"></span>A · Teal
+        </a>
+        <a class="nav-item" href="./t2_demo_A_studio.html">
+          <span class="nav-dot violet"></span>A · Peach
+        </a>
+        <a class="nav-item" href="./t2_demo_C_editorial.html">
+          <span class="nav-dot violet"></span>C · Editorial
+        </a>
+      </div>
+    </div>
+
+    <div class="aside-card">
+      <div class="aside-label">Label key</div>
+      <div class="aside-title">Status</div>
+      <div>
+        <div class="legend-row">
+          <span class="legend-pill deployed">live</span>
+          <span>Production hiện tại</span>
         </div>
-        <svg class="demo-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </li>
+        <div class="legend-row">
+          <span class="legend-pill original">original</span>
+          <span>MVP gốc, baseline</span>
+        </div>
+        <div class="legend-row">
+          <span class="legend-pill poc">candidate</span>
+          <span>POC hướng mới</span>
+        </div>
+        <div class="legend-row">
+          <span class="legend-pill alt">exploration</span>
+          <span>Artifact quá trình</span>
+        </div>
+      </div>
+    </div>
 
-  </ul>
+    <div class="aside-card">
+      <div class="aside-label">Decision needed</div>
+      <div class="aside-title">3 hướng đi</div>
+      <div class="aside-body">
+        <strong>Wild</strong> — giữ nguyên 18 trang đã build, identity mạnh nhưng playful. <strong>MVP+LA</strong> — incremental, risk thấp, chỉ thêm LA panel vào MVP gốc. <strong>T2</strong> — rewrite toàn diện, identity mới rõ ràng, cần scale ra 4 trang POC kế.
+      </div>
+    </div>
+  </aside>
 
-  <footer>
-    <p>Sprout Design System · Token Set 2 &nbsp;·&nbsp; <span>vietdungregister/PMFCDocument</span></p>
-    <p style="margin-top:0.4rem;">GitHub Pages · Chỉ dùng nội bộ cho mục đích review</p>
-  </footer>
+</div>
 
 </body>
 </html>
