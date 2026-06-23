@@ -415,6 +415,68 @@ body {
   animation: pulse-soft 1.6s ease-in-out infinite;
 }
 
+/* Tabs */
+.tabs {
+  display: flex; gap: 4px;
+  border-bottom: 1px solid var(--border-1);
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 10px 14px;
+  font-size: 13.5px; font-weight: 500;
+  color: var(--text-2);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.18s var(--ease);
+  display: inline-flex; align-items: center; gap: 7px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.tab:hover { color: var(--text-1); }
+.tab.active {
+  color: var(--sprout);
+  border-bottom-color: var(--sprout);
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+}
+.tab-count {
+  font-family: var(--font-mono); font-size: 10px;
+  font-weight: 600;
+  color: var(--text-3);
+  background: var(--surface-1);
+  padding: 2px 6px;
+  border-radius: var(--r-pill);
+  font-style: normal;
+}
+.tab.active .tab-count { background: var(--sprout-soft); color: var(--sprout); }
+
+/* Chip filters */
+.chip-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 22px;
+  align-items: center;
+}
+.chip {
+  padding: 5px 12px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  font-weight: 500;
+}
+.chip:hover { color: var(--text-1); border-color: var(--border-2); }
+.chip.on {
+  background: var(--sprout-soft);
+  border-color: var(--sprout);
+  color: var(--sprout);
+  font-weight: 700;
+}
+.chip-sep { flex: 1; }
+
 /* Hero featured token */
 .hero-token {
   background: var(--surface-1);
@@ -580,11 +642,18 @@ body {
   letter-spacing: -0.015em;
   display: flex; align-items: baseline; gap: 12px;
 }
-.section-title::after {
+.section-title:not(.with-chips)::after {
   content: '';
   flex: 1; height: 1px;
   background: var(--border-1);
   margin-bottom: 6px;
+}
+.section-title.with-chips .chip-tail {
+  margin-left: auto;
+  display: flex; gap: 6px;
+  font-family: var(--font-body); font-style: normal; font-weight: 500;
+  align-self: center;
+  flex-wrap: wrap;
 }
 .section-title .meta {
   font-family: var(--font-mono); font-style: normal;
@@ -781,6 +850,17 @@ body {
   color: var(--text-3); margin-top: 4px; display: block;
 }
 
+/* Helper line for milestones panel */
+.now-helper {
+  font-family: var(--font-mono); font-size: 10.5px;
+  color: var(--text-3);
+  line-height: 1.5;
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+  padding: 0 2px;
+}
+.now-helper b { color: var(--sprout); font-weight: 600; }
+
 /* Now in greenhouse */
 .now-card {
   background: var(--surface-1);
@@ -882,13 +962,6 @@ body {
     </div>
   </div>
 
-  <div class="weather">
-    <span class="weather-icon">☀</span>
-    <span class="weather-pulse"></span>
-    <span class="weather-text">Sunny</span>
-    <span style="color:var(--text-3); font-size: 11px;">· markets warm</span>
-  </div>
-
   <div class="search">
     <span class="search-icon">⌕</span>
     <input placeholder="Search seedlings, growers, clubs…">
@@ -950,98 +1023,6 @@ body {
   <!-- ===== MAIN ===== -->
   <main class="main">
 
-    <!-- Welcome strip — personalized greeting -->
-    <div class="welcome">
-      <div class="welcome-icon">🌅</div>
-      <div class="welcome-body">
-        <div class="welcome-title">Welcome back. While you were away…</div>
-        <div class="welcome-detail">
-          <b>14 new seedlings</b> planted, your watchlist gained <b>+8.4%</b>, and <b>$TRELLIS</b> (Mossy's pick) is up <b>+18%</b>. One holding down: <span class="down">$WICK −3.2%</span>.
-        </div>
-      </div>
-      <div class="welcome-cta">See summary →</div>
-    </div>
-
-    <div class="page-head">
-      <div>
-        <h1 class="page-title">Discover</h1>
-        <div class="page-sub"><span class="page-pulse"></span>1,284 seedlings · 42.8K growers tending today</div>
-      </div>
-      <div style="display:flex; gap:8px;">
-        <button class="btn">⚙ Filter</button>
-        <button class="btn">⇅ Sort: Growing fastest</button>
-        <button class="btn primary">＋ Plant a seed</button>
-      </div>
-    </div>
-
-    <!-- ============ HERO FEATURED TOKEN ============ -->
-    <section class="hero-token">
-      <div>
-        <div class="hero-meta">🌱 Mossy's pick · trending #1</div>
-        <div class="hero-head">
-          <div class="hero-portrait">
-            🪴
-            <span class="stage" title="Sapling stage">
-              <!-- Sapling SVG: stem with 3 leaves -->
-              <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
-                <path d="M8 14V6" stroke="#5DCE81" stroke-width="1.4" stroke-linecap="round"/>
-                <path d="M8 9C8 9 5 8 4 6" stroke="#5DCE81" stroke-width="1.4" stroke-linecap="round" fill="none"/>
-                <path d="M8 7C8 7 11 6 12 4" stroke="#5DCE81" stroke-width="1.4" stroke-linecap="round" fill="none"/>
-                <ellipse cx="4" cy="6" rx="1.5" ry="0.8" fill="#5DCE81" transform="rotate(-30 4 6)"/>
-                <ellipse cx="12" cy="4" rx="1.5" ry="0.8" fill="#5DCE81" transform="rotate(30 12 4)"/>
-                <ellipse cx="8" cy="11" rx="1.5" ry="0.8" fill="#5DCE81"/>
-              </svg>
-            </span>
-          </div>
-          <div class="hero-id">
-            <div class="hero-name">Trellis</div>
-            <div class="hero-detail">
-              $TRELLIS · Solana · <span class="age">3 weeks old · Sapling stage</span>
-            </div>
-          </div>
-        </div>
-        <div class="hero-stats">
-          <div>
-            <div class="hs-label">Price</div>
-            <div class="hs-val">$0.0428</div>
-          </div>
-          <div>
-            <div class="hs-label">24h</div>
-            <div class="hs-val pos">+24.8%</div>
-          </div>
-          <div>
-            <div class="hs-label">All-time</div>
-            <div class="hs-val pos">+142%</div>
-          </div>
-          <div>
-            <div class="hs-label">Growers</div>
-            <div class="hs-val">18,492</div>
-          </div>
-        </div>
-      </div>
-      <div class="hero-right">
-        <div class="hero-chart">
-          <svg viewBox="0 0 320 110" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="hg" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stop-color="#5DCE81" stop-opacity="0.36"/>
-                <stop offset="100%" stop-color="#5DCE81" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <path d="M0,90 L24,84 L48,88 L72,76 L96,80 L120,68 L144,72 L168,58 L192,62 L216,46 L240,50 L264,32 L288,38 L312,18 L320,22 L320,110 L0,110 Z" fill="url(#hg)"/>
-            <polyline points="0,90 24,84 48,88 72,76 96,80 120,68 144,72 168,58 192,62 216,46 240,50 264,32 288,38 312,18 320,22" fill="none" stroke="#5DCE81" stroke-width="2"/>
-            <circle cx="320" cy="22" r="4" fill="#5DCE81">
-              <animate attributeName="r" values="4;6;4" dur="1.6s" repeatCount="indefinite"/>
-            </circle>
-          </svg>
-        </div>
-        <div class="hero-actions">
-          <button class="btn flex">+ Watch</button>
-          <button class="btn primary flex">Tend ↗</button>
-        </div>
-      </div>
-    </section>
-
     <!-- Stats row -->
     <div class="stats">
       <div class="stat">
@@ -1066,16 +1047,25 @@ body {
         </div>
       </div>
       <div class="stat">
-        <div class="stat-label">Rewards harvest</div>
+        <div class="stat-label">Top mover</div>
         <div class="stat-row">
-          <div class="stat-val">$124K</div>
-          <div class="stat-delta neg">−2.3%</div>
+          <div class="stat-val">$TOAD</div>
+          <div class="stat-delta pos">+42.1%</div>
         </div>
       </div>
     </div>
 
-    <!-- ============ TRENDING ============ -->
-    <div class="section-title">Trending in the greenhouse <span class="meta">24 tokens · live</span></div>
+    <!-- ============ TRENDING + filter chips inline ============ -->
+    <div class="section-title with-chips">
+      Trending now
+      <span class="meta">24 seedlings · 12s ago</span>
+      <div class="chip-tail">
+        <div class="chip on">⚡ Just planted</div>
+        <div class="chip">📈 Vol &gt; $100K</div>
+        <div class="chip">🌱 Graduated</div>
+        <div class="chip">🔥 Hot 1h</div>
+      </div>
+    </div>
     <div class="token-grid">
 
       <!-- Card 1: Trellis (Sapling) -->
@@ -1333,132 +1323,73 @@ body {
       </div>
     </div>
 
-    <!-- ============ NEW SEEDLINGS ============ -->
-    <div class="section-title">Just-planted seedlings <span class="meta">last 24h · 14 new</span></div>
-    <div class="token-grid">
-
-      <!-- Card 7: Wick (Seed, 4h) -->
-      <div class="token">
-        <div class="tk-head">
-          <div class="tk-portrait">
-            🕯
-            <span class="stage">
-              <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="9" r="3" stroke="#5DCE81" stroke-width="1.6" fill="none"/>
-                <circle cx="8" cy="9" r="1" fill="#5DCE81"/>
+    <!-- ============ HERO FEATURED TOKEN ============ -->
+    <section class="hero-token">
+      <div>
+        <div class="hero-meta">🌱 Mossy's pick · trending #1</div>
+        <div class="hero-head">
+          <div class="hero-portrait">
+            🪴
+            <span class="stage" title="Sapling stage">
+              <!-- Sapling SVG: stem with 3 leaves -->
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
+                <path d="M8 14V6" stroke="#5DCE81" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M8 9C8 9 5 8 4 6" stroke="#5DCE81" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+                <path d="M8 7C8 7 11 6 12 4" stroke="#5DCE81" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+                <ellipse cx="4" cy="6" rx="1.5" ry="0.8" fill="#5DCE81" transform="rotate(-30 4 6)"/>
+                <ellipse cx="12" cy="4" rx="1.5" ry="0.8" fill="#5DCE81" transform="rotate(30 12 4)"/>
+                <ellipse cx="8" cy="11" rx="1.5" ry="0.8" fill="#5DCE81"/>
               </svg>
             </span>
           </div>
-          <div class="tk-id">
-            <div class="tk-name">Wick</div>
-            <div class="tk-detail"><span class="ticker">$WICK</span> · <span class="age">4h · Seed</span></div>
-          </div>
-        </div>
-        <div class="tk-mid">
-          <div class="tk-price-block">
-            <div class="tk-price">$0.0007</div>
-            <div class="tk-delta pos">+62.0%</div>
-          </div>
-          <div class="tk-spark">
-            <svg viewBox="0 0 90 30" preserveAspectRatio="none">
-              <polyline points="0,28 9,24 18,22 27,17 36,18 45,12 54,14 63,8 72,9 81,4 90,5" fill="none" stroke="#5DCE81" stroke-width="1.8"/>
-            </svg>
-          </div>
-        </div>
-        <div class="tk-foot">
-          <div class="tk-presence">
-            <div class="presence-dots">
-              <div class="dot peach">🐲</div>
-              <div class="dot sprout">🦄</div>
-              <div class="dot more">+12</div>
+          <div class="hero-id">
+            <div class="hero-name">Trellis</div>
+            <div class="hero-detail">
+              $TRELLIS · Solana · <span class="age">3 weeks old · Sapling stage</span>
             </div>
-            <span class="tk-presence-count"><b>183</b> watching</span>
           </div>
-          <span class="tk-vol">Vol <b>$84K</b></span>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hs-label">Price</div>
+            <div class="hs-val">$0.0428</div>
+          </div>
+          <div>
+            <div class="hs-label">24h</div>
+            <div class="hs-val pos">+24.8%</div>
+          </div>
+          <div>
+            <div class="hs-label">All-time</div>
+            <div class="hs-val pos">+142%</div>
+          </div>
+          <div>
+            <div class="hs-label">Growers</div>
+            <div class="hs-val">18,492</div>
+          </div>
         </div>
       </div>
-
-      <!-- Card 8: Cactus (Seed, 9h) -->
-      <div class="token">
-        <div class="tk-head">
-          <div class="tk-portrait">
-            🌵
-            <span class="stage">
-              <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="9" r="3" stroke="#5DCE81" stroke-width="1.6" fill="none"/>
-                <circle cx="8" cy="9" r="1" fill="#5DCE81"/>
-              </svg>
-            </span>
-          </div>
-          <div class="tk-id">
-            <div class="tk-name">Cactus</div>
-            <div class="tk-detail"><span class="ticker">$CACT</span> · <span class="age">9h · Seed</span></div>
-          </div>
+      <div class="hero-right">
+        <div class="hero-chart">
+          <svg viewBox="0 0 320 110" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="hg" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#5DCE81" stop-opacity="0.36"/>
+                <stop offset="100%" stop-color="#5DCE81" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,90 L24,84 L48,88 L72,76 L96,80 L120,68 L144,72 L168,58 L192,62 L216,46 L240,50 L264,32 L288,38 L312,18 L320,22 L320,110 L0,110 Z" fill="url(#hg)"/>
+            <polyline points="0,90 24,84 48,88 72,76 96,80 120,68 144,72 168,58 192,62 216,46 240,50 264,32 288,38 312,18 320,22" fill="none" stroke="#5DCE81" stroke-width="2"/>
+            <circle cx="320" cy="22" r="4" fill="#5DCE81">
+              <animate attributeName="r" values="4;6;4" dur="1.6s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
         </div>
-        <div class="tk-mid">
-          <div class="tk-price-block">
-            <div class="tk-price">$0.0021</div>
-            <div class="tk-delta pos">+18.4%</div>
-          </div>
-          <div class="tk-spark">
-            <svg viewBox="0 0 90 30" preserveAspectRatio="none">
-              <polyline points="0,24 9,22 18,18 27,20 36,14 45,16 54,10 63,12 72,7 81,9 90,5" fill="none" stroke="#5DCE81" stroke-width="1.8"/>
-            </svg>
-          </div>
-        </div>
-        <div class="tk-foot">
-          <div class="tk-presence">
-            <div class="presence-dots">
-              <div class="dot sprout">🌾</div>
-              <div class="dot peach">🦊</div>
-              <div class="dot more">+4</div>
-            </div>
-            <span class="tk-presence-count"><b>54</b> watching</span>
-          </div>
-          <span class="tk-vol">Vol <b>$62K</b></span>
+        <div class="hero-actions">
+          <button class="btn flex">+ Watch</button>
+          <button class="btn primary flex">Tend ↗</button>
         </div>
       </div>
-
-      <!-- Card 9: Hedgie (Seed, 14h) -->
-      <div class="token">
-        <div class="tk-head">
-          <div class="tk-portrait">
-            🦔
-            <span class="stage">
-              <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="9" r="3" stroke="#5DCE81" stroke-width="1.6" fill="none"/>
-                <circle cx="8" cy="9" r="1" fill="#5DCE81"/>
-              </svg>
-            </span>
-          </div>
-          <div class="tk-id">
-            <div class="tk-name">Hedgie</div>
-            <div class="tk-detail"><span class="ticker">$HEDG</span> · <span class="age">14h · Seed</span></div>
-          </div>
-        </div>
-        <div class="tk-mid">
-          <div class="tk-price-block">
-            <div class="tk-price">$0.0014</div>
-            <div class="tk-delta neg">−12.4%</div>
-          </div>
-          <div class="tk-spark">
-            <svg viewBox="0 0 90 30" preserveAspectRatio="none">
-              <polyline points="0,4 9,8 18,12 27,10 36,14 45,12 54,18 63,16 72,22 81,20 90,24" fill="none" stroke="#E8786A" stroke-width="1.8"/>
-            </svg>
-          </div>
-        </div>
-        <div class="tk-foot">
-          <div class="tk-presence">
-            <div class="presence-dots">
-              <div class="dot peach">🐺</div>
-              <div class="dot more">+2</div>
-            </div>
-            <span class="tk-presence-count"><b>31</b> watching</span>
-          </div>
-          <span class="tk-vol">Vol <b>$41K</b></span>
-        </div>
-      </div>
-    </div>
+    </section>
 
   </main>
 
@@ -1519,31 +1450,6 @@ body {
             <span class="activity-actor">bee.box</span> <span class="activity-token">$CACT</span> graduated to <span style="color:var(--peach); font-weight:600;">Sprout stage</span>
             <span class="activity-time">1m ago</span>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="rail-section">
-      <div class="rail-head">
-        <div class="rail-title">Now in greenhouse</div>
-        <div class="rail-tag">today</div>
-      </div>
-      <div class="now-card">
-        <div class="now-row">
-          <span class="now-label">🌱 Seeds planted</span>
-          <span class="now-val sprout">+14</span>
-        </div>
-        <div class="now-row">
-          <span class="now-label">🪴 Reached Sprout</span>
-          <span class="now-val">+8</span>
-        </div>
-        <div class="now-row">
-          <span class="now-label">🌳 Reached Tree</span>
-          <span class="now-val peach">+2</span>
-        </div>
-        <div class="now-row">
-          <span class="now-label">🌻 Total growers</span>
-          <span class="now-val">42,891</span>
         </div>
       </div>
     </div>
