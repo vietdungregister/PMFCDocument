@@ -1,0 +1,1564 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Sprout Greenhouse — Claude's design vision</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400..900;1,400..900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Warm forest dark — slightly green-tinted, never cold */
+  --bg-1: #0E1812;
+  --bg-2: #122019;
+  --surface-1: #162420;
+  --surface-2: #1E2D26;
+  --surface-3: #283A30;
+  --border-1: rgba(255,255,255,0.06);
+  --border-2: rgba(255,255,255,0.11);
+  --border-warm: rgba(240,181,131,0.18);
+
+  --text-1: #F3F5F0;
+  --text-2: #9CA8A1;
+  --text-3: #5F6A63;
+
+  /* Sprout — vibrant, alive, distinct from generic crypto green */
+  --sprout: #5DCE81;
+  --sprout-bright: #7DD89A;
+  --sprout-soft: rgba(93,206,129,0.16);
+  --sprout-glow: rgba(93,206,129,0.30);
+  --sprout-deep: #3D9460;
+
+  /* Peach — warmth, used only for welcome/achievement moments */
+  --peach: #F0B583;
+  --peach-soft: rgba(240,181,131,0.14);
+  --peach-glow: rgba(240,181,131,0.28);
+
+  --coral: #E8786A;
+
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-pill: 999px;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --font-disp: 'Fraunces', serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --header-h: 56px;
+  --sidebar-w: 260px;
+  --rail-w: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg-1);
+  background-image:
+    radial-gradient(ellipse 900px 500px at 15% 0%, rgba(93,206,129,0.05), transparent 60%),
+    radial-gradient(ellipse 700px 400px at 95% 30%, rgba(240,181,131,0.04), transparent 60%);
+  background-attachment: fixed;
+  color: var(--text-1);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.92); }
+}
+@keyframes breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1px); }
+}
+@keyframes slidein {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* === TOP HEADER === */
+.topbar {
+  height: var(--header-h);
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border-1);
+  display: flex; align-items: center;
+  padding: 0 22px;
+  gap: 18px;
+  position: sticky; top: 0; z-index: 60;
+}
+.brand {
+  display: flex; align-items: center; gap: 11px;
+  min-width: calc(var(--sidebar-w) - 22px);
+}
+.brand-mark {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--sprout) 0%, var(--sprout-deep) 100%);
+  display: grid; place-items: center;
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 17px; color: var(--bg-1);
+  box-shadow: 0 0 14px rgba(93,206,129,0.35), inset 0 1px 0 rgba(255,255,255,0.18);
+}
+.brand-name {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 20px; letter-spacing: -0.015em;
+}
+.brand-tag {
+  font-family: var(--font-mono); font-size: 9px;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-top: 2px;
+}
+
+/* Weather indicator — gives the platform a sense of "place" */
+.weather {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-pill);
+  font-size: 12px; color: var(--text-2);
+}
+.weather-icon {
+  width: 18px; height: 18px;
+  display: grid; place-items: center;
+  font-size: 13px;
+}
+.weather-text { color: var(--text-1); font-weight: 500; }
+.weather-pulse {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--sprout);
+  box-shadow: 0 0 8px var(--sprout-glow);
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
+
+.search {
+  flex: 1; max-width: 460px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 14px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-pill);
+  transition: border-color 0.18s var(--ease);
+}
+.search:focus-within { border-color: var(--sprout); box-shadow: 0 0 0 3px var(--sprout-soft); }
+.search input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text-1); font-family: var(--font-body); font-size: 13px;
+}
+.search input::placeholder { color: var(--text-3); }
+.search-icon { color: var(--text-3); font-size: 14px; }
+.kbd {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3);
+  border: 1px solid var(--border-1);
+  padding: 2px 6px; border-radius: 4px;
+}
+
+.tb-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.icon-btn {
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border-radius: var(--r-sm);
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  font-size: 14px;
+  position: relative;
+}
+.icon-btn:hover { color: var(--text-1); border-color: var(--border-2); }
+.icon-btn .badge {
+  position: absolute; top: 4px; right: 4px;
+  background: var(--peach);
+  color: var(--bg-1);
+  font-size: 9px; font-weight: 700;
+  padding: 1px 5px; border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+}
+.wallet-btn {
+  background: var(--sprout);
+  color: var(--bg-1);
+  border: 1px solid var(--sprout);
+  padding: 7px 14px;
+  border-radius: var(--r-sm);
+  font-weight: 600; font-size: 13px;
+  cursor: pointer;
+  transition: background 0.18s var(--ease);
+  display: flex; align-items: center; gap: 8px;
+}
+.wallet-btn:hover { background: var(--sprout-bright); }
+.wallet-addr { font-family: var(--font-mono); }
+
+/* === SHELL === */
+.shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr var(--rail-w);
+  min-height: calc(100vh - var(--header-h));
+}
+
+/* === SIDEBAR === */
+.sidebar {
+  background: var(--bg-2);
+  border-right: 1px solid var(--border-1);
+  padding: 20px 16px 24px;
+  display: flex; flex-direction: column;
+  gap: 20px;
+}
+
+/* The mascot card — this is the signature element.
+   Your Sprout has a name, mood, tier. It grew with you. */
+.mascot-card {
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
+  border: 1px solid var(--border-warm);
+  border-radius: var(--r-md);
+  padding: 18px 16px 14px;
+  position: relative;
+  overflow: hidden;
+}
+.mascot-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 200px 120px at 80% 100%, var(--sprout-soft), transparent 60%);
+  pointer-events: none;
+}
+.mascot-portrait {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  border: 2px solid var(--sprout);
+  display: grid; place-items: center;
+  font-size: 30px;
+  margin: 0 auto 10px;
+  position: relative;
+  box-shadow: 0 0 18px var(--sprout-glow), inset 0 1px 0 rgba(255,255,255,0.06);
+  animation: breathe 3.5s ease-in-out infinite;
+}
+.mascot-portrait::after {
+  content: '';
+  position: absolute; bottom: -2px; right: -2px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--sprout);
+  border: 2px solid var(--bg-2);
+  box-shadow: 0 0 6px var(--sprout-glow);
+}
+.mascot-name {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 20px; color: var(--text-1);
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+.mascot-tier {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--sprout); text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-align: center;
+  margin-top: 4px;
+  font-weight: 700;
+}
+.mascot-mood {
+  font-family: var(--font-disp); font-style: italic;
+  font-size: 12.5px; color: var(--text-2);
+  text-align: center;
+  margin: 10px 0 12px;
+  line-height: 1.4;
+  position: relative; z-index: 1;
+}
+.mascot-mood b { color: var(--peach); font-weight: 600; }
+.mascot-progress {
+  height: 4px;
+  background: var(--surface-3);
+  border-radius: 2px; overflow: hidden;
+  margin-bottom: 6px;
+}
+.mascot-progress-fill {
+  height: 100%;
+  width: 64%;
+  background: linear-gradient(90deg, var(--sprout) 0%, var(--sprout-bright) 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--sprout-glow);
+}
+.mascot-stats {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+}
+.mascot-stats b { color: var(--text-2); font-weight: 600; }
+
+/* Navigation */
+.nav-section { display: flex; flex-direction: column; gap: 1px; }
+.nav-label {
+  font-family: var(--font-mono); font-size: 9px;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.12em; font-weight: 600;
+  padding: 0 10px; margin-bottom: 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 11px;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  font-size: 13.5px; font-weight: 500;
+  position: relative;
+}
+.nav-item:hover { background: var(--surface-1); color: var(--text-1); }
+.nav-item.active {
+  background: var(--surface-1);
+  color: var(--text-1);
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: -16px; top: 8px; bottom: 8px;
+  width: 3px;
+  background: var(--sprout);
+  border-radius: 0 2px 2px 0;
+  box-shadow: 2px 0 8px var(--sprout-glow);
+}
+.nav-icon { width: 16px; text-align: center; color: var(--text-3); }
+.nav-item.active .nav-icon { color: var(--sprout); }
+.nav-pill {
+  margin-left: auto;
+  font-family: var(--font-mono); font-size: 9px;
+  background: var(--peach-soft); color: var(--peach);
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  font-weight: 700; letter-spacing: 0.04em;
+}
+
+/* === MAIN === */
+.main {
+  padding: 22px 28px 60px;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+/* Welcome strip — narrative micro-summary, replaces marquee */
+.welcome {
+  background: linear-gradient(90deg, var(--surface-1) 0%, transparent 100%);
+  border: 1px solid var(--border-warm);
+  border-radius: var(--r-md);
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.welcome::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 400px 200px at 0% 50%, var(--peach-soft), transparent 60%);
+  pointer-events: none;
+}
+.welcome-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border-warm);
+  display: grid; place-items: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  position: relative; z-index: 1;
+}
+.welcome-body { position: relative; z-index: 1; flex: 1; }
+.welcome-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 700;
+  font-size: 15px; color: var(--text-1);
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+}
+.welcome-detail {
+  font-size: 12.5px; color: var(--text-2); line-height: 1.5;
+}
+.welcome-detail b { color: var(--sprout); font-family: var(--font-mono); font-weight: 700; }
+.welcome-detail .down { color: var(--coral); }
+.welcome-cta {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--peach); text-transform: uppercase;
+  letter-spacing: 0.1em; font-weight: 700;
+  cursor: pointer;
+  padding: 8px 12px;
+  border: 1px solid var(--border-warm);
+  border-radius: var(--r-sm);
+  position: relative; z-index: 1;
+  transition: all 0.18s var(--ease);
+}
+.welcome-cta:hover { background: var(--peach-soft); border-color: var(--peach); }
+
+/* Page head */
+.page-head {
+  display: flex; align-items: end; justify-content: space-between;
+  margin-bottom: 22px;
+}
+.page-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 38px; line-height: 1; letter-spacing: -0.025em;
+  color: var(--text-1);
+}
+.page-sub {
+  color: var(--text-2); margin-top: 8px; font-size: 13px;
+  display: flex; align-items: center; gap: 10px;
+}
+.page-pulse {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--sprout);
+  box-shadow: 0 0 6px var(--sprout-glow);
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
+
+/* Hero featured token */
+.hero-token {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-lg);
+  padding: 22px 24px;
+  margin-bottom: 26px;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 28px;
+  align-items: center;
+}
+.hero-token::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 480px 260px at 0% 0%, var(--sprout-soft), transparent 65%);
+  pointer-events: none;
+}
+.hero-meta {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--sprout); text-transform: uppercase;
+  letter-spacing: 0.14em; font-weight: 700;
+  background: var(--sprout-soft);
+  padding: 4px 11px;
+  border-radius: var(--r-pill);
+  margin-bottom: 14px;
+  position: relative; z-index: 1;
+}
+.hero-head {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 14px;
+  position: relative; z-index: 1;
+}
+.hero-portrait {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-1);
+  display: grid; place-items: center;
+  font-size: 32px;
+  position: relative;
+}
+.hero-portrait .stage {
+  position: absolute; bottom: -4px; right: -4px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--surface-1);
+  border: 2px solid var(--bg-1);
+  display: grid; place-items: center;
+}
+.hero-id {}
+.hero-name {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 30px; color: var(--text-1);
+  letter-spacing: -0.02em; line-height: 1;
+}
+.hero-detail {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-2);
+  letter-spacing: 0.04em;
+  margin-top: 5px;
+}
+.hero-detail .age { color: var(--peach); }
+
+.hero-stats {
+  display: grid; grid-template-columns: repeat(4, auto);
+  gap: 24px;
+  position: relative; z-index: 1;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-1);
+}
+.hs-label {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.08em; margin-bottom: 4px;
+}
+.hs-val {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 18px; color: var(--text-1);
+  letter-spacing: -0.01em;
+}
+.hs-val.pos { color: var(--sprout); }
+.hs-val.neg { color: var(--coral); }
+
+.hero-right {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.hero-chart {
+  height: 110px;
+}
+.hero-chart svg { width: 100%; height: 100%; display: block; }
+.hero-actions { display: flex; gap: 8px; }
+.btn {
+  background: var(--surface-2);
+  border: 1px solid var(--border-1);
+  color: var(--text-1);
+  padding: 9px 16px;
+  border-radius: var(--r-sm);
+  font-family: var(--font-body); font-weight: 600; font-size: 13px;
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  display: inline-flex; align-items: center; gap: 7px;
+  justify-content: center;
+}
+.btn:hover { border-color: var(--border-2); background: var(--surface-3); }
+.btn.primary {
+  background: var(--sprout);
+  color: var(--bg-1);
+  border-color: var(--sprout);
+}
+.btn.primary:hover { background: var(--sprout-bright); }
+.btn.flex { flex: 1; }
+
+/* Stats row */
+.stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 14px; margin-bottom: 26px;
+}
+.stat {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  position: relative;
+}
+.stat::before {
+  content: '';
+  position: absolute; left: 0; top: 14px; bottom: 14px;
+  width: 3px; background: var(--sprout);
+  border-radius: 0 2px 2px 0;
+}
+.stat-label {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.08em; font-weight: 600;
+  margin-bottom: 6px;
+}
+.stat-row {
+  display: flex; align-items: end; justify-content: space-between;
+}
+.stat-val {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 22px; color: var(--text-1);
+  letter-spacing: -0.01em; line-height: 1;
+  animation: breathe 4s ease-in-out infinite;
+}
+.stat-delta {
+  font-family: var(--font-mono); font-weight: 600;
+  font-size: 11px;
+}
+.stat-delta.pos { color: var(--sprout); }
+.stat-delta.neg { color: var(--coral); }
+
+/* Section title */
+.section-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 22px; color: var(--text-1);
+  margin: 8px 0 14px;
+  letter-spacing: -0.015em;
+  display: flex; align-items: baseline; gap: 12px;
+}
+.section-title::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: var(--border-1);
+  margin-bottom: 6px;
+}
+.section-title .meta {
+  font-family: var(--font-mono); font-style: normal;
+  font-size: 11px; color: var(--text-3);
+  font-weight: 500; letter-spacing: 0.04em;
+}
+
+/* === TOKEN CARDS — with growth stage + presence === */
+.token-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+  margin-bottom: 30px;
+}
+.token {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  padding: 16px 16px 14px 19px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease), border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.token::before {
+  content: '';
+  position: absolute; left: 0; top: 14px; bottom: 14px;
+  width: 3px; background: var(--sprout);
+  border-radius: 0 2px 2px 0;
+}
+.token:hover {
+  border-color: var(--border-2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -14px var(--sprout-glow), 0 2px 0 var(--border-1);
+}
+
+.tk-head {
+  display: flex; align-items: center; gap: 11px;
+  margin-bottom: 12px;
+}
+.tk-portrait {
+  width: 40px; height: 40px;
+  border-radius: 11px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-1);
+  display: grid; place-items: center;
+  font-size: 21px;
+  position: relative;
+  flex-shrink: 0;
+}
+.tk-portrait .stage {
+  position: absolute; bottom: -3px; right: -3px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--surface-1);
+  border: 2px solid var(--bg-1);
+  display: grid; place-items: center;
+}
+.tk-id { flex: 1; min-width: 0; }
+.tk-name {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 17px; color: var(--text-1);
+  letter-spacing: -0.01em; line-height: 1.15;
+}
+.tk-detail {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3); margin-top: 3px;
+  letter-spacing: 0.04em;
+  display: flex; gap: 6px;
+}
+.tk-detail .age { color: var(--peach); }
+.tk-detail .ticker { color: var(--text-2); }
+
+.tk-mid {
+  display: flex; align-items: end; justify-content: space-between;
+  margin-bottom: 12px; gap: 12px;
+}
+.tk-price-block {}
+.tk-price {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 17px; color: var(--text-1);
+  letter-spacing: -0.01em; line-height: 1;
+}
+.tk-delta {
+  font-family: var(--font-mono); font-weight: 600;
+  font-size: 12px; margin-top: 4px;
+}
+.tk-delta.pos { color: var(--sprout); }
+.tk-delta.neg { color: var(--coral); }
+
+.tk-spark { width: 90px; height: 30px; flex-shrink: 0; }
+.tk-spark svg { width: 100%; height: 100%; }
+
+/* Presence dots — who's looking at this token right now */
+.tk-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-1);
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-2);
+}
+.tk-presence {
+  display: flex; align-items: center; gap: 4px;
+}
+.presence-dots {
+  display: flex; margin-right: 6px;
+}
+.presence-dots .dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid var(--surface-1);
+  margin-left: -4px;
+  background: var(--surface-3);
+  display: grid; place-items: center;
+  font-size: 8px;
+}
+.presence-dots .dot:first-child { margin-left: 0; }
+.presence-dots .dot.sprout { background: var(--sprout-soft); color: var(--sprout); }
+.presence-dots .dot.peach { background: var(--peach-soft); color: var(--peach); }
+.presence-dots .dot.more {
+  background: var(--surface-3);
+  color: var(--text-2);
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 7px;
+}
+.tk-presence-count b { color: var(--text-1); font-weight: 600; }
+.tk-vol { color: var(--text-3); }
+.tk-vol b { color: var(--text-1); font-weight: 600; }
+
+/* === ACTIVITY RAIL (right) — presence visible === */
+.rail {
+  background: var(--bg-2);
+  border-left: 1px solid var(--border-1);
+  padding: 22px 18px;
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+  gap: 20px;
+}
+.rail-section {}
+.rail-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.rail-title {
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  font-size: 17px; color: var(--text-1);
+  display: flex; align-items: center; gap: 8px;
+  letter-spacing: -0.01em;
+}
+.rail-pulse {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--sprout);
+  box-shadow: 0 0 9px var(--sprout-glow);
+  animation: pulse-soft 1.4s ease-in-out infinite;
+}
+.rail-tag {
+  font-family: var(--font-mono); font-size: 9px;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.activity-list { display: flex; flex-direction: column; gap: 8px; }
+.activity {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-sm);
+  padding: 10px 12px 10px 12px;
+  font-size: 12px; color: var(--text-2);
+  line-height: 1.45;
+  display: flex; gap: 10px;
+  animation: slidein 0.4s var(--ease);
+  transition: border-color 0.18s var(--ease);
+}
+.activity:hover { border-color: var(--border-2); }
+.activity-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  border: 1.5px solid var(--sprout);
+  display: grid; place-items: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.activity-avatar.peach { border-color: var(--peach); }
+.activity-avatar.coral { border-color: var(--coral); }
+.activity-body { flex: 1; min-width: 0; }
+.activity-actor {
+  font-family: var(--font-disp); font-style: italic; font-weight: 700;
+  color: var(--text-1);
+}
+.activity-token { color: var(--sprout); font-weight: 600; }
+.activity-amount {
+  font-family: var(--font-mono); font-weight: 600; color: var(--text-1);
+}
+.activity-time {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-3); margin-top: 4px; display: block;
+}
+
+/* Now in greenhouse */
+.now-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-md);
+  padding: 14px 14px 12px;
+  position: relative;
+}
+.now-card::before {
+  content: '';
+  position: absolute; left: 0; top: 14px; bottom: 14px;
+  width: 3px; background: var(--peach);
+  border-radius: 0 2px 2px 0;
+}
+.now-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px;
+  padding: 7px 0;
+  border-bottom: 1px dashed var(--border-1);
+}
+.now-row:last-child { border-bottom: none; }
+.now-label { color: var(--text-2); }
+.now-val {
+  font-family: var(--font-mono); font-weight: 700;
+  color: var(--text-1);
+}
+.now-val.sprout { color: var(--sprout); }
+.now-val.peach  { color: var(--peach); }
+
+/* === FLOATING MASCOT === */
+.float-mascot {
+  position: fixed; bottom: 22px; right: 22px;
+  display: flex; align-items: end; gap: 12px;
+  z-index: 100;
+}
+.float-bubble {
+  background: var(--surface-1);
+  border: 1px solid var(--border-warm);
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  font-family: var(--font-disp); font-style: italic;
+  font-size: 13px;
+  color: var(--text-1);
+  max-width: 220px;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.float-bubble::after {
+  content: '';
+  position: absolute; right: -5px; bottom: 14px;
+  width: 8px; height: 8px;
+  background: var(--surface-1);
+  border-right: 1px solid var(--border-warm);
+  border-top: 1px solid var(--border-warm);
+  transform: rotate(45deg);
+}
+.float-bubble b { color: var(--sprout); font-style: normal; font-family: var(--font-mono); font-weight: 700; }
+.float-mark {
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sprout) 0%, var(--sprout-deep) 100%);
+  display: grid; place-items: center;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 8px 22px var(--sprout-glow), inset 0 1px 0 rgba(255,255,255,0.12);
+  transition: transform 0.2s var(--ease);
+  animation: breathe 3.5s ease-in-out infinite;
+}
+.float-mark:hover { transform: translateY(-3px) scale(1.06); }
+
+/* === STORY LABEL === */
+.story-label {
+  position: fixed; top: 70px; right: 16px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-warm);
+  padding: 6px 11px;
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-2);
+  letter-spacing: 0.04em;
+  z-index: 200;
+}
+.story-label b {
+  color: var(--peach);
+  font-family: var(--font-disp); font-style: italic; font-weight: 900;
+  letter-spacing: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- ============ TOPBAR ============ -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">S</div>
+    <div>
+      <div class="brand-name">Sprout</div>
+      <div class="brand-tag">The meme garden</div>
+    </div>
+  </div>
+
+  <div class="weather">
+    <span class="weather-icon">☀</span>
+    <span class="weather-pulse"></span>
+    <span class="weather-text">Sunny</span>
+    <span style="color:var(--text-3); font-size: 11px;">· markets warm</span>
+  </div>
+
+  <div class="search">
+    <span class="search-icon">⌕</span>
+    <input placeholder="Search seedlings, growers, clubs…">
+    <span class="kbd">⌘ K</span>
+  </div>
+
+  <div class="tb-actions">
+    <div class="icon-btn" title="Watchlist">☆</div>
+    <div class="icon-btn" title="Notifications">◔<span class="badge">3</span></div>
+    <button class="wallet-btn">
+      <span class="wallet-addr">7xK9…aR2v</span>
+    </button>
+  </div>
+</header>
+
+<div class="story-label">Claude's vision · <b>Sprout Greenhouse</b></div>
+
+<!-- ============ SHELL ============ -->
+<div class="shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+
+    <!-- Mascot card — your Sprout, named, growing -->
+    <div class="mascot-card">
+      <div class="mascot-portrait">🌿</div>
+      <div class="mascot-name">Mossy</div>
+      <div class="mascot-tier">Sapling · your Sprout</div>
+      <div class="mascot-mood">Curious about <b>$TRELLIS</b> today. Watered <b>3 times</b> this week.</div>
+      <div class="mascot-progress"><div class="mascot-progress-fill"></div></div>
+      <div class="mascot-stats">
+        <span>5,420 pts</span>
+        <span>→ <b>Tree</b> in 1,580</span>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Explore</div>
+      <div class="nav-item active"><span class="nav-icon">◎</span>Discover</div>
+      <div class="nav-item"><span class="nav-icon">⌃</span>Leaderboard</div>
+      <div class="nav-item"><span class="nav-icon">○</span>Arena<span class="nav-pill">live</span></div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Community</div>
+      <div class="nav-item"><span class="nav-icon">◇</span>Clubs</div>
+      <div class="nav-item"><span class="nav-icon">▷</span>Events</div>
+      <div class="nav-item"><span class="nav-icon">★</span>Rewards<span class="nav-pill">3</span></div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Garden</div>
+      <div class="nav-item"><span class="nav-icon">◐</span>Portfolio</div>
+      <div class="nav-item"><span class="nav-icon">⊙</span>Profile</div>
+      <div class="nav-item"><span class="nav-icon">⊞</span>Plant a seed</div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main">
+
+    <!-- Welcome strip — personalized greeting -->
+    <div class="welcome">
+      <div class="welcome-icon">🌅</div>
+      <div class="welcome-body">
+        <div class="welcome-title">Welcome back. While you were away…</div>
+        <div class="welcome-detail">
+          <b>14 new seedlings</b> planted, your watchlist gained <b>+8.4%</b>, and <b>$TRELLIS</b> (Mossy's pick) is up <b>+18%</b>. One holding down: <span class="down">$WICK −3.2%</span>.
+        </div>
+      </div>
+      <div class="welcome-cta">See summary →</div>
+    </div>
+
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">Discover</h1>
+        <div class="page-sub"><span class="page-pulse"></span>1,284 seedlings · 42.8K growers tending today</div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn">⚙ Filter</button>
+        <button class="btn">⇅ Sort: Growing fastest</button>
+        <button class="btn primary">＋ Plant a seed</button>
+      </div>
+    </div>
+
+    <!-- ============ HERO FEATURED TOKEN ============ -->
+    <section class="hero-token">
+      <div>
+        <div class="hero-meta">🌱 Mossy's pick · trending #1</div>
+        <div class="hero-head">
+          <div class="hero-portrait">
+            🪴
+            <span class="stage" title="Sapling stage">
+              <!-- Sapling SVG: stem with 3 leaves -->
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
+                <path d="M8 14V6" stroke="#5DCE81" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M8 9C8 9 5 8 4 6" stroke="#5DCE81" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+                <path d="M8 7C8 7 11 6 12 4" stroke="#5DCE81" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+                <ellipse cx="4" cy="6" rx="1.5" ry="0.8" fill="#5DCE81" transform="rotate(-30 4 6)"/>
+                <ellipse cx="12" cy="4" rx="1.5" ry="0.8" fill="#5DCE81" transform="rotate(30 12 4)"/>
+                <ellipse cx="8" cy="11" rx="1.5" ry="0.8" fill="#5DCE81"/>
+              </svg>
+            </span>
+          </div>
+          <div class="hero-id">
+            <div class="hero-name">Trellis</div>
+            <div class="hero-detail">
+              $TRELLIS · Solana · <span class="age">3 weeks old · Sapling stage</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hs-label">Price</div>
+            <div class="hs-val">$0.0428</div>
+          </div>
+          <div>
+            <div class="hs-label">24h</div>
+            <div class="hs-val pos">+24.8%</div>
+          </div>
+          <div>
+            <div class="hs-label">All-time</div>
+            <div class="hs-val pos">+142%</div>
+          </div>
+          <div>
+            <div class="hs-label">Growers</div>
+            <div class="hs-val">18,492</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-chart">
+          <svg viewBox="0 0 320 110" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="hg" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#5DCE81" stop-opacity="0.36"/>
+                <stop offset="100%" stop-color="#5DCE81" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,90 L24,84 L48,88 L72,76 L96,80 L120,68 L144,72 L168,58 L192,62 L216,46 L240,50 L264,32 L288,38 L312,18 L320,22 L320,110 L0,110 Z" fill="url(#hg)"/>
+            <polyline points="0,90 24,84 48,88 72,76 96,80 120,68 144,72 168,58 192,62 216,46 240,50 264,32 288,38 312,18 320,22" fill="none" stroke="#5DCE81" stroke-width="2"/>
+            <circle cx="320" cy="22" r="4" fill="#5DCE81">
+              <animate attributeName="r" values="4;6;4" dur="1.6s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+        <div class="hero-actions">
+          <button class="btn flex">+ Watch</button>
+          <button class="btn primary flex">Tend ↗</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats row -->
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Total volume 24h</div>
+        <div class="stat-row">
+          <div class="stat-val">$8.42M</div>
+          <div class="stat-delta pos">+12.4%</div>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Active seedlings</div>
+        <div class="stat-row">
+          <div class="stat-val">1,284</div>
+          <div class="stat-delta pos">+38</div>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Growers online</div>
+        <div class="stat-row">
+          <div class="stat-val">42.8K</div>
+          <div class="stat-delta pos">+5.1%</div>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Rewards harvest</div>
+        <div class="stat-row">
+          <div class="stat-val">$124K</div>
+          <div class="stat-delta neg">−2.3%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ TRENDING ============ -->
+    <div class="section-title">Trending in the greenhouse <span class="meta">24 tokens · live</span></div>
+    <div class="token-grid">
+
+      <!-- Card 1: Trellis (Sapling) -->
+      <div class="token">
+        <div class="tk-head">
+          <div class="tk-portrait">
+            🪴
+            <span class="stage">
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+                <path d="M8 14V6" stroke="#5DCE81" stroke-width="1.6" stroke-linecap="round"/>
+                <ellipse cx="4" cy="6" rx="1.5" ry="0.8" fill="#5DCE81" transform="rotate(-30 4 6)"/>
+                <ellipse cx="12" cy="4" rx="1.5" ry="0.8" fill="#5DCE81" transform="rotate(30 12 4)"/>
+              </svg>
+            </span>
+          </div>
+          <div class="tk-id">
+            <div class="tk-name">Trellis</div>
+            <div class="tk-detail"><span class="ticker">$TRELLIS</span> · <span class="age">3w · Sapling</span></div>
+          </div>
+        </div>
+        <div class="tk-mid">
+          <div class="tk-price-block">
+            <div class="tk-price">$0.0428</div>
+            <div class="tk-delta pos">+24.8%</div>
+          </div>
+          <div class="tk-spark">
+            <svg viewBox="0 0 90 30" preserveAspectRatio="none">
+              <polyline points="0,24 9,22 18,20 27,15 36,18 45,12 54,14 63,7 72,9 81,3 90,5" fill="none" stroke="#5DCE81" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tk-foot">
+          <div class="tk-presence">
+            <div class="presence-dots">
+              <div class="dot sprout">🦋</div>
+              <div class="dot peach">🦉</div>
+              <div class="dot sprout">🐢</div>
+              <div class="dot more">+9</div>
+            </div>
+            <span class="tk-presence-count"><b>147</b> watching</span>
+          </div>
+          <span class="tk-vol">Vol <b>$2.1M</b></span>
+        </div>
+      </div>
+
+      <!-- Card 2: Lumen (Sprout — 5d) -->
+      <div class="token">
+        <div class="tk-head">
+          <div class="tk-portrait">
+            💡
+            <span class="stage">
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+                <path d="M8 14V8" stroke="#5DCE81" stroke-width="1.6" stroke-linecap="round"/>
+                <ellipse cx="5" cy="8" rx="1.3" ry="0.7" fill="#5DCE81" transform="rotate(-30 5 8)"/>
+                <ellipse cx="11" cy="7" rx="1.3" ry="0.7" fill="#5DCE81" transform="rotate(30 11 7)"/>
+              </svg>
+            </span>
+          </div>
+          <div class="tk-id">
+            <div class="tk-name">Lumen</div>
+            <div class="tk-detail"><span class="ticker">$LUMEN</span> · <span class="age">5d · Sprout</span></div>
+          </div>
+        </div>
+        <div class="tk-mid">
+          <div class="tk-price-block">
+            <div class="tk-price">$0.0019</div>
+            <div class="tk-delta pos">+18.2%</div>
+          </div>
+          <div class="tk-spark">
+            <svg viewBox="0 0 90 30" preserveAspectRatio="none">
+              <polyline points="0,22 9,20 18,16 27,18 36,12 45,14 54,8 63,10 72,4 81,6 90,3" fill="none" stroke="#5DCE81" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tk-foot">
+          <div class="tk-presence">
+            <div class="presence-dots">
+              <div class="dot sprout">🦊</div>
+              <div class="dot peach">🐝</div>
+              <div class="dot more">+6</div>
+            </div>
+            <span class="tk-presence-count"><b>82</b> watching</span>
+          </div>
+          <span class="tk-vol">Vol <b>$1.4M</b></span>
+        </div>
+      </div>
+
+      <!-- Card 3: Kiln (Tree — 4mo) -->
+      <div class="token">
+        <div class="tk-head">
+          <div class="tk-portrait">
+            🔥
+            <span class="stage">
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+                <path d="M8 14V10" stroke="#5DCE81" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M3 8L8 2L13 8L11 8L8 4L5 8Z" fill="#5DCE81"/>
+                <path d="M5 11L8 7L11 11L9 11L8 9L7 11Z" fill="#5DCE81"/>
+              </svg>
+            </span>
+          </div>
+          <div class="tk-id">
+            <div class="tk-name">Kiln</div>
+            <div class="tk-detail"><span class="ticker">$KILN</span> · <span class="age">4mo · Tree</span></div>
+          </div>
+        </div>
+        <div class="tk-mid">
+          <div class="tk-price-block">
+            <div class="tk-price">$0.124</div>
+            <div class="tk-delta neg">−4.2%</div>
+          </div>
+          <div class="tk-spark">
+            <svg viewBox="0 0 90 30" preserveAspectRatio="none">
+              <polyline points="0,8 9,10 18,7 27,14 36,11 45,16 54,14 63,20 72,18 81,24 90,22" fill="none" stroke="#E8786A" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tk-foot">
+          <div class="tk-presence">
+            <div class="presence-dots">
+              <div class="dot peach">🐺</div>
+              <div class="dot sprout">🦔</div>
+              <div class="dot more">+4</div>
+            </div>
+            <span class="tk-presence-count"><b>54</b> watching</span>
+          </div>
+          <span class="tk-vol">Vol <b>$890K</b></span>
+        </div>
+      </div>
+
+      <!-- Card 4: Pyrrha (Tree — 7mo) -->
+      <div class="token">
+        <div class="tk-head">
+          <div class="tk-portrait">
+            🦅
+            <span class="stage">
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+                <path d="M8 14V10" stroke="#5DCE81" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M3 8L8 2L13 8L11 8L8 4L5 8Z" fill="#5DCE81"/>
+                <path d="M5 11L8 7L11 11L9 11L8 9L7 11Z" fill="#5DCE81"/>
+              </svg>
+            </span>
+          </div>
+          <div class="tk-id">
+            <div class="tk-name">Pyrrha</div>
+            <div class="tk-detail"><span class="ticker">$PYRRHA</span> · <span class="age">7mo · Tree</span></div>
+          </div>
+        </div>
+        <div class="tk-mid">
+          <div class="tk-price-block">
+            <div class="tk-price">$0.0081</div>
+            <div class="tk-delta pos">+8.4%</div>
+          </div>
+          <div class="tk-spark">
+            <svg viewBox="0 0 90 30" preserveAspectRatio="none">
+              <polyline points="0,20 9,18 18,17 27,15 36,13 45,15 54,11 63,13 72,9 81,11 90,7" fill="none" stroke="#5DCE81" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tk-foot">
+          <div class="tk-presence">
+            <div class="presence-dots">
+              <div class="dot sprout">🦋</div>
+              <div class="dot peach">🌵</div>
+              <div class="dot more">+3</div>
+            </div>
+            <span class="tk-presence-count"><b>41</b> watching</span>
+          </div>
+          <span class="tk-vol">Vol <b>$620K</b></span>
+        </div>
+      </div>
+
+      <!-- Card 5: Toad (Sprout) -->
+      <div class="token">
+        <div class="tk-head">
+          <div class="tk-portrait">
+            🐸
+            <span class="stage">
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+                <path d="M8 14V8" stroke="#5DCE81" stroke-width="1.6" stroke-linecap="round"/>
+                <ellipse cx="5" cy="8" rx="1.3" ry="0.7" fill="#5DCE81" transform="rotate(-30 5 8)"/>
+                <ellipse cx="11" cy="7" rx="1.3" ry="0.7" fill="#5DCE81" transform="rotate(30 11 7)"/>
+              </svg>
+            </span>
+          </div>
+          <div class="tk-id">
+            <div class="tk-name">Toad</div>
+            <div class="tk-detail"><span class="ticker">$TOAD</span> · <span class="age">2d · Sprout</span></div>
+          </div>
+        </div>
+        <div class="tk-mid">
+          <div class="tk-price-block">
+            <div class="tk-price">$0.0034</div>
+            <div class="tk-delta pos">+42.1%</div>
+          </div>
+          <div class="tk-spark">
+            <svg viewBox="0 0 90 30" preserveAspectRatio="none">
+              <polyline points="0,26 9,22 18,20 27,16 36,14 45,10 54,12 63,6 72,4 81,5 90,2" fill="none" stroke="#5DCE81" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tk-foot">
+          <div class="tk-presence">
+            <div class="presence-dots">
+              <div class="dot sprout">🦊</div>
+              <div class="dot peach">🦉</div>
+              <div class="dot sprout">🐝</div>
+              <div class="dot more">+18</div>
+            </div>
+            <span class="tk-presence-count"><b>231</b> watching</span>
+          </div>
+          <span class="tk-vol">Vol <b>$520K</b></span>
+        </div>
+      </div>
+
+      <!-- Card 6: Frost (Sapling) -->
+      <div class="token">
+        <div class="tk-head">
+          <div class="tk-portrait">
+            ❄
+            <span class="stage">
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+                <path d="M8 14V6" stroke="#5DCE81" stroke-width="1.6" stroke-linecap="round"/>
+                <ellipse cx="4" cy="6" rx="1.5" ry="0.8" fill="#5DCE81" transform="rotate(-30 4 6)"/>
+                <ellipse cx="12" cy="4" rx="1.5" ry="0.8" fill="#5DCE81" transform="rotate(30 12 4)"/>
+              </svg>
+            </span>
+          </div>
+          <div class="tk-id">
+            <div class="tk-name">Frost</div>
+            <div class="tk-detail"><span class="ticker">$FROST</span> · <span class="age">2w · Sapling</span></div>
+          </div>
+        </div>
+        <div class="tk-mid">
+          <div class="tk-price-block">
+            <div class="tk-price">$0.0156</div>
+            <div class="tk-delta neg">−1.8%</div>
+          </div>
+          <div class="tk-spark">
+            <svg viewBox="0 0 90 30" preserveAspectRatio="none">
+              <polyline points="0,10 9,14 18,12 27,16 36,14 45,18 54,16 63,14 72,18 81,16 90,20" fill="none" stroke="#E8786A" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tk-foot">
+          <div class="tk-presence">
+            <div class="presence-dots">
+              <div class="dot peach">🐢</div>
+              <div class="dot sprout">🦔</div>
+              <div class="dot more">+5</div>
+            </div>
+            <span class="tk-presence-count"><b>62</b> watching</span>
+          </div>
+          <span class="tk-vol">Vol <b>$410K</b></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ NEW SEEDLINGS ============ -->
+    <div class="section-title">Just-planted seedlings <span class="meta">last 24h · 14 new</span></div>
+    <div class="token-grid">
+
+      <!-- Card 7: Wick (Seed, 4h) -->
+      <div class="token">
+        <div class="tk-head">
+          <div class="tk-portrait">
+            🕯
+            <span class="stage">
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="9" r="3" stroke="#5DCE81" stroke-width="1.6" fill="none"/>
+                <circle cx="8" cy="9" r="1" fill="#5DCE81"/>
+              </svg>
+            </span>
+          </div>
+          <div class="tk-id">
+            <div class="tk-name">Wick</div>
+            <div class="tk-detail"><span class="ticker">$WICK</span> · <span class="age">4h · Seed</span></div>
+          </div>
+        </div>
+        <div class="tk-mid">
+          <div class="tk-price-block">
+            <div class="tk-price">$0.0007</div>
+            <div class="tk-delta pos">+62.0%</div>
+          </div>
+          <div class="tk-spark">
+            <svg viewBox="0 0 90 30" preserveAspectRatio="none">
+              <polyline points="0,28 9,24 18,22 27,17 36,18 45,12 54,14 63,8 72,9 81,4 90,5" fill="none" stroke="#5DCE81" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tk-foot">
+          <div class="tk-presence">
+            <div class="presence-dots">
+              <div class="dot peach">🐲</div>
+              <div class="dot sprout">🦄</div>
+              <div class="dot more">+12</div>
+            </div>
+            <span class="tk-presence-count"><b>183</b> watching</span>
+          </div>
+          <span class="tk-vol">Vol <b>$84K</b></span>
+        </div>
+      </div>
+
+      <!-- Card 8: Cactus (Seed, 9h) -->
+      <div class="token">
+        <div class="tk-head">
+          <div class="tk-portrait">
+            🌵
+            <span class="stage">
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="9" r="3" stroke="#5DCE81" stroke-width="1.6" fill="none"/>
+                <circle cx="8" cy="9" r="1" fill="#5DCE81"/>
+              </svg>
+            </span>
+          </div>
+          <div class="tk-id">
+            <div class="tk-name">Cactus</div>
+            <div class="tk-detail"><span class="ticker">$CACT</span> · <span class="age">9h · Seed</span></div>
+          </div>
+        </div>
+        <div class="tk-mid">
+          <div class="tk-price-block">
+            <div class="tk-price">$0.0021</div>
+            <div class="tk-delta pos">+18.4%</div>
+          </div>
+          <div class="tk-spark">
+            <svg viewBox="0 0 90 30" preserveAspectRatio="none">
+              <polyline points="0,24 9,22 18,18 27,20 36,14 45,16 54,10 63,12 72,7 81,9 90,5" fill="none" stroke="#5DCE81" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tk-foot">
+          <div class="tk-presence">
+            <div class="presence-dots">
+              <div class="dot sprout">🌾</div>
+              <div class="dot peach">🦊</div>
+              <div class="dot more">+4</div>
+            </div>
+            <span class="tk-presence-count"><b>54</b> watching</span>
+          </div>
+          <span class="tk-vol">Vol <b>$62K</b></span>
+        </div>
+      </div>
+
+      <!-- Card 9: Hedgie (Seed, 14h) -->
+      <div class="token">
+        <div class="tk-head">
+          <div class="tk-portrait">
+            🦔
+            <span class="stage">
+              <svg width="9" height="9" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="9" r="3" stroke="#5DCE81" stroke-width="1.6" fill="none"/>
+                <circle cx="8" cy="9" r="1" fill="#5DCE81"/>
+              </svg>
+            </span>
+          </div>
+          <div class="tk-id">
+            <div class="tk-name">Hedgie</div>
+            <div class="tk-detail"><span class="ticker">$HEDG</span> · <span class="age">14h · Seed</span></div>
+          </div>
+        </div>
+        <div class="tk-mid">
+          <div class="tk-price-block">
+            <div class="tk-price">$0.0014</div>
+            <div class="tk-delta neg">−12.4%</div>
+          </div>
+          <div class="tk-spark">
+            <svg viewBox="0 0 90 30" preserveAspectRatio="none">
+              <polyline points="0,4 9,8 18,12 27,10 36,14 45,12 54,18 63,16 72,22 81,20 90,24" fill="none" stroke="#E8786A" stroke-width="1.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="tk-foot">
+          <div class="tk-presence">
+            <div class="presence-dots">
+              <div class="dot peach">🐺</div>
+              <div class="dot more">+2</div>
+            </div>
+            <span class="tk-presence-count"><b>31</b> watching</span>
+          </div>
+          <span class="tk-vol">Vol <b>$41K</b></span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ===== ACTIVITY RAIL ===== -->
+  <aside class="rail">
+
+    <div class="rail-section">
+      <div class="rail-head">
+        <div class="rail-title"><span class="rail-pulse"></span>Live in the garden</div>
+        <div class="rail-tag">last 60s</div>
+      </div>
+      <div class="activity-list">
+        <div class="activity">
+          <div class="activity-avatar">🦉</div>
+          <div class="activity-body">
+            <span class="activity-actor">moonowl</span> watered <span class="activity-amount">$2.4K</span> of <span class="activity-token">$TRELLIS</span>
+            <span class="activity-time">2s ago</span>
+          </div>
+        </div>
+        <div class="activity">
+          <div class="activity-avatar peach">🦋</div>
+          <div class="activity-body">
+            <span class="activity-actor">flutter</span> planted <span class="activity-token">$WICK</span>
+            <span class="activity-time">14s ago</span>
+          </div>
+        </div>
+        <div class="activity">
+          <div class="activity-avatar">🐢</div>
+          <div class="activity-body">
+            <span class="activity-actor">slow.eth</span> watered <span class="activity-amount">$840</span> of <span class="activity-token">$TOAD</span>
+            <span class="activity-time">28s ago</span>
+          </div>
+        </div>
+        <div class="activity">
+          <div class="activity-avatar coral">🌵</div>
+          <div class="activity-body">
+            <span class="activity-actor">cactus</span> harvested <span class="activity-amount">$1.2K</span> of <span class="activity-token">$KILN</span>
+            <span class="activity-time">42s ago</span>
+          </div>
+        </div>
+        <div class="activity">
+          <div class="activity-avatar peach">🌾</div>
+          <div class="activity-body">
+            <span class="activity-actor">verde.fan</span> joined <span class="activity-token">Green Pact</span> club
+            <span class="activity-time">51s ago</span>
+          </div>
+        </div>
+        <div class="activity">
+          <div class="activity-avatar">🦔</div>
+          <div class="activity-body">
+            <span class="activity-actor">hedgie</span> watered <span class="activity-amount">$320</span> of <span class="activity-token">$HEDG</span>
+            <span class="activity-time">58s ago</span>
+          </div>
+        </div>
+        <div class="activity">
+          <div class="activity-avatar peach">🐝</div>
+          <div class="activity-body">
+            <span class="activity-actor">bee.box</span> <span class="activity-token">$CACT</span> graduated to <span style="color:var(--peach); font-weight:600;">Sprout stage</span>
+            <span class="activity-time">1m ago</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rail-section">
+      <div class="rail-head">
+        <div class="rail-title">Now in greenhouse</div>
+        <div class="rail-tag">today</div>
+      </div>
+      <div class="now-card">
+        <div class="now-row">
+          <span class="now-label">🌱 Seeds planted</span>
+          <span class="now-val sprout">+14</span>
+        </div>
+        <div class="now-row">
+          <span class="now-label">🪴 Reached Sprout</span>
+          <span class="now-val">+8</span>
+        </div>
+        <div class="now-row">
+          <span class="now-label">🌳 Reached Tree</span>
+          <span class="now-val peach">+2</span>
+        </div>
+        <div class="now-row">
+          <span class="now-label">🌻 Total growers</span>
+          <span class="now-val">42,891</span>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+
+<!-- ===== FLOATING MASCOT ===== -->
+<div class="float-mascot">
+  <div class="float-bubble">
+    Mossy noticed <b>$TRELLIS</b> hit a new high. Worth a peek?
+  </div>
+  <div class="float-mark">🌿</div>
+</div>
+
+</body>
+</html>
